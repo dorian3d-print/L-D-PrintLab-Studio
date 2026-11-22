@@ -55,12 +55,12 @@
     // HIER DEINE FIREBASE-KONFIGURATION AUS DER FIREBASE CONSOLE EINFÜGEN:
     // (Solange hier "DEIN_API_KEY" steht, läuft die Seite automatisch im lokalen Vorschau-Modus)
     const FIREBASE_CONFIG = {
-      apiKey: "DEIN_API_KEY",
-      authDomain: "DEIN_PROJEKT.firebaseapp.com",
-      projectId: "DEIN_PROJEKT",
-      storageBucket: "DEIN_PROJEKT.appspot.com",
-      messagingSenderId: "DEINE_SENDER_ID",
-      appId: "DEINE_APP_ID"
+      apiKey: "AIzaSyDU3zHIAZBznuA46UiL1rKnJNYpqNIBEKE",
+      authDomain: "ld-printlab-studio.firebaseapp.com",
+      projectId: "ld-printlab-studio",
+      storageBucket: "ld-printlab-studio.firebasestorage.app",
+      messagingSenderId: "256829656910",
+      appId: "1:256829656910:web:b74c9699595a752ca5581f"
     };
   </script>
 
@@ -72,7 +72,7 @@
       <div class="flex items-center justify-between gap-4">
         <!-- Logo & Markenname (ohne Untertitel) -->
         <button onclick="switchTab('catalog')" class="flex items-center gap-3.5 text-left group focus:outline-none">
-          <div class="w-10 h-10 rounded-xl bg-white border border-[#E2DFD7] shadow-xs flex items-center justify-center shrink-0 group-hover:border-[#8C7765] transition">
+          <div class="w-10 h-10 rounded-xl bg-white border border-[#E2DFD7] shadow-sm flex items-center justify-center shrink-0 group-hover:border-[#8C7765] transition">
             <!-- Geometrisches L&D 3D-Monogramm -->
             <svg class="w-6 h-6" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
               <polygon points="32,6 54,18.5 54,45.5 32,58 10,45.5 10,18.5" stroke="#8C7765" stroke-width="2.6"/>
@@ -104,7 +104,7 @@
           Wunschmodell per Link
         </button>
         <button onclick="switchTab('my-orders')" id="nav-my-orders" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
-          Anfragestatus <span id="myOrdersBadge" class="hidden ml-1.5 px-1.5 py-0.2 text-[11px] rounded-full bg-[#8C7765] text-white">0</span>
+          Anfragestatus <span id="myOrdersBadge" class="hidden ml-1.5 px-1.5 py-0.5 text-[11px] rounded-full bg-[#8C7765] text-white">0</span>
         </button>
         <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap ml-auto">
           Studio-Verwaltung
@@ -158,7 +158,7 @@
 
     <!-- TAB 2: WUNSCHMODELL PER LINK (MAKERWORLD & THINGIVERSE) -->
     <section id="view-custom-link" class="hidden max-w-3xl mx-auto space-y-6">
-      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2DFD7] shadow-xs space-y-6">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2DFD7] shadow-sm space-y-6">
         <div class="space-y-2">
           <span class="inline-block px-3 py-1 rounded-full bg-[#EFECE6] text-[#8C7765] text-[11px] font-semibold uppercase tracking-wider">
             Auftragsdruck nach Link
@@ -241,7 +241,7 @@
 
     <!-- TAB 3: ANFRAGESTATUS FÜR FREUNDE & KUNDEN -->
     <section id="view-my-orders" class="hidden max-w-3xl mx-auto space-y-6">
-      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2DFD7] shadow-xs space-y-5">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2DFD7] shadow-sm space-y-5">
         <div>
           <h2 class="font-display text-xl font-bold text-[#22211F]">Status deiner Bestellungen & Anfragen</h2>
           <p class="text-sm text-[#6E6A63] mt-1">Hier siehst du den aktuellen Stand deiner Anfragen – inklusive hinterlegtem Angebotspreis bei Link-Anfragen.</p>
@@ -262,7 +262,7 @@
     <!-- TAB 4: STUDIO-VERWALTUNG (FIREBASE AUTH EMAIL & PASSWORT) -->
     <section id="view-admin" class="hidden space-y-6">
       <!-- Login-Box -->
-      <div id="adminLoginBox" class="max-w-md mx-auto bg-white rounded-3xl p-7 border border-[#E2DFD7] shadow-xs space-y-5">
+      <div id="adminLoginBox" class="max-w-md mx-auto bg-white rounded-3xl p-7 border border-[#E2DFD7] shadow-sm space-y-5">
         <div class="space-y-1 text-center">
           <span class="inline-block px-3 py-1 rounded-full bg-[#EFECE6] text-[#8C7765] text-[11px] font-semibold uppercase tracking-wider">Admin-Bereich</span>
           <h2 class="font-display text-xl font-bold text-[#22211F] pt-1">Studio-Verwaltung</h2>
@@ -290,7 +290,7 @@
         <div class="bg-white rounded-3xl p-4 sm:p-5 border border-[#E2DFD7] flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
             <button onclick="switchAdminSubTab('orders')" id="admin-tab-orders" class="admin-sub-btn px-4 py-2 rounded-full text-xs font-semibold bg-[#22211F] text-white transition whitespace-nowrap">
-              Bestellungen & Links <span id="openOrdersCounter" class="ml-1 px-1.5 py-0.2 rounded-full bg-[#8C7765] text-white text-[10px]">0</span>
+              Bestellungen & Links <span id="openOrdersCounter" class="ml-1 px-1.5 py-0.5 rounded-full bg-[#8C7765] text-white text-[10px]">0</span>
             </button>
             <button onclick="switchAdminSubTab('products')" id="admin-tab-products" class="admin-sub-btn px-4 py-2 rounded-full text-xs font-semibold text-[#6E6A63] hover:bg-[#EFECE6] transition whitespace-nowrap">
               3D-Modelle
@@ -457,7 +457,7 @@
   <!-- =====================================================================
        4. BESTELL-MODAL ("MÖCHTE ICH HABEN")
        ===================================================================== -->
-  <div id="orderModal" class="fixed inset-0 z-40 hidden bg-[#22211F]/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+  <div id="orderModal" class="fixed inset-0 z-40 hidden bg-[#22211F]/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-[#E2DFD7] space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex items-start justify-between gap-3">
         <div>
@@ -517,7 +517,7 @@
   <!-- =====================================================================
        5. BESTÄTIGUNGS-MODAL MIT WHATSAPP & E-MAIL BUTTON
        ===================================================================== -->
-  <div id="confirmationModal" class="fixed inset-0 z-50 hidden bg-[#22211F]/60 backdrop-blur-xs flex items-center justify-center p-4">
+  <div id="confirmationModal" class="fixed inset-0 z-50 hidden bg-[#22211F]/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-[#E2DFD7] space-y-4">
       <div class="flex items-center justify-between">
         <span class="px-3 py-1 rounded-full bg-[#EFECE6] text-[#22211F] text-xs font-semibold">Gespeichert • <span id="confRefId">#LP-0000</span></span>
@@ -549,7 +549,7 @@
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
     import {
       getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc,
-      onSnapshot, query, orderBy, getDocs, where
+      onSnapshot, query, orderBy
     } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
     const isCloudConfigured = FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey !== "DEIN_API_KEY";
@@ -578,6 +578,20 @@
 
     function formatPrice(val) {
       return Number(val || 0).toFixed(2).replace(".", ",") + " " + STUDIO_CONFIG.currency;
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function safeHttpUrl(url) {
+      const trimmed = String(url ?? "").trim();
+      return /^https?:\/\//i.test(trimmed) ? trimmed : "#";
     }
 
     function showToast(msg) {
@@ -615,35 +629,41 @@
         if (isAdminLoggedIn) renderAdminAll();
       });
 
-      // Live-Listener: Filamente
+      const handleFirestoreError = err => {
+        document.getElementById("catalogLoader").classList.add("hidden");
+        console.error("Firestore Fehler:", err);
+        showToast("Datenbank-Hinweis: " + (err?.message || "Zugriff nicht möglich"));
+      };
+
+      // Live-Listener: Filamente (Collection: "filaments")
       onSnapshot(query(collection(db, "filaments"), orderBy("createdAt", "asc")), snap => {
         filaments = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderAllViews();
-      });
+      }, handleFirestoreError);
 
-      // Live-Listener: Kategorien
+      // Live-Listener: Kategorien (Collection: "categories")
       onSnapshot(query(collection(db, "categories"), orderBy("order", "asc")), snap => {
         categories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         if (categories.length === 0) {
           categories = DEFAULT_CATEGORIES.map((name, i) => ({ id: "def-" + i, name, order: i }));
         }
         renderAllViews();
-      });
+      }, handleFirestoreError);
 
-      // Live-Listener: Produkte
+      // Live-Listener: Produkte (Collection: "products")
       onSnapshot(query(collection(db, "products"), orderBy("createdAt", "desc")), snap => {
         products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         document.getElementById("catalogLoader").classList.add("hidden");
         renderAllViews();
-      });
+      }, handleFirestoreError);
 
-      // Live-Listener: Bestellungen & Anfragen
+      // Live-Listener: Bestellungen & Anfragen (Collection: "orders")
       onSnapshot(query(collection(db, "orders"), orderBy("createdAt", "desc")), snap => {
         allOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         updateBadges();
         renderMyOrders();
         if (isAdminLoggedIn) renderAdminOrders();
-      });
+      }, handleFirestoreError);
 
     } else {
       // Lokaler Vorschau-Modus solange FIREBASE_CONFIG noch Platzhalter enthält
@@ -726,13 +746,13 @@
         const isActive = activeCategory === cat;
         const label = cat === "ALL" ? "Alle Modelle" : cat;
         return `
-          <button onclick="setCategoryFilter('${cat.replace(/'/g, "\'")}')"
+          <button onclick="setCategoryFilter('${escapeHtml(cat.replace(/\\/g, "\\\\").replace(/'/g, "\\'"))}')"
             class="px-4 py-1.5 rounded-full text-xs font-medium border transition whitespace-nowrap ${
               isActive
                 ? "bg-[#22211F] text-white border-[#22211F]"
                 : "bg-white text-[#6E6A63] border-[#E2DFD7] hover:text-[#22211F]"
             }">
-            ${label}
+            ${escapeHtml(label)}
           </button>
         `;
       }).join("");
@@ -759,16 +779,15 @@
 
       emptyState.classList.add("hidden");
       grid.innerHTML = filtered.map(p => {
-        // Besucher sehen ausschließlich Filamente, die dem Produkt zugewiesen UND vorrätig sind
         const availableColors = getAvailableFilamentsForProduct(p);
         const hasColors = availableColors.length > 0;
 
         return `
-          <article class="bg-white rounded-3xl border border-[#E2DFD7] overflow-hidden flex flex-col shadow-2xs hover:shadow-md transition duration-200">
+          <article class="bg-white rounded-3xl border border-[#E2DFD7] overflow-hidden flex flex-col shadow-sm hover:shadow-md transition duration-200">
             <div class="relative aspect-[4/3] bg-[#EFECE6] overflow-hidden">
-              <img src="${p.imageData || createPlaceholderGraphic(p.title)}" alt="${p.title}" class="w-full h-full object-cover" />
-              <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-xs text-[#22211F] text-[11px] font-medium border border-[#E2DFD7]">
-                ${p.category}
+              <img src="${p.imageData || createPlaceholderGraphic(p.title)}" alt="${escapeHtml(p.title)}" class="w-full h-full object-cover" />
+              <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm text-[#22211F] text-[11px] font-medium border border-[#E2DFD7]">
+                ${escapeHtml(p.category)}
               </span>
               <span class="absolute bottom-3.5 right-3.5 px-2.5 py-1 rounded-full bg-[#22211F]/85 text-white text-[11px] font-medium">
                 ${p.weightGrams} g
@@ -778,11 +797,11 @@
             <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-5">
               <div>
                 <div class="flex items-start justify-between gap-3">
-                  <h3 class="font-display font-bold text-base sm:text-lg text-[#22211F] leading-snug">${p.title}</h3>
+                  <h3 class="font-display font-bold text-base sm:text-lg text-[#22211F] leading-snug">${escapeHtml(p.title)}</h3>
                   <span class="font-display text-lg font-bold text-[#22211F] whitespace-nowrap">${formatPrice(p.price)}</span>
                 </div>
-                ${p.materialNote ? `<p class="text-xs text-[#8C7765] font-medium mt-1">${p.materialNote}</p>` : ""}
-                ${p.description ? `<p class="text-sm text-[#6E6A63] mt-2.5 leading-relaxed line-clamp-2">${p.description}</p>` : ""}
+                ${p.materialNote ? `<p class="text-xs text-[#8C7765] font-medium mt-1">${escapeHtml(p.materialNote)}</p>` : ""}
+                ${p.description ? `<p class="text-sm text-[#6E6A63] mt-2.5 leading-relaxed line-clamp-2">${escapeHtml(p.description)}</p>` : ""}
 
                 <div class="mt-4 pt-3.5 border-t border-[#F0EEE9]">
                   <div class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6A63] mb-2">
@@ -793,7 +812,7 @@
                       ${availableColors.map(f => `
                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs bg-[#F7F6F2] border border-[#E2DFD7] text-[#22211F]">
                           <span class="w-2.5 h-2.5 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
-                          <span>${f.name} <span class="text-[#6E6A63]">(${f.material})</span></span>
+                          <span>${escapeHtml(f.name)} <span class="text-[#6E6A63]">(${escapeHtml(f.material)})</span></span>
                         </span>
                       `).join("")}
                     </div>
@@ -848,7 +867,7 @@
                 : "border-[#E2DFD7] hover:border-[#8C7765] text-[#6E6A63]"
             }">
             <span class="w-4 h-4 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
-            <span class="truncate">${f.name} (${f.material})</span>
+            <span class="truncate">${escapeHtml(f.name)} (${escapeHtml(f.material)})</span>
           </button>
         `;
       }).join("");
@@ -926,8 +945,7 @@
           `• Gesamtpreis: ${formatPrice(total)}`,
           `• Name: ${customerName} (${customerContact})`,
           comment ? `• Kommentar: ${comment}` : null
-        ].filter(Boolean).join("
-");
+        ].filter(Boolean).join("\n");
 
         openConfirmationModal(refId, summaryText, `Anfrage ${refId} – ${orderPayload.productTitle}`);
       } catch (err) {
@@ -949,16 +967,17 @@
         return;
       }
       box.innerHTML = inStockFils.map(f => `
-        <button type="button" onclick="pickCustomColor('${f.name} (${f.material})')"
+        <button type="button" onclick="pickCustomColorById('${f.id}')"
           class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] bg-[#F7F6F2] hover:bg-[#EFECE6] border border-[#E2DFD7] text-[#22211F] transition">
           <span class="w-2 h-2 rounded-full border border-black/15" style="background:${f.hex}"></span>
-          <span>${f.name} (${f.material})</span>
+          <span>${escapeHtml(f.name)} (${escapeHtml(f.material)})</span>
         </button>
       `).join("");
     }
 
-    window.pickCustomColor = function(label) {
-      document.getElementById("customColorPref").value = label;
+    window.pickCustomColorById = function(filId) {
+      const f = filaments.find(x => x.id === filId);
+      if (f) document.getElementById("customColorPref").value = `${f.name} (${f.material})`;
     };
 
     window.detectPlatformBadge = function() {
@@ -1028,8 +1047,7 @@
           `• Stückzahl: ${qty}x`,
           `• Name: ${customerName} (${customerContact})`,
           comment ? `• Kommentar: ${comment}` : null
-        ].filter(Boolean).join("
-");
+        ].filter(Boolean).join("\n");
 
         openConfirmationModal(refId, summaryText, `Link-Anfrage ${refId} – Wunschmodell`);
       } catch (err) {
@@ -1121,22 +1139,22 @@
             </div>
 
             <div class="text-sm font-semibold text-[#22211F]">
-              ${o.type === "link" ? `<a href="${o.modelUrl}" target="_blank" class="underline break-all">${o.modelUrl}</a>` : `${o.qty}x ${o.productTitle}`}
+              ${o.type === "link" ? `<a href="${safeHttpUrl(o.modelUrl)}" target="_blank" rel="noopener noreferrer" class="underline break-all">${escapeHtml(o.modelUrl)}</a>` : `${o.qty}x ${escapeHtml(o.productTitle)}`}
             </div>
 
             <div class="text-xs text-[#6E6A63]">
-              Farbe: <strong class="text-[#22211F]">${o.filamentName}</strong>
+              Farbe: <strong class="text-[#22211F]">${escapeHtml(o.filamentName)}</strong>
               ${o.totalPrice ? ` • Gesamt: <strong class="text-[#22211F]">${formatPrice(o.totalPrice)}</strong>` : ""}
             </div>
 
             ${o.quotedPrice ? `
               <div class="p-3 rounded-xl bg-white border border-[#8C7765]/40 text-xs space-y-1">
                 <div class="font-semibold text-[#22211F]">Angebot vom Studio: ${formatPrice(o.quotedPrice)} ${o.quotedWeight ? `(ca. ${o.quotedWeight} g)` : ""}</div>
-                ${o.adminNote ? `<div class="text-[#6E6A63]">${o.adminNote}</div>` : ""}
+                ${o.adminNote ? `<div class="text-[#6E6A63]">${escapeHtml(o.adminNote)}</div>` : ""}
               </div>
             ` : o.adminNote ? `
               <div class="p-3 rounded-xl bg-white border border-[#E2DFD7] text-xs text-[#6E6A63]">
-                Hinweis: ${o.adminNote}
+                Hinweis: ${escapeHtml(o.adminNote)}
               </div>
             ` : ""}
           </div>
@@ -1228,13 +1246,13 @@
                   <span class="text-xs text-[#6E6A63]">• ${dateStr}</span>
                 </div>
                 <h4 class="font-display font-bold text-base text-[#22211F] mt-1.5">
-                  ${isLink ? `<a href="${o.modelUrl}" target="_blank" class="underline break-all text-[#22211F]">${o.modelUrl} ↗</a>` : `${o.qty}x ${o.productTitle}`}
+                  ${isLink ? `<a href="${safeHttpUrl(o.modelUrl)}" target="_blank" rel="noopener noreferrer" class="underline break-all text-[#22211F]">${escapeHtml(o.modelUrl)} ↗</a>` : `${o.qty}x ${escapeHtml(o.productTitle)}`}
                 </h4>
                 <p class="text-xs text-[#6E6A63] mt-1">
-                  Kunde: <strong class="text-[#22211F]">${o.customerName}</strong> (${o.customerContact}) • Farbe: <strong class="text-[#22211F]">${o.filamentName}</strong>
+                  Kunde: <strong class="text-[#22211F]">${escapeHtml(o.customerName)}</strong> (${escapeHtml(o.customerContact)}) • Farbe: <strong class="text-[#22211F]">${escapeHtml(o.filamentName)}</strong>
                   ${!isLink ? ` • Summe: <strong class="text-[#22211F]">${formatPrice(o.totalPrice)}</strong>` : ""}
                 </p>
-                ${o.comment ? `<p class="text-xs text-[#22211F] bg-[#F7F6F2] px-3 py-2 rounded-xl mt-2 border border-[#E2DFD7]">Kommentar: ${o.comment}</p>` : ""}
+                ${o.comment ? `<p class="text-xs text-[#22211F] bg-[#F7F6F2] px-3 py-2 rounded-xl mt-2 border border-[#E2DFD7]">Kommentar: ${escapeHtml(o.comment)}</p>` : ""}
               </div>
 
               <button onclick="deleteOrder('${o.id}')" class="text-xs text-[#6E6A63] hover:text-red-600 underline">Löschen</button>
@@ -1302,8 +1320,7 @@
         price ? `Angebotspreis: ${formatPrice(price)}` : null,
         weight ? `Geschätztes Gewicht: ca. ${weight} g` : null,
         note ? `Hinweis: ${note}` : null
-      ].filter(Boolean).join("
-");
+      ].filter(Boolean).join("\n");
 
       navigator.clipboard.writeText(lines);
       showToast("Antworttext kopiert!");
@@ -1361,7 +1378,12 @@
           canvas.width = Math.round(img.width * scale);
           canvas.height = Math.round(img.height * scale);
           canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
-          uploadedCompressedImage = canvas.toDataURL("image/jpeg", 0.78);
+          let quality = 0.78;
+          uploadedCompressedImage = canvas.toDataURL("image/jpeg", quality);
+          while (uploadedCompressedImage.length > 650000 && quality > 0.35) {
+            quality -= 0.12;
+            uploadedCompressedImage = canvas.toDataURL("image/jpeg", quality);
+          }
 
           const preview = document.getElementById("productImagePreview");
           preview.src = uploadedCompressedImage;
@@ -1504,8 +1526,8 @@
             <div class="flex items-center gap-3 min-w-0">
               <img src="${p.imageData || createPlaceholderGraphic(p.title)}" class="w-12 h-12 rounded-xl object-cover bg-[#EFECE6] shrink-0" />
               <div class="min-w-0">
-                <div class="text-sm font-semibold text-[#22211F] truncate">${p.title}</div>
-                <div class="text-xs text-[#6E6A63]">${p.category} • ${p.weightGrams} g • ${formatPrice(p.price)} • ${availCount} vorrätige Farben</div>
+                <div class="text-sm font-semibold text-[#22211F] truncate">${escapeHtml(p.title)}</div>
+                <div class="text-xs text-[#6E6A63]">${escapeHtml(p.category)} • ${p.weightGrams} g • ${formatPrice(p.price)} • ${availCount} vorrätige Farben</div>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
@@ -1570,7 +1592,7 @@
           <div class="flex items-center gap-3">
             <span class="w-6 h-6 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
             <div>
-              <div class="text-sm font-semibold text-[#22211F]">${f.name} <span class="text-xs font-normal text-[#6E6A63]">(${f.material})</span></div>
+              <div class="text-sm font-semibold text-[#22211F]">${escapeHtml(f.name)} <span class="text-xs font-normal text-[#6E6A63]">(${escapeHtml(f.material)})</span></div>
               <div class="text-[11px] ${f.inStock ? "text-emerald-700" : "text-[#8C7765]"}">
                 ${f.inStock ? "● Vorrätig (im Shop sichtbar)" : "○ Nicht vorrätig (für Kunden unsichtbar)"}
               </div>
@@ -1624,7 +1646,7 @@
       const box = document.getElementById("adminCategoriesList");
       box.innerHTML = categories.map(c => `
         <div class="py-3 flex items-center justify-between">
-          <span class="text-sm font-medium text-[#22211F]">${c.name}</span>
+          <span class="text-sm font-medium text-[#22211F]">${escapeHtml(c.name)}</span>
           <button onclick="deleteCategory('${c.id}')" class="text-xs text-[#6E6A63] hover:text-red-600">Entfernen</button>
         </div>
       `).join("");
@@ -1645,8 +1667,10 @@
           const ref = await addDoc(collection(db, "filaments"), f);
           createdFilIds.push(ref.id);
         }
-        for (let i = 0; i < DEFAULT_CATEGORIES.length; i++) {
-          await addDoc(collection(db, "categories"), { name: DEFAULT_CATEGORIES[i], order: i });
+        if (categories.every(c => c.id.startsWith("def-"))) {
+          for (let i = 0; i < DEFAULT_CATEGORIES.length; i++) {
+            await addDoc(collection(db, "categories"), { name: DEFAULT_CATEGORIES[i], order: i });
+          }
         }
       } else {
         filaments = sampleFilaments.map((f, idx) => ({ id: "fil-s-" + idx, ...f }));
