@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="theme-color" content="#F7F6F2" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="L&D PrintLab" />
+  <title>L&D PrintLab Studio</title>
+
+  <!-- Minimalistisches L&D Monogramm als App-Icon & Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23F7F6F2'/%3E%3Cpolygon points='32,10 52,21 52,43 32,54 12,43 12,21' fill='none' stroke='%238C7765' stroke-width='2.5'/%3E%3Cpath d='M22 22V40H32' fill='none' stroke='%23232220' stroke-width='3.5' stroke-linecap='square'/%3E%3Cpath d='M34 22H39C44 22 47 26 47 31C47 36 44 40 39 40H34V22Z' fill='none' stroke='%23232220' stroke-width='3.2'/%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23F7F6F2'/%3E%3Cpolygon points='32,10 52,21 52,43 32,54 12,43 12,21' fill='none' stroke='%238C7765' stroke-width='2.5'/%3E%3Cpath d='M22 22V40H32' fill='none' stroke='%23232220' stroke-width='3.5' stroke-linecap='square'/%3E%3Cpath d='M34 22H39C44 22 47 26 47 31C47 36 44 40 39 40H34V22Z' fill='none' stroke='%23232220' stroke-width='3.2'/%3E%3C/svg%3E" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
+    :root {
+      --bg-canvas: #F7F6F2;
+      --bg-surface: #FFFFFF;
+      --bg-subtle: #EFECE6;
+      --border-soft: #E2DFD7;
+      --text-primary: #22211F;
+      --text-secondary: #6E6A63;
+      --accent-bronze: #8C7765;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      -webkit-tap-highlight-color: transparent;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-[#8C7765]/20">
+
+  <!-- =====================================================================
+       1. KONFIGURATION (HIER EINMALIG FIREBASE-DATEN EINFÜGEN)
+       ===================================================================== -->
+  <script>
+    const STUDIO_CONFIG = {
+      shopName: "L&D PrintLab Studio",
+      whatsappNumber: "491785271446",
+      whatsappDisplay: "0178 5271446",
+      contactEmail: "dorian3d-print@web.de",
+      currency: "€"
+    };
+
+    // HIER DEINE FIREBASE-KONFIGURATION AUS DER FIREBASE CONSOLE EINFÜGEN:
+    // (Solange hier "DEIN_API_KEY" steht, läuft die Seite automatisch im lokalen Vorschau-Modus)
+    const FIREBASE_CONFIG = {
+      apiKey: "DEIN_API_KEY",
+      authDomain: "DEIN_PROJEKT.firebaseapp.com",
+      projectId: "DEIN_PROJEKT",
+      storageBucket: "DEIN_PROJEKT.appspot.com",
+      messagingSenderId: "DEINE_SENDER_ID",
+      appId: "DEINE_APP_ID"
+    };
+  </script>
+
+  <!-- =====================================================================
+       2. HEADER & MINIMALISTISCHE NAVIGATION
+       ===================================================================== -->
+  <header class="sticky top-0 z-30 bg-[#F7F6F2]/90 backdrop-blur-md border-b border-[#E2DFD7]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+      <div class="flex items-center justify-between gap-4">
+        <!-- Logo & Markenname (ohne Untertitel) -->
+        <button onclick="switchTab('catalog')" class="flex items-center gap-3.5 text-left group focus:outline-none">
+          <div class="w-10 h-10 rounded-xl bg-white border border-[#E2DFD7] shadow-xs flex items-center justify-center shrink-0 group-hover:border-[#8C7765] transition">
+            <!-- Geometrisches L&D 3D-Monogramm -->
+            <svg class="w-6 h-6" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="32,6 54,18.5 54,45.5 32,58 10,45.5 10,18.5" stroke="#8C7765" stroke-width="2.6"/>
+              <line x1="32" y1="6" x2="32" y2="58" stroke="#D6D1C7" stroke-width="1.8"/>
+              <path d="M19 20V42H30" stroke="#22211F" stroke-width="4" stroke-linecap="square"/>
+              <path d="M34 20H39.5C45 20 48.5 24.5 48.5 31C48.5 37.5 45 42 39.5 42H34V20Z" stroke="#22211F" stroke-width="3.6"/>
+            </svg>
+          </div>
+          <span class="font-display text-lg sm:text-xl font-bold tracking-tight text-[#22211F]">
+            L&amp;D PrintLab Studio
+          </span>
+        </button>
+
+        <!-- Link teilen -->
+        <button onclick="shareCatalogLink()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white hover:bg-[#EFECE6] text-[#22211F] text-xs font-medium border border-[#E2DFD7] transition shrink-0">
+          <svg class="w-3.5 h-3.5 text-[#8C7765]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+          </svg>
+          <span>Link teilen</span>
+        </button>
+      </div>
+
+      <!-- Navigations-Tabs -->
+      <nav class="flex items-center gap-1.5 mt-4 overflow-x-auto no-scrollbar">
+        <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-[#22211F] text-white transition whitespace-nowrap">
+          Katalog
+        </button>
+        <button onclick="switchTab('custom-link')" id="nav-custom-link" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
+          Wunschmodell per Link
+        </button>
+        <button onclick="switchTab('my-orders')" id="nav-my-orders" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
+          Anfragestatus <span id="myOrdersBadge" class="hidden ml-1.5 px-1.5 py-0.2 text-[11px] rounded-full bg-[#8C7765] text-white">0</span>
+        </button>
+        <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap ml-auto">
+          Studio-Verwaltung
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hinweisbanner falls Firebase noch nicht eingetragen wurde -->
+  <div id="demoModeBanner" class="hidden bg-[#EFECE6] border-b border-[#E2DFD7] px-4 py-2.5 text-center text-xs text-[#6E6A63]">
+    <span class="font-semibold text-[#22211F]">Lokaler Vorschau-Modus:</span> Sobald du deine Firebase-Daten in der <code class="bg-white px-1.5 py-0.5 rounded border border-[#E2DFD7]">index.html</code> hinterlegst, synchronisieren sich alle Modelle, Filamente und Bestellungen live in der Cloud.
+  </div>
+
+  <!-- Toast-Benachrichtigung -->
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-6 z-50 hidden bg-[#22211F] text-white text-xs sm:text-sm font-medium px-4 py-3 rounded-2xl shadow-lg border border-white/10"></div>
+
+  <!-- =====================================================================
+       3. HAUPTBEREICH
+       ===================================================================== -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-7">
+
+    <!-- TAB 1: PRODUKTKATALOG -->
+    <section id="view-catalog" class="space-y-6">
+      <!-- Filterleiste -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div id="categoryPills" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+        <button onclick="switchTab('custom-link')" class="self-start sm:self-auto px-4 py-2 rounded-full bg-white hover:bg-[#EFECE6] text-[#22211F] border border-[#E2DFD7] text-xs font-medium transition whitespace-nowrap">
+          Eigenen MakerWorld / Thingiverse Link senden →
+        </button>
+      </div>
+
+      <!-- Ladezustand -->
+      <div id="catalogLoader" class="text-center py-16 text-sm text-[#6E6A63]">
+        Katalog wird geladen …
+      </div>
+
+      <!-- Produkt-Grid -->
+      <div id="productGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+      <!-- Leerer Katalog -->
+      <div id="emptyCatalogState" class="hidden bg-white rounded-3xl border border-[#E2DFD7] p-10 text-center max-w-lg mx-auto space-y-3">
+        <p class="font-display text-lg font-semibold text-[#22211F]">Aktuell sind noch keine Modelle eingestellt</p>
+        <p class="text-sm text-[#6E6A63]">Logge dich in der Studio-Verwaltung ein, um dein erstes 3D-Druckmodell hinzuzufügen, oder sende direkt einen Link von MakerWorld oder Thingiverse.</p>
+        <div class="pt-2">
+          <button onclick="switchTab('custom-link')" class="px-5 py-2.5 rounded-full bg-[#22211F] text-white text-xs font-medium hover:bg-[#3A3835] transition">
+            Wunschmodell per Link anfragen
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: WUNSCHMODELL PER LINK (MAKERWORLD & THINGIVERSE) -->
+    <section id="view-custom-link" class="hidden max-w-3xl mx-auto space-y-6">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2DFD7] shadow-xs space-y-6">
+        <div class="space-y-2">
+          <span class="inline-block px-3 py-1 rounded-full bg-[#EFECE6] text-[#8C7765] text-[11px] font-semibold uppercase tracking-wider">
+            Auftragsdruck nach Link
+          </span>
+          <h2 class="font-display text-2xl font-bold text-[#22211F]">Wunschmodell auf MakerWorld oder Thingiverse gefunden?</h2>
+          <p class="text-sm text-[#6E6A63] leading-relaxed">
+            Suche dir kostenlos ein 3D-Modell aus, kopiere den Link und füge ihn hier ein. Wir prüfen die Druckbarkeit, berechnen Materialgewicht sowie Druckzeit und melden uns mit einem konkreten Angebot.
+          </p>
+        </div>
+
+        <!-- Direktlinks zu MakerWorld & Thingiverse -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <a href="https://makerworld.com" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/70 hover:bg-[#EFECE6]/70 hover:border-[#8C7765] transition group">
+            <div>
+              <div class="font-display font-semibold text-sm text-[#22211F] flex items-center gap-2">
+                MakerWorld öffnen
+                <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white border border-[#E2DFD7] text-[#8C7765]">Tipp</span>
+              </div>
+              <p class="text-xs text-[#6E6A63] mt-0.5">Geprüfte Druckprofile & moderne Designs</p>
+            </div>
+            <span class="text-[#8C7765] font-semibold text-base group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition">↗</span>
+          </a>
+
+          <a href="https://www.thingiverse.com" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/70 hover:bg-[#EFECE6]/70 hover:border-[#8C7765] transition group">
+            <div>
+              <div class="font-display font-semibold text-sm text-[#22211F]">Thingiverse öffnen</div>
+              <p class="text-xs text-[#6E6A63] mt-0.5">Große Auswahl an Haltern, Gadgets & Ersatzteilen</p>
+            </div>
+            <span class="text-[#8C7765] font-semibold text-base group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition">↗</span>
+          </a>
+        </div>
+
+        <hr class="border-[#E2DFD7]" />
+
+        <!-- Link-Anfrageformular -->
+        <form id="customLinkForm" onsubmit="submitCustomLinkRequest(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Link zum 3D-Modell *</label>
+            <div class="relative">
+              <input type="url" id="customModelUrl" required oninput="detectPlatformBadge()" placeholder="https://makerworld.com/de/models/... oder https://www.thingiverse.com/thing:..." class="w-full px-4 py-3 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+              <span id="platformBadge" class="hidden absolute right-3 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#EFECE6] text-[#22211F]"></span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Gewünschte Farbe / Material</label>
+              <input type="text" id="customColorPref" placeholder="z. B. Mattschwarz PETG oder egal" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+              <!-- Klickbare Chips nur für aktuell vorrätige Filamente -->
+              <div id="customInStockChips" class="flex flex-wrap gap-1.5 mt-2"></div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Stückzahl</label>
+              <input type="number" id="customQty" min="1" max="50" value="1" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Dein Name *</label>
+              <input type="text" id="customCustomerName" required placeholder="Vorname Nachname" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#22211F] mb-1.5">WhatsApp-Nummer oder E-Mail *</label>
+              <input type="text" id="customCustomerContact" required placeholder="Für Rückfragen & dein Angebot" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Kommentar / Sonderwunsch (optional)</label>
+            <textarea id="customNotes" rows="2" placeholder="z. B. Besondere Größe, Einsatzbereich oder Wunsch nach Versand" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]"></textarea>
+          </div>
+
+          <button type="submit" id="customSubmitBtn" class="w-full sm:w-auto px-6 py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
+            Unverbindliches Angebot anfragen
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 3: ANFRAGESTATUS FÜR FREUNDE & KUNDEN -->
+    <section id="view-my-orders" class="hidden max-w-3xl mx-auto space-y-6">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2DFD7] shadow-xs space-y-5">
+        <div>
+          <h2 class="font-display text-xl font-bold text-[#22211F]">Status deiner Bestellungen & Anfragen</h2>
+          <p class="text-sm text-[#6E6A63] mt-1">Hier siehst du den aktuellen Stand deiner Anfragen – inklusive hinterlegtem Angebotspreis bei Link-Anfragen.</p>
+        </div>
+
+        <!-- Suche nach Bestellnummer -->
+        <form onsubmit="lookupOrderByCode(event)" class="flex gap-2">
+          <input type="text" id="lookupRefInput" placeholder="Bestellnummer eingeben (z. B. #LP-4821)" class="flex-1 px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60 text-sm uppercase focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+          <button type="submit" class="px-5 py-2.5 rounded-2xl bg-[#22211F] text-white text-xs font-medium hover:bg-[#3A3835] transition">
+            Abrufen
+          </button>
+        </form>
+
+        <div id="myOrdersList" class="space-y-4"></div>
+      </div>
+    </section>
+
+    <!-- TAB 4: STUDIO-VERWALTUNG (FIREBASE AUTH EMAIL & PASSWORT) -->
+    <section id="view-admin" class="hidden space-y-6">
+      <!-- Login-Box -->
+      <div id="adminLoginBox" class="max-w-md mx-auto bg-white rounded-3xl p-7 border border-[#E2DFD7] shadow-xs space-y-5">
+        <div class="space-y-1 text-center">
+          <span class="inline-block px-3 py-1 rounded-full bg-[#EFECE6] text-[#8C7765] text-[11px] font-semibold uppercase tracking-wider">Admin-Bereich</span>
+          <h2 class="font-display text-xl font-bold text-[#22211F] pt-1">Studio-Verwaltung</h2>
+          <p class="text-xs text-[#6E6A63]">Melde dich mit eurer Studio-E-Mail und Passwort an, um Modelle, Filamente und Bestellungen zu verwalten.</p>
+        </div>
+
+        <form onsubmit="handleAdminLogin(event)" class="space-y-3.5">
+          <div>
+            <label class="block text-xs font-semibold text-[#22211F] mb-1">E-Mail-Adresse</label>
+            <input type="email" id="adminEmailInput" required value="dorian3d-print@web.de" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-[#22211F] mb-1">Passwort</label>
+            <input type="password" id="adminPasswordInput" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+          </div>
+          <button type="submit" id="adminLoginBtn" class="w-full py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
+            Anmelden
+          </button>
+        </form>
+      </div>
+
+      <!-- Entsperrtes Admin-Dashboard -->
+      <div id="adminDashboard" class="hidden space-y-6">
+        <!-- Kopfleiste Admin -->
+        <div class="bg-white rounded-3xl p-4 sm:p-5 border border-[#E2DFD7] flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+            <button onclick="switchAdminSubTab('orders')" id="admin-tab-orders" class="admin-sub-btn px-4 py-2 rounded-full text-xs font-semibold bg-[#22211F] text-white transition whitespace-nowrap">
+              Bestellungen & Links <span id="openOrdersCounter" class="ml-1 px-1.5 py-0.2 rounded-full bg-[#8C7765] text-white text-[10px]">0</span>
+            </button>
+            <button onclick="switchAdminSubTab('products')" id="admin-tab-products" class="admin-sub-btn px-4 py-2 rounded-full text-xs font-semibold text-[#6E6A63] hover:bg-[#EFECE6] transition whitespace-nowrap">
+              3D-Modelle
+            </button>
+            <button onclick="switchAdminSubTab('filaments')" id="admin-tab-filaments" class="admin-sub-btn px-4 py-2 rounded-full text-xs font-semibold text-[#6E6A63] hover:bg-[#EFECE6] transition whitespace-nowrap">
+              Filament-Rollen
+            </button>
+            <button onclick="switchAdminSubTab('categories')" id="admin-tab-categories" class="admin-sub-btn px-4 py-2 rounded-full text-xs font-semibold text-[#6E6A63] hover:bg-[#EFECE6] transition whitespace-nowrap">
+              Kategorien
+            </button>
+          </div>
+          <button onclick="handleAdminLogout()" class="px-3.5 py-1.5 rounded-full border border-[#E2DFD7] text-xs font-medium text-[#6E6A63] hover:text-[#22211F] transition">
+            Abmelden
+          </button>
+        </div>
+
+        <!-- SUB-TAB A: BESTELLUNGEN & LINK-ANFRAGEN -->
+        <div id="admin-view-orders" class="space-y-4">
+          <div id="adminOrdersList" class="space-y-4"></div>
+        </div>
+
+        <!-- SUB-TAB B: 3D-MODELLE HINZUFÜGEN & VERWALTEN -->
+        <div id="admin-view-products" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Formular Modell anlegen/bearbeiten -->
+          <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-[#E2DFD7] space-y-4 self-start">
+            <div class="flex items-center justify-between">
+              <h3 id="productFormTitle" class="font-display text-lg font-bold text-[#22211F]">Neues 3D-Modell einstellen</h3>
+              <button type="button" id="cancelEditBtn" onclick="resetProductForm()" class="hidden text-xs text-[#8C7765] underline">Abbrechen</button>
+            </div>
+
+            <form id="productAdminForm" onsubmit="saveProduct(event)" class="space-y-3.5">
+              <input type="hidden" id="editProductId" value="" />
+
+              <!-- Foto-Upload direkt vom Handy -->
+              <div>
+                <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Foto des 3D-Drucks *</label>
+                <label class="flex flex-col items-center justify-center w-full h-36 rounded-2xl border-2 border-dashed border-[#D6D1C7] bg-[#F7F6F2]/60 hover:bg-[#EFECE6]/60 cursor-pointer overflow-hidden relative transition">
+                  <img id="productImagePreview" class="hidden w-full h-full object-cover" />
+                  <div id="productImagePlaceholder" class="text-center p-4">
+                    <span class="text-xs font-semibold text-[#22211F] block">Foto auswählen oder aufnehmen</span>
+                    <span class="text-[11px] text-[#6E6A63] mt-0.5 block">Wird automatisch für schnelles Laden optimiert</span>
+                  </div>
+                  <input type="file" id="productImageInput" accept="image/*" onchange="handleProductPhotoSelect(event)" class="hidden" />
+                </label>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-[#22211F] mb-1">Modellname *</label>
+                <input type="text" id="prodTitle" required placeholder="z. B. Kabel-Organizer Untertisch" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-[#22211F] mb-1">Kategorie *</label>
+                  <select id="prodCategory" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]"></select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#22211F] mb-1">Material-Info</label>
+                  <input type="text" id="prodMaterialNote" placeholder="z. B. PETG / PLA+" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-[#22211F] mb-1">Gewicht (Gramm) *</label>
+                  <input type="number" id="prodWeight" required min="1" placeholder="120" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#22211F] mb-1">Preis (€) *</label>
+                  <input type="number" id="prodPrice" required min="0.5" step="0.5" placeholder="12.50" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-[#22211F] mb-1">Beschreibung</label>
+                <textarea id="prodDescription" rows="2" placeholder="Maße, Einsatzbereich, Lieferumfang …" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]"></textarea>
+              </div>
+
+              <!-- Auswahl aus zentraler Filament-Liste -->
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="block text-xs font-semibold text-[#22211F]">Mögliche Filamentfarben anhaken *</label>
+                  <button type="button" onclick="selectAllFilamentsForProduct()" class="text-[11px] text-[#8C7765] underline">Alle wählen</button>
+                </div>
+                <div id="productFilamentCheckboxes" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto p-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50"></div>
+                <p class="text-[11px] text-[#6E6A63] mt-1">Besucher sehen später automatisch nur Farben, die zusätzlich in deiner Filament-Liste als „Vorrätig“ markiert sind.</p>
+              </div>
+
+              <button type="submit" id="saveProductBtn" class="w-full py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
+                Modell veröffentlichen
+              </button>
+            </form>
+          </div>
+
+          <!-- Liste der eingestellten Modelle -->
+          <div class="lg:col-span-7 bg-white rounded-3xl p-6 border border-[#E2DFD7] space-y-4">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="font-display text-lg font-bold text-[#22211F]">Eingestellte Modelle (<span id="adminProdCount">0</span>)</h3>
+              <button onclick="seedStarterData()" id="seedBtn" class="px-3.5 py-1.5 rounded-full bg-[#EFECE6] hover:bg-[#E2DFD7] text-[#22211F] text-xs font-medium transition">
+                Beispieldaten laden
+              </button>
+            </div>
+            <div id="adminProductsList" class="divide-y divide-[#E2DFD7]"></div>
+          </div>
+        </div>
+
+        <!-- SUB-TAB C: ZENTRALE FILAMENT-VERWALTUNG -->
+        <div id="admin-view-filaments" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-[#E2DFD7] space-y-4 self-start">
+            <h3 class="font-display text-lg font-bold text-[#22211F]">Neue Filament-Rolle anlegen</h3>
+            <p class="text-xs text-[#6E6A63]">Lege hier einmal alle eure Filamente an. Wenn eine Rolle leer ist, schalte sie einfach auf „Nicht vorrätig“ – sie verschwindet sofort bei allen Modellen im Shop.</p>
+            <form onsubmit="addFilament(event)" class="space-y-3.5">
+              <div>
+                <label class="block text-xs font-semibold text-[#22211F] mb-1">Farbbezeichnung *</label>
+                <input type="text" id="filName" required placeholder="z. B. Mattschwarz" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-[#22211F] mb-1">Material *</label>
+                  <select id="filMaterial" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]">
+                    <option value="PLA">PLA</option>
+                    <option value="PLA Matte">PLA Matte</option>
+                    <option value="PLA Silk">PLA Silk</option>
+                    <option value="PETG">PETG</option>
+                    <option value="ASA">ASA</option>
+                    <option value="TPU">TPU</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#22211F] mb-1">Farbton</label>
+                  <div class="flex items-center gap-2">
+                    <input type="color" id="filHex" value="#22211F" class="w-11 h-10 rounded-xl border border-[#E2DFD7] cursor-pointer bg-white p-1" />
+                    <span id="filHexText" class="text-xs font-mono text-[#6E6A63]">#22211F</span>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="w-full py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
+                Filament hinzufügen
+              </button>
+            </form>
+          </div>
+
+          <div class="lg:col-span-7 bg-white rounded-3xl p-6 border border-[#E2DFD7] space-y-4">
+            <h3 class="font-display text-lg font-bold text-[#22211F]">Euer Filament-Lager (<span id="adminFilCount">0</span>)</h3>
+            <div id="adminFilamentsList" class="divide-y divide-[#E2DFD7]"></div>
+          </div>
+        </div>
+
+        <!-- SUB-TAB D: KATEGORIEN -->
+        <div id="admin-view-categories" class="hidden max-w-2xl bg-white rounded-3xl p-6 border border-[#E2DFD7] space-y-4">
+          <h3 class="font-display text-lg font-bold text-[#22211F]">Kategorien verwalten</h3>
+          <form onsubmit="addCategory(event)" class="flex gap-2">
+            <input type="text" id="newCategoryName" required placeholder="Neue Kategorie (z. B. Auto & Fahrrad)" class="flex-1 px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+            <button type="submit" class="px-5 py-2.5 rounded-2xl bg-[#22211F] text-white text-xs font-medium hover:bg-[#3A3835] transition">
+              Hinzufügen
+            </button>
+          </form>
+          <div id="adminCategoriesList" class="divide-y divide-[#E2DFD7]"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =====================================================================
+       4. BESTELL-MODAL ("MÖCHTE ICH HABEN")
+       ===================================================================== -->
+  <div id="orderModal" class="fixed inset-0 z-40 hidden bg-[#22211F]/50 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-[#E2DFD7] space-y-4 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <span id="modalCategory" class="text-[11px] font-semibold uppercase tracking-wider text-[#8C7765]">Kategorie</span>
+          <h3 id="modalTitle" class="font-display text-xl font-bold text-[#22211F] mt-0.5">Modellname</h3>
+        </div>
+        <button onclick="closeOrderModal()" class="w-8 h-8 rounded-full bg-[#F7F6F2] text-[#6E6A63] hover:text-[#22211F] flex items-center justify-center">✕</button>
+      </div>
+
+      <p id="modalDesc" class="text-sm text-[#6E6A63] leading-relaxed"></p>
+
+      <div class="flex items-center justify-between px-4 py-3 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] text-xs sm:text-sm">
+        <div><span class="text-[#6E6A63]">Gewicht:</span> <strong id="modalWeight" class="text-[#22211F]">0 g</strong></div>
+        <div><span class="text-[#6E6A63]">Stückpreis:</span> <strong id="modalPrice" class="text-[#22211F]">0,00 €</strong></div>
+      </div>
+
+      <form onsubmit="submitCatalogOrder(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-[#22211F] mb-2">Verfügbare Filamentfarbe wählen *</label>
+          <div id="modalColorOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-[#22211F] mb-1">Stückzahl</label>
+            <input type="number" id="orderQty" min="1" max="25" value="1" oninput="updateOrderTotal()" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-[#22211F] mb-1">Gesamtpreis</label>
+            <div id="orderTotalDisplay" class="px-3.5 py-2.5 rounded-2xl bg-[#EFECE6] font-display font-bold text-[#22211F] text-sm">0,00 €</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-[#22211F] mb-1">Dein Name *</label>
+            <input type="text" id="orderCustomerName" required placeholder="Vorname Nachname" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-[#22211F] mb-1">WhatsApp oder E-Mail *</label>
+            <input type="text" id="orderCustomerContact" required placeholder="Für Rückfragen" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-[#22211F] mb-1">Kommentar / Sonderwunsch (optional)</label>
+          <input type="text" id="orderComment" placeholder="z. B. Notiz oder Wunsch nach Versand" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+        </div>
+
+        <button type="submit" id="confirmOrderBtn" class="w-full py-3.5 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
+          Verbindlich anfragen
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       5. BESTÄTIGUNGS-MODAL MIT WHATSAPP & E-MAIL BUTTON
+       ===================================================================== -->
+  <div id="confirmationModal" class="fixed inset-0 z-50 hidden bg-[#22211F]/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-[#E2DFD7] space-y-4">
+      <div class="flex items-center justify-between">
+        <span class="px-3 py-1 rounded-full bg-[#EFECE6] text-[#22211F] text-xs font-semibold">Gespeichert • <span id="confRefId">#LP-0000</span></span>
+        <button onclick="closeConfirmationModal()" class="w-8 h-8 rounded-full bg-[#F7F6F2] text-[#6E6A63] flex items-center justify-center">✕</button>
+      </div>
+      <h3 class="font-display text-xl font-bold text-[#22211F]">Deine Anfrage ist eingegangen</h3>
+      <p class="text-xs sm:text-sm text-[#6E6A63] leading-relaxed">
+        Deine Anfrage wurde direkt im Studio-System hinterlegt. Wenn du uns zusätzlich direkt schreiben möchtest, nutze gerne den WhatsApp- oder E-Mail-Button:
+      </p>
+
+      <pre id="confPreviewText" class="p-3.5 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] text-[#22211F] text-xs whitespace-pre-wrap font-mono leading-relaxed"></pre>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+        <a id="confWhatsappBtn" href="#" target="_blank" rel="noopener noreferrer" class="py-3 px-4 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-xs text-center transition">
+          Per WhatsApp senden
+        </a>
+        <a id="confEmailBtn" href="#" class="py-3 px-4 rounded-full bg-[#EFECE6] hover:bg-[#E2DFD7] text-[#22211F] font-medium text-xs text-center transition">
+          Per E-Mail senden
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       6. CLOUD-DATENBANK (FIREBASE) & ANWENDUNGSLOGIK
+       ===================================================================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+    import {
+      getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc,
+      onSnapshot, query, orderBy, getDocs, where
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+    const isCloudConfigured = FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey !== "DEIN_API_KEY";
+
+    let db = null;
+    let auth = null;
+    let isAdminLoggedIn = false;
+
+    let products = [];
+    let filaments = [];
+    let categories = [];
+    let allOrders = [];
+    let localSavedRefs = JSON.parse(localStorage.getItem("ld_printlab_refs") || "[]");
+
+    let activeCategory = "ALL";
+    let activeOrderProduct = null;
+    let selectedModalFilamentId = "";
+    let uploadedCompressedImage = "";
+
+    const DEFAULT_CATEGORIES = ["Alltag & Ordnung", "Werkstatt", "Deko & Wohnen", "Ersatzteile"];
+
+    // Farb-Picker Live-Anzeige
+    document.getElementById("filHex").addEventListener("input", e => {
+      document.getElementById("filHexText").textContent = e.target.value.toUpperCase();
+    });
+
+    function formatPrice(val) {
+      return Number(val || 0).toFixed(2).replace(".", ",") + " " + STUDIO_CONFIG.currency;
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.remove("hidden");
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => t.classList.add("hidden"), 3200);
+    }
+
+    function createPlaceholderGraphic(title) {
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="720" height="540" viewBox="0 0 720 540">
+        <rect width="720" height="540" fill="#EFECE6"/>
+        <polygon points="360,150 445,198 445,295 360,343 275,295 275,198" fill="none" stroke="#8C7765" stroke-width="4"/>
+        <line x1="360" y1="246" x2="445" y2="198" stroke="#B8AFA3" stroke-width="2.5"/>
+        <line x1="360" y1="246" x2="275" y2="198" stroke="#B8AFA3" stroke-width="2.5"/>
+        <line x1="360" y1="246" x2="360" y2="343" stroke="#B8AFA3" stroke-width="2.5"/>
+        <text x="360" y="405" fill="#22211F" font-family="sans-serif" font-size="22" font-weight="600" text-anchor="middle">${title}</text>
+      </svg>`;
+      return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+    }
+
+    // =====================================================================
+    // INITIALISIERUNG (CLOUD ODER LOKALER VORSCHAU-MODUS)
+    // =====================================================================
+    if (isCloudConfigured) {
+      const app = initializeApp(FIREBASE_CONFIG);
+      auth = getAuth(app);
+      db = getFirestore(app);
+
+      onAuthStateChanged(auth, user => {
+        isAdminLoggedIn = !!user;
+        document.getElementById("adminLoginBox").classList.toggle("hidden", isAdminLoggedIn);
+        document.getElementById("adminDashboard").classList.toggle("hidden", !isAdminLoggedIn);
+        if (isAdminLoggedIn) renderAdminAll();
+      });
+
+      // Live-Listener: Filamente
+      onSnapshot(query(collection(db, "filaments"), orderBy("createdAt", "asc")), snap => {
+        filaments = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderAllViews();
+      });
+
+      // Live-Listener: Kategorien
+      onSnapshot(query(collection(db, "categories"), orderBy("order", "asc")), snap => {
+        categories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (categories.length === 0) {
+          categories = DEFAULT_CATEGORIES.map((name, i) => ({ id: "def-" + i, name, order: i }));
+        }
+        renderAllViews();
+      });
+
+      // Live-Listener: Produkte
+      onSnapshot(query(collection(db, "products"), orderBy("createdAt", "desc")), snap => {
+        products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        document.getElementById("catalogLoader").classList.add("hidden");
+        renderAllViews();
+      });
+
+      // Live-Listener: Bestellungen & Anfragen
+      onSnapshot(query(collection(db, "orders"), orderBy("createdAt", "desc")), snap => {
+        allOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        updateBadges();
+        renderMyOrders();
+        if (isAdminLoggedIn) renderAdminOrders();
+      });
+
+    } else {
+      // Lokaler Vorschau-Modus solange FIREBASE_CONFIG noch Platzhalter enthält
+      document.getElementById("demoModeBanner").classList.remove("hidden");
+      document.getElementById("catalogLoader").classList.add("hidden");
+      filaments = JSON.parse(localStorage.getItem("ld_demo_filaments") || "null") || [
+        { id: "fil-1", name: "Mattschwarz", material: "PLA", hex: "#22211F", inStock: true },
+        { id: "fil-2", name: "Reinweiß", material: "PETG", hex: "#F7F6F2", inStock: true },
+        { id: "fil-3", name: "Warmgrau", material: "PLA Matte", hex: "#9A948C", inStock: true },
+        { id: "fil-4", name: "Salbeigrün", material: "PLA Matte", hex: "#768B78", inStock: false }
+      ];
+      categories = JSON.parse(localStorage.getItem("ld_demo_categories") || "null") ||
+        DEFAULT_CATEGORIES.map((name, i) => ({ id: "cat-" + i, name, order: i }));
+      products = JSON.parse(localStorage.getItem("ld_demo_products") || "[]");
+      allOrders = JSON.parse(localStorage.getItem("ld_demo_orders") || "[]");
+      renderAllViews();
+      updateBadges();
+    }
+
+    function syncDemoStorage() {
+      if (isCloudConfigured) return;
+      localStorage.setItem("ld_demo_filaments", JSON.stringify(filaments));
+      localStorage.setItem("ld_demo_categories", JSON.stringify(categories));
+      localStorage.setItem("ld_demo_products", JSON.stringify(products));
+      localStorage.setItem("ld_demo_orders", JSON.stringify(allOrders));
+      renderAllViews();
+      updateBadges();
+    }
+
+    function renderAllViews() {
+      renderCategoryPills();
+      renderCatalog();
+      renderCustomInStockChips();
+      renderMyOrders();
+      if (isAdminLoggedIn) renderAdminAll();
+    }
+
+    // =====================================================================
+    // NAVIGATION
+    // =====================================================================
+    window.switchTab = function(tab) {
+      ["catalog", "custom-link", "my-orders", "admin"].forEach(id => {
+        document.getElementById("view-" + id).classList.add("hidden");
+        const btn = document.getElementById("nav-" + id);
+        btn.classList.remove("bg-[#22211F]", "text-white");
+        btn.classList.add("text-[#6E6A63]");
+      });
+      document.getElementById("view-" + tab).classList.remove("hidden");
+      const activeBtn = document.getElementById("nav-" + tab);
+      activeBtn.classList.add("bg-[#22211F]", "text-white");
+      activeBtn.classList.remove("text-[#6E6A63]");
+
+      if (tab === "my-orders") renderMyOrders();
+      if (tab === "admin" && isAdminLoggedIn) renderAdminAll();
+    };
+
+    window.shareCatalogLink = function() {
+      if (navigator.share) {
+        navigator.share({ title: STUDIO_CONFIG.shopName, url: window.location.href }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(window.location.href);
+        showToast("Link zum L&D PrintLab Studio kopiert!");
+      }
+    };
+
+    // =====================================================================
+    // KATALOG & FILAMENT-FILTERUNG (NUR VORRÄTIGE FARBEN SICHTBAR!)
+    // =====================================================================
+    function getAvailableFilamentsForProduct(product) {
+      const assignedIds = product.filamentIds || [];
+      return assignedIds
+        .map(id => filaments.find(f => f.id === id))
+        .filter(f => f && f.inStock === true);
+    }
+
+    function renderCategoryPills() {
+      const box = document.getElementById("categoryPills");
+      const allCats = ["ALL", ...categories.map(c => c.name)];
+      box.innerHTML = allCats.map(cat => {
+        const isActive = activeCategory === cat;
+        const label = cat === "ALL" ? "Alle Modelle" : cat;
+        return `
+          <button onclick="setCategoryFilter('${cat.replace(/'/g, "\'")}')"
+            class="px-4 py-1.5 rounded-full text-xs font-medium border transition whitespace-nowrap ${
+              isActive
+                ? "bg-[#22211F] text-white border-[#22211F]"
+                : "bg-white text-[#6E6A63] border-[#E2DFD7] hover:text-[#22211F]"
+            }">
+            ${label}
+          </button>
+        `;
+      }).join("");
+    }
+
+    window.setCategoryFilter = function(cat) {
+      activeCategory = cat;
+      renderCategoryPills();
+      renderCatalog();
+    };
+
+    function renderCatalog() {
+      const grid = document.getElementById("productGrid");
+      const emptyState = document.getElementById("emptyCatalogState");
+      const filtered = activeCategory === "ALL"
+        ? products
+        : products.filter(p => p.category === activeCategory);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+      grid.innerHTML = filtered.map(p => {
+        // Besucher sehen ausschließlich Filamente, die dem Produkt zugewiesen UND vorrätig sind
+        const availableColors = getAvailableFilamentsForProduct(p);
+        const hasColors = availableColors.length > 0;
+
+        return `
+          <article class="bg-white rounded-3xl border border-[#E2DFD7] overflow-hidden flex flex-col shadow-2xs hover:shadow-md transition duration-200">
+            <div class="relative aspect-[4/3] bg-[#EFECE6] overflow-hidden">
+              <img src="${p.imageData || createPlaceholderGraphic(p.title)}" alt="${p.title}" class="w-full h-full object-cover" />
+              <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-xs text-[#22211F] text-[11px] font-medium border border-[#E2DFD7]">
+                ${p.category}
+              </span>
+              <span class="absolute bottom-3.5 right-3.5 px-2.5 py-1 rounded-full bg-[#22211F]/85 text-white text-[11px] font-medium">
+                ${p.weightGrams} g
+              </span>
+            </div>
+
+            <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-5">
+              <div>
+                <div class="flex items-start justify-between gap-3">
+                  <h3 class="font-display font-bold text-base sm:text-lg text-[#22211F] leading-snug">${p.title}</h3>
+                  <span class="font-display text-lg font-bold text-[#22211F] whitespace-nowrap">${formatPrice(p.price)}</span>
+                </div>
+                ${p.materialNote ? `<p class="text-xs text-[#8C7765] font-medium mt-1">${p.materialNote}</p>` : ""}
+                ${p.description ? `<p class="text-sm text-[#6E6A63] mt-2.5 leading-relaxed line-clamp-2">${p.description}</p>` : ""}
+
+                <div class="mt-4 pt-3.5 border-t border-[#F0EEE9]">
+                  <div class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6A63] mb-2">
+                    Verfügbare Farben
+                  </div>
+                  ${hasColors ? `
+                    <div class="flex flex-wrap gap-1.5">
+                      ${availableColors.map(f => `
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs bg-[#F7F6F2] border border-[#E2DFD7] text-[#22211F]">
+                          <span class="w-2.5 h-2.5 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
+                          <span>${f.name} <span class="text-[#6E6A63]">(${f.material})</span></span>
+                        </span>
+                      `).join("")}
+                    </div>
+                  ` : `
+                    <p class="text-xs text-[#8C7765]">Aktuell keine Filamentfarbe auf Lager</p>
+                  `}
+                </div>
+              </div>
+
+              <button onclick="openOrderModal('${p.id}')" ${hasColors ? "" : "disabled"}
+                class="w-full py-3 px-4 rounded-full font-medium text-sm transition ${
+                  hasColors
+                    ? "bg-[#22211F] hover:bg-[#3A3835] text-white"
+                    : "bg-[#EFECE6] text-[#9A948C] cursor-not-allowed"
+                }">
+                ${hasColors ? "Möchte ich haben" : "Aktuell vergriffen"}
+              </button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    // =====================================================================
+    // BESTELL-MODAL ("MÖCHTE ICH HABEN")
+    // =====================================================================
+    window.openOrderModal = function(productId) {
+      activeOrderProduct = products.find(p => p.id === productId);
+      if (!activeOrderProduct) return;
+
+      const availableColors = getAvailableFilamentsForProduct(activeOrderProduct);
+      if (availableColors.length === 0) return;
+
+      if (!availableColors.some(f => f.id === selectedModalFilamentId)) {
+        selectedModalFilamentId = availableColors[0].id;
+      }
+
+      document.getElementById("modalCategory").textContent = activeOrderProduct.category;
+      document.getElementById("modalTitle").textContent = activeOrderProduct.title;
+      document.getElementById("modalDesc").textContent = activeOrderProduct.description || "";
+      document.getElementById("modalWeight").textContent = activeOrderProduct.weightGrams + " g";
+      document.getElementById("modalPrice").textContent = formatPrice(activeOrderProduct.price);
+      document.getElementById("orderQty").value = 1;
+
+      document.getElementById("modalColorOptions").innerHTML = availableColors.map(f => {
+        const isSelected = f.id === selectedModalFilamentId;
+        return `
+          <button type="button" onclick="selectModalFilament('${f.id}')"
+            class="flex items-center gap-2.5 p-2.5 rounded-2xl border text-left text-xs font-medium transition ${
+              isSelected
+                ? "border-[#22211F] bg-[#F7F6F2] text-[#22211F]"
+                : "border-[#E2DFD7] hover:border-[#8C7765] text-[#6E6A63]"
+            }">
+            <span class="w-4 h-4 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
+            <span class="truncate">${f.name} (${f.material})</span>
+          </button>
+        `;
+      }).join("");
+
+      updateOrderTotal();
+      document.getElementById("orderModal").classList.remove("hidden");
+    };
+
+    window.selectModalFilament = function(filId) {
+      selectedModalFilamentId = filId;
+      openOrderModal(activeOrderProduct.id);
+    };
+
+    window.updateOrderTotal = function() {
+      if (!activeOrderProduct) return;
+      const qty = Math.max(1, parseInt(document.getElementById("orderQty").value || "1", 10));
+      document.getElementById("orderTotalDisplay").textContent = formatPrice(activeOrderProduct.price * qty);
+    };
+
+    window.closeOrderModal = function() {
+      document.getElementById("orderModal").classList.add("hidden");
+    };
+
+    window.submitCatalogOrder = async function(e) {
+      e.preventDefault();
+      if (!activeOrderProduct) return;
+
+      const btn = document.getElementById("confirmOrderBtn");
+      btn.disabled = true;
+      btn.textContent = "Wird gesendet …";
+
+      const chosenFil = filaments.find(f => f.id === selectedModalFilamentId);
+      const qty = Math.max(1, parseInt(document.getElementById("orderQty").value || "1", 10));
+      const customerName = document.getElementById("orderCustomerName").value.trim();
+      const customerContact = document.getElementById("orderCustomerContact").value.trim();
+      const comment = document.getElementById("orderComment").value.trim();
+      const refId = "#LP-" + Math.floor(1000 + Math.random() * 9000);
+      const total = activeOrderProduct.price * qty;
+
+      const orderPayload = {
+        refId,
+        type: "catalog",
+        productId: activeOrderProduct.id,
+        productTitle: activeOrderProduct.title,
+        filamentName: chosenFil ? `${chosenFil.name} (${chosenFil.material})` : "Standard",
+        filamentHex: chosenFil ? chosenFil.hex : "#22211F",
+        qty,
+        unitPrice: activeOrderProduct.price,
+        totalPrice: total,
+        weightGrams: activeOrderProduct.weightGrams * qty,
+        customerName,
+        customerContact,
+        comment,
+        status: "Neu eingegangen",
+        createdAt: Date.now()
+      };
+
+      try {
+        if (isCloudConfigured) {
+          await addDoc(collection(db, "orders"), orderPayload);
+        } else {
+          allOrders.unshift({ id: "ord-" + Date.now(), ...orderPayload });
+          syncDemoStorage();
+        }
+
+        rememberOrderRef(refId);
+        closeOrderModal();
+        e.target.reset();
+
+        const summaryText = [
+          `Hallo Dorian, neue Anfrage über ${STUDIO_CONFIG.shopName} (${refId}):`,
+          `• Modell: ${orderPayload.productTitle}`,
+          `• Farbe: ${orderPayload.filamentName}`,
+          `• Menge: ${qty}x (ca. ${orderPayload.weightGrams} g)`,
+          `• Gesamtpreis: ${formatPrice(total)}`,
+          `• Name: ${customerName} (${customerContact})`,
+          comment ? `• Kommentar: ${comment}` : null
+        ].filter(Boolean).join("
+");
+
+        openConfirmationModal(refId, summaryText, `Anfrage ${refId} – ${orderPayload.productTitle}`);
+      } catch (err) {
+        showToast("Fehler beim Senden: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Verbindlich anfragen";
+      }
+    };
+
+    // =====================================================================
+    // WUNSCHMODELL PER LINK (MAKERWORLD / THINGIVERSE)
+    // =====================================================================
+    function renderCustomInStockChips() {
+      const box = document.getElementById("customInStockChips");
+      const inStockFils = filaments.filter(f => f.inStock);
+      if (inStockFils.length === 0) {
+        box.innerHTML = "";
+        return;
+      }
+      box.innerHTML = inStockFils.map(f => `
+        <button type="button" onclick="pickCustomColor('${f.name} (${f.material})')"
+          class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] bg-[#F7F6F2] hover:bg-[#EFECE6] border border-[#E2DFD7] text-[#22211F] transition">
+          <span class="w-2 h-2 rounded-full border border-black/15" style="background:${f.hex}"></span>
+          <span>${f.name} (${f.material})</span>
+        </button>
+      `).join("");
+    }
+
+    window.pickCustomColor = function(label) {
+      document.getElementById("customColorPref").value = label;
+    };
+
+    window.detectPlatformBadge = function() {
+      const url = document.getElementById("customModelUrl").value.toLowerCase();
+      const badge = document.getElementById("platformBadge");
+      if (url.includes("makerworld.com")) {
+        badge.textContent = "MakerWorld";
+        badge.classList.remove("hidden");
+      } else if (url.includes("thingiverse.com")) {
+        badge.textContent = "Thingiverse";
+        badge.classList.remove("hidden");
+      } else if (url.includes("printables.com")) {
+        badge.textContent = "Printables";
+        badge.classList.remove("hidden");
+      } else {
+        badge.classList.add("hidden");
+      }
+    };
+
+    window.submitCustomLinkRequest = async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById("customSubmitBtn");
+      btn.disabled = true;
+      btn.textContent = "Wird übermittelt …";
+
+      const modelUrl = document.getElementById("customModelUrl").value.trim();
+      const filamentName = document.getElementById("customColorPref").value.trim() || "Nach Absprache";
+      const qty = Math.max(1, parseInt(document.getElementById("customQty").value || "1", 10));
+      const customerName = document.getElementById("customCustomerName").value.trim();
+      const customerContact = document.getElementById("customCustomerContact").value.trim();
+      const comment = document.getElementById("customNotes").value.trim();
+      const refId = "#LP-" + Math.floor(1000 + Math.random() * 9000);
+
+      const orderPayload = {
+        refId,
+        type: "link",
+        productTitle: "Wunschmodell per Link",
+        modelUrl,
+        filamentName,
+        qty,
+        customerName,
+        customerContact,
+        comment,
+        status: "Neu eingegangen",
+        quotedPrice: null,
+        quotedWeight: null,
+        adminNote: "",
+        createdAt: Date.now()
+      };
+
+      try {
+        if (isCloudConfigured) {
+          await addDoc(collection(db, "orders"), orderPayload);
+        } else {
+          allOrders.unshift({ id: "ord-" + Date.now(), ...orderPayload });
+          syncDemoStorage();
+        }
+
+        rememberOrderRef(refId);
+        e.target.reset();
+        detectPlatformBadge();
+
+        const summaryText = [
+          `Hallo Dorian, neue Link-Anfrage über ${STUDIO_CONFIG.shopName} (${refId}):`,
+          `• Modell-Link: ${modelUrl}`,
+          `• Wunschfarbe / Material: ${filamentName}`,
+          `• Stückzahl: ${qty}x`,
+          `• Name: ${customerName} (${customerContact})`,
+          comment ? `• Kommentar: ${comment}` : null
+        ].filter(Boolean).join("
+");
+
+        openConfirmationModal(refId, summaryText, `Link-Anfrage ${refId} – Wunschmodell`);
+      } catch (err) {
+        showToast("Fehler beim Senden: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Unverbindliches Angebot anfragen";
+      }
+    };
+
+    // =====================================================================
+    // BESTÄTIGUNGS-MODAL (WHATSAPP & E-MAIL)
+    // =====================================================================
+    function openConfirmationModal(refId, message, subject) {
+      document.getElementById("confRefId").textContent = refId;
+      document.getElementById("confPreviewText").textContent = message;
+      const encText = encodeURIComponent(message);
+      const encSubj = encodeURIComponent(subject);
+
+      document.getElementById("confWhatsappBtn").href =
+        `https://wa.me/${STUDIO_CONFIG.whatsappNumber}?text=${encText}`;
+      document.getElementById("confEmailBtn").href =
+        `mailto:${STUDIO_CONFIG.contactEmail}?subject=${encSubj}&body=${encText}`;
+
+      document.getElementById("confirmationModal").classList.remove("hidden");
+    }
+
+    window.closeConfirmationModal = function() {
+      document.getElementById("confirmationModal").classList.add("hidden");
+    };
+
+    // =====================================================================
+    // KUNDEN-ANFRAGESTATUS
+    // =====================================================================
+    function rememberOrderRef(refId) {
+      if (!localSavedRefs.includes(refId)) {
+        localSavedRefs.unshift(refId);
+        localStorage.setItem("ld_printlab_refs", JSON.stringify(localSavedRefs));
+      }
+      updateBadges();
+    }
+
+    function updateBadges() {
+      const badge = document.getElementById("myOrdersBadge");
+      if (localSavedRefs.length > 0) {
+        badge.textContent = localSavedRefs.length;
+        badge.classList.remove("hidden");
+      }
+      const openCount = allOrders.filter(o => o.status === "Neu eingegangen").length;
+      document.getElementById("openOrdersCounter").textContent = openCount;
+    }
+
+    window.lookupOrderByCode = function(e) {
+      e.preventDefault();
+      let code = document.getElementById("lookupRefInput").value.trim().toUpperCase();
+      if (!code) return;
+      if (!code.startsWith("#")) code = "#" + code;
+      const found = allOrders.find(o => o.refId === code);
+      if (found) {
+        rememberOrderRef(code);
+        renderMyOrders();
+        showToast(`Anfrage ${code} gefunden.`);
+      } else {
+        showToast(`Keine Anfrage unter ${code} gefunden.`);
+      }
+    };
+
+    function renderMyOrders() {
+      const box = document.getElementById("myOrdersList");
+      const matched = allOrders.filter(o => localSavedRefs.includes(o.refId));
+
+      if (matched.length === 0) {
+        box.innerHTML = `<p class="text-sm text-[#6E6A63]">Noch keine gespeicherten Anfragen auf diesem Gerät. Gib oben deine Bestellnummer ein, um den Status abzurufen.</p>`;
+        return;
+      }
+
+      box.innerHTML = matched.map(o => {
+        const dateStr = o.createdAt ? new Date(o.createdAt).toLocaleDateString("de-DE") : "";
+        return `
+          <div class="p-4 sm:p-5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60 space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#22211F] text-white">${o.refId}</span>
+                <span class="text-xs text-[#6E6A63]">${dateStr}</span>
+              </div>
+              <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white border border-[#E2DFD7] text-[#22211F]">
+                ${o.status}
+              </span>
+            </div>
+
+            <div class="text-sm font-semibold text-[#22211F]">
+              ${o.type === "link" ? `<a href="${o.modelUrl}" target="_blank" class="underline break-all">${o.modelUrl}</a>` : `${o.qty}x ${o.productTitle}`}
+            </div>
+
+            <div class="text-xs text-[#6E6A63]">
+              Farbe: <strong class="text-[#22211F]">${o.filamentName}</strong>
+              ${o.totalPrice ? ` • Gesamt: <strong class="text-[#22211F]">${formatPrice(o.totalPrice)}</strong>` : ""}
+            </div>
+
+            ${o.quotedPrice ? `
+              <div class="p-3 rounded-xl bg-white border border-[#8C7765]/40 text-xs space-y-1">
+                <div class="font-semibold text-[#22211F]">Angebot vom Studio: ${formatPrice(o.quotedPrice)} ${o.quotedWeight ? `(ca. ${o.quotedWeight} g)` : ""}</div>
+                ${o.adminNote ? `<div class="text-[#6E6A63]">${o.adminNote}</div>` : ""}
+              </div>
+            ` : o.adminNote ? `
+              <div class="p-3 rounded-xl bg-white border border-[#E2DFD7] text-xs text-[#6E6A63]">
+                Hinweis: ${o.adminNote}
+              </div>
+            ` : ""}
+          </div>
+        `;
+      }).join("");
+    }
+
+    // =====================================================================
+    // ADMIN-AUTHENTIFIZIERUNG & VERWALTUNG
+    // =====================================================================
+    window.handleAdminLogin = async function(e) {
+      e.preventDefault();
+      const email = document.getElementById("adminEmailInput").value.trim();
+      const pass = document.getElementById("adminPasswordInput").value;
+      const btn = document.getElementById("adminLoginBtn");
+
+      if (!isCloudConfigured) {
+        isAdminLoggedIn = true;
+        document.getElementById("adminLoginBox").classList.add("hidden");
+        document.getElementById("adminDashboard").classList.remove("hidden");
+        renderAdminAll();
+        showToast("Im lokalen Vorschau-Modus angemeldet.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Anmeldung …";
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        showToast("Willkommen im L&D PrintLab Studio!");
+      } catch (err) {
+        showToast("Login fehlgeschlagen. Bitte E-Mail & Passwort prüfen.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Anmelden";
+      }
+    };
+
+    window.handleAdminLogout = async function() {
+      if (isCloudConfigured && auth) {
+        await signOut(auth);
+      } else {
+        isAdminLoggedIn = false;
+        document.getElementById("adminLoginBox").classList.remove("hidden");
+        document.getElementById("adminDashboard").classList.add("hidden");
+      }
+      showToast("Abgemeldet.");
+    };
+
+    window.switchAdminSubTab = function(sub) {
+      ["orders", "products", "filaments", "categories"].forEach(id => {
+        document.getElementById("admin-view-" + id).classList.add("hidden");
+        const btn = document.getElementById("admin-tab-" + id);
+        btn.classList.remove("bg-[#22211F]", "text-white");
+        btn.classList.add("text-[#6E6A63]");
+      });
+      document.getElementById("admin-view-" + sub).classList.remove("hidden");
+      const activeBtn = document.getElementById("admin-tab-" + sub);
+      activeBtn.classList.add("bg-[#22211F]", "text-white");
+      activeBtn.classList.remove("text-[#6E6A63]");
+    };
+
+    function renderAdminAll() {
+      renderAdminOrders();
+      renderAdminProductsFormHelpers();
+      renderAdminProductsList();
+      renderAdminFilamentsList();
+      renderAdminCategoriesList();
+    }
+
+    // --- Admin: Bestellungen & Link-Anfragen ---
+    function renderAdminOrders() {
+      const box = document.getElementById("adminOrdersList");
+      if (allOrders.length === 0) {
+        box.innerHTML = `<div class="bg-white rounded-3xl p-8 border border-[#E2DFD7] text-center text-sm text-[#6E6A63]">Noch keine Bestellungen oder Link-Anfragen eingegangen.</div>`;
+        return;
+      }
+
+      box.innerHTML = allOrders.map(o => {
+        const dateStr = o.createdAt ? new Date(o.createdAt).toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" }) : "";
+        const isLink = o.type === "link";
+        return `
+          <div class="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2DFD7] space-y-4">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#22211F] text-white">${o.refId}</span>
+                  <span class="text-xs font-semibold text-[#8C7765]">${isLink ? "MakerWorld / Thingiverse Link" : "Katalog-Bestellung"}</span>
+                  <span class="text-xs text-[#6E6A63]">• ${dateStr}</span>
+                </div>
+                <h4 class="font-display font-bold text-base text-[#22211F] mt-1.5">
+                  ${isLink ? `<a href="${o.modelUrl}" target="_blank" class="underline break-all text-[#22211F]">${o.modelUrl} ↗</a>` : `${o.qty}x ${o.productTitle}`}
+                </h4>
+                <p class="text-xs text-[#6E6A63] mt-1">
+                  Kunde: <strong class="text-[#22211F]">${o.customerName}</strong> (${o.customerContact}) • Farbe: <strong class="text-[#22211F]">${o.filamentName}</strong>
+                  ${!isLink ? ` • Summe: <strong class="text-[#22211F]">${formatPrice(o.totalPrice)}</strong>` : ""}
+                </p>
+                ${o.comment ? `<p class="text-xs text-[#22211F] bg-[#F7F6F2] px-3 py-2 rounded-xl mt-2 border border-[#E2DFD7]">Kommentar: ${o.comment}</p>` : ""}
+              </div>
+
+              <button onclick="deleteOrder('${o.id}')" class="text-xs text-[#6E6A63] hover:text-red-600 underline">Löschen</button>
+            </div>
+
+            <!-- Bearbeitung: Status, Angebotspreis, Notiz -->
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5 pt-2 border-t border-[#F0EEE9]">
+              <select id="status-${o.id}" class="px-3 py-2 rounded-xl border border-[#E2DFD7] bg-[#F7F6F2] text-xs font-medium">
+                ${["Neu eingegangen", "Angebot liegt vor", "In Druck", "Abholbereit / Fertig", "Nicht umsetzbar"].map(st =>
+                  `<option value="${st}" ${o.status === st ? "selected" : ""}>${st}</option>`
+                ).join("")}
+              </select>
+              <input type="number" step="0.5" id="qprice-${o.id}" value="${o.quotedPrice || ""}" placeholder="Angebotspreis (€)" class="px-3 py-2 rounded-xl border border-[#E2DFD7] bg-[#F7F6F2] text-xs" />
+              <input type="number" id="qweight-${o.id}" value="${o.quotedWeight || ""}" placeholder="Gewicht (g)" class="px-3 py-2 rounded-xl border border-[#E2DFD7] bg-[#F7F6F2] text-xs" />
+              <input type="text" id="qnote-${o.id}" value="${(o.adminNote || "").replace(/"/g, "&quot;")}" placeholder="Notiz / Rückmeldung" class="px-3 py-2 rounded-xl border border-[#E2DFD7] bg-[#F7F6F2] text-xs" />
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="saveOrderUpdate('${o.id}')" class="px-4 py-2 rounded-full bg-[#22211F] text-white text-xs font-medium hover:bg-[#3A3835] transition">
+                Status & Angebot speichern
+              </button>
+              <button onclick="copyAdminReply('${o.id}')" class="px-4 py-2 rounded-full bg-[#EFECE6] text-[#22211F] text-xs font-medium hover:bg-[#E2DFD7] transition">
+                Antworttext kopieren
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    window.saveOrderUpdate = async function(orderId) {
+      const status = document.getElementById("status-" + orderId).value;
+      const qPriceRaw = document.getElementById("qprice-" + orderId).value;
+      const qWeightRaw = document.getElementById("qweight-" + orderId).value;
+      const adminNote = document.getElementById("qnote-" + orderId).value.trim();
+
+      const updates = {
+        status,
+        quotedPrice: qPriceRaw ? parseFloat(qPriceRaw) : null,
+        quotedWeight: qWeightRaw ? parseInt(qWeightRaw, 10) : null,
+        adminNote
+      };
+
+      if (isCloudConfigured) {
+        await updateDoc(doc(db, "orders", orderId), updates);
+      } else {
+        const idx = allOrders.findIndex(o => o.id === orderId);
+        if (idx > -1) Object.assign(allOrders[idx], updates);
+        syncDemoStorage();
+      }
+      showToast("Status & Angebot gespeichert.");
+    };
+
+    window.copyAdminReply = function(orderId) {
+      const o = allOrders.find(x => x.id === orderId);
+      if (!o) return;
+      const status = document.getElementById("status-" + orderId).value;
+      const price = document.getElementById("qprice-" + orderId).value;
+      const weight = document.getElementById("qweight-" + orderId).value;
+      const note = document.getElementById("qnote-" + orderId).value.trim();
+
+      const lines = [
+        `Hallo ${o.customerName}, hier ist ein Update vom ${STUDIO_CONFIG.shopName} zu deiner Anfrage (${o.refId}):`,
+        `Status: ${status}`,
+        price ? `Angebotspreis: ${formatPrice(price)}` : null,
+        weight ? `Geschätztes Gewicht: ca. ${weight} g` : null,
+        note ? `Hinweis: ${note}` : null
+      ].filter(Boolean).join("
+");
+
+      navigator.clipboard.writeText(lines);
+      showToast("Antworttext kopiert!");
+    };
+
+    window.deleteOrder = async function(orderId) {
+      if (!confirm("Anfrage wirklich löschen?")) return;
+      if (isCloudConfigured) {
+        await deleteDoc(doc(db, "orders", orderId));
+      } else {
+        allOrders = allOrders.filter(o => o.id !== orderId);
+        syncDemoStorage();
+      }
+      showToast("Anfrage gelöscht.");
+    };
+
+    // --- Admin: 3D-Modelle ---
+    function renderAdminProductsFormHelpers() {
+      const catSelect = document.getElementById("prodCategory");
+      const currentCat = catSelect.value;
+      catSelect.innerHTML = categories.map(c => `<option value="${c.name}">${c.name}</option>`).join("");
+      if ([...catSelect.options].some(o => o.value === currentCat)) catSelect.value = currentCat;
+
+      const filBox = document.getElementById("productFilamentCheckboxes");
+      const checkedIds = [...document.querySelectorAll("input[name='prodFilCheck']:checked")].map(el => el.value);
+
+      if (filaments.length === 0) {
+        filBox.innerHTML = `<p class="text-xs text-[#6E6A63] col-span-2">Lege zuerst unter „Filament-Rollen“ eure Farben an.</p>`;
+        return;
+      }
+
+      filBox.innerHTML = filaments.map(f => `
+        <label class="flex items-center gap-2 p-2 rounded-xl bg-white border border-[#E2DFD7] text-xs cursor-pointer">
+          <input type="checkbox" name="prodFilCheck" value="${f.id}" ${checkedIds.includes(f.id) ? "checked" : ""} class="rounded accent-[#22211F]" />
+          <span class="w-3 h-3 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
+          <span class="truncate ${f.inStock ? "text-[#22211F]" : "text-[#9A948C] line-through"}">${f.name} (${f.material})</span>
+        </label>
+      `).join("");
+    }
+
+    window.selectAllFilamentsForProduct = function() {
+      document.querySelectorAll("input[name='prodFilCheck']").forEach(cb => cb.checked = true);
+    };
+
+    window.handleProductPhotoSelect = function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const maxDim = 720;
+          const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+          uploadedCompressedImage = canvas.toDataURL("image/jpeg", 0.78);
+
+          const preview = document.getElementById("productImagePreview");
+          preview.src = uploadedCompressedImage;
+          preview.classList.remove("hidden");
+          document.getElementById("productImagePlaceholder").classList.add("hidden");
+          showToast("Foto optimiert & bereit!");
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.saveProduct = async function(e) {
+      e.preventDefault();
+      const editId = document.getElementById("editProductId").value;
+      const title = document.getElementById("prodTitle").value.trim();
+      const category = document.getElementById("prodCategory").value;
+      const materialNote = document.getElementById("prodMaterialNote").value.trim();
+      const weightGrams = parseInt(document.getElementById("prodWeight").value, 10);
+      const price = parseFloat(document.getElementById("prodPrice").value);
+      const description = document.getElementById("prodDescription").value.trim();
+      const filamentIds = [...document.querySelectorAll("input[name='prodFilCheck']:checked")].map(cb => cb.value);
+
+      if (filamentIds.length === 0) {
+        showToast("Bitte mindestens eine Filamentfarbe anhaken.");
+        return;
+      }
+
+      const btn = document.getElementById("saveProductBtn");
+      btn.disabled = true;
+      btn.textContent = "Wird gespeichert …";
+
+      try {
+        const existing = editId ? products.find(p => p.id === editId) : null;
+        const payload = {
+          title,
+          category,
+          materialNote,
+          weightGrams,
+          price,
+          description,
+          filamentIds,
+          imageData: uploadedCompressedImage || (existing ? existing.imageData : createPlaceholderGraphic(title)),
+          createdAt: existing ? existing.createdAt : Date.now()
+        };
+
+        if (isCloudConfigured) {
+          if (editId) {
+            await setDoc(doc(db, "products", editId), payload);
+          } else {
+            await addDoc(collection(db, "products"), payload);
+          }
+        } else {
+          if (editId) {
+            const idx = products.findIndex(p => p.id === editId);
+            if (idx > -1) products[idx] = { id: editId, ...payload };
+          } else {
+            products.unshift({ id: "prod-" + Date.now(), ...payload });
+          }
+          syncDemoStorage();
+        }
+
+        resetProductForm();
+        showToast(editId ? "Modell aktualisiert!" : "Modell im Katalog veröffentlicht!");
+      } catch (err) {
+        showToast("Fehler: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Modell veröffentlichen";
+      }
+    };
+
+    window.editProduct = function(prodId) {
+      const p = products.find(x => x.id === prodId);
+      if (!p) return;
+
+      document.getElementById("editProductId").value = p.id;
+      document.getElementById("productFormTitle").textContent = "Modell bearbeiten";
+      document.getElementById("saveProductBtn").textContent = "Änderungen speichern";
+      document.getElementById("cancelEditBtn").classList.remove("hidden");
+
+      document.getElementById("prodTitle").value = p.title;
+      document.getElementById("prodCategory").value = p.category;
+      document.getElementById("prodMaterialNote").value = p.materialNote || "";
+      document.getElementById("prodWeight").value = p.weightGrams;
+      document.getElementById("prodPrice").value = p.price;
+      document.getElementById("prodDescription").value = p.description || "";
+
+      uploadedCompressedImage = p.imageData || "";
+      if (uploadedCompressedImage) {
+        const preview = document.getElementById("productImagePreview");
+        preview.src = uploadedCompressedImage;
+        preview.classList.remove("hidden");
+        document.getElementById("productImagePlaceholder").classList.add("hidden");
+      }
+
+      document.querySelectorAll("input[name='prodFilCheck']").forEach(cb => {
+        cb.checked = (p.filamentIds || []).includes(cb.value);
+      });
+
+      document.getElementById("productAdminForm").scrollIntoView({ behavior: "smooth" });
+    };
+
+    window.resetProductForm = function() {
+      document.getElementById("productAdminForm").reset();
+      document.getElementById("editProductId").value = "";
+      document.getElementById("productFormTitle").textContent = "Neues 3D-Modell einstellen";
+      document.getElementById("saveProductBtn").textContent = "Modell veröffentlichen";
+      document.getElementById("cancelEditBtn").classList.add("hidden");
+      uploadedCompressedImage = "";
+      document.getElementById("productImagePreview").classList.add("hidden");
+      document.getElementById("productImagePlaceholder").classList.remove("hidden");
+    };
+
+    window.deleteProduct = async function(prodId) {
+      if (!confirm("Dieses 3D-Modell wirklich aus dem Katalog entfernen?")) return;
+      if (isCloudConfigured) {
+        await deleteDoc(doc(db, "products", prodId));
+      } else {
+        products = products.filter(p => p.id !== prodId);
+        syncDemoStorage();
+      }
+      showToast("Modell entfernt.");
+    };
+
+    function renderAdminProductsList() {
+      document.getElementById("adminProdCount").textContent = products.length;
+      document.getElementById("seedBtn").classList.toggle("hidden", products.length > 0);
+      const box = document.getElementById("adminProductsList");
+
+      if (products.length === 0) {
+        box.innerHTML = `<p class="py-6 text-sm text-[#6E6A63]">Noch keine Modelle vorhanden. Lege links dein erstes Modell an oder lade zum Testen die Beispieldaten.</p>`;
+        return;
+      }
+
+      box.innerHTML = products.map(p => {
+        const availCount = getAvailableFilamentsForProduct(p).length;
+        return `
+          <div class="py-3.5 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+              <img src="${p.imageData || createPlaceholderGraphic(p.title)}" class="w-12 h-12 rounded-xl object-cover bg-[#EFECE6] shrink-0" />
+              <div class="min-w-0">
+                <div class="text-sm font-semibold text-[#22211F] truncate">${p.title}</div>
+                <div class="text-xs text-[#6E6A63]">${p.category} • ${p.weightGrams} g • ${formatPrice(p.price)} • ${availCount} vorrätige Farben</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button onclick="editProduct('${p.id}')" class="px-3 py-1.5 rounded-full bg-[#F7F6F2] hover:bg-[#EFECE6] text-xs font-medium text-[#22211F]">Bearbeiten</button>
+              <button onclick="deleteProduct('${p.id}')" class="px-2.5 py-1.5 rounded-full text-xs text-red-600 hover:bg-red-50">Löschen</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // --- Admin: Zentrale Filament-Rollen ---
+    window.addFilament = async function(e) {
+      e.preventDefault();
+      const name = document.getElementById("filName").value.trim();
+      const material = document.getElementById("filMaterial").value;
+      const hex = document.getElementById("filHex").value;
+
+      const payload = { name, material, hex, inStock: true, createdAt: Date.now() };
+      if (isCloudConfigured) {
+        await addDoc(collection(db, "filaments"), payload);
+      } else {
+        filaments.push({ id: "fil-" + Date.now(), ...payload });
+        syncDemoStorage();
+      }
+      document.getElementById("filName").value = "";
+      showToast(`${name} (${material}) angelegt.`);
+    };
+
+    window.toggleFilamentStock = async function(filId, nextState) {
+      if (isCloudConfigured) {
+        await updateDoc(doc(db, "filaments", filId), { inStock: nextState });
+      } else {
+        const f = filaments.find(x => x.id === filId);
+        if (f) f.inStock = nextState;
+        syncDemoStorage();
+      }
+      showToast(nextState ? "Als vorrätig aktiviert." : "Ausgeblendet (nicht vorrätig).");
+    };
+
+    window.deleteFilament = async function(filId) {
+      if (!confirm("Filamentrolle wirklich löschen?")) return;
+      if (isCloudConfigured) {
+        await deleteDoc(doc(db, "filaments", filId));
+      } else {
+        filaments = filaments.filter(f => f.id !== filId);
+        syncDemoStorage();
+      }
+      showToast("Filament entfernt.");
+    };
+
+    function renderAdminFilamentsList() {
+      document.getElementById("adminFilCount").textContent = filaments.length;
+      const box = document.getElementById("adminFilamentsList");
+      if (filaments.length === 0) {
+        box.innerHTML = `<p class="py-6 text-sm text-[#6E6A63]">Noch keine Filamente angelegt.</p>`;
+        return;
+      }
+
+      box.innerHTML = filaments.map(f => `
+        <div class="py-3.5 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="w-6 h-6 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
+            <div>
+              <div class="text-sm font-semibold text-[#22211F]">${f.name} <span class="text-xs font-normal text-[#6E6A63]">(${f.material})</span></div>
+              <div class="text-[11px] ${f.inStock ? "text-emerald-700" : "text-[#8C7765]"}">
+                ${f.inStock ? "● Vorrätig (im Shop sichtbar)" : "○ Nicht vorrätig (für Kunden unsichtbar)"}
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="toggleFilamentStock('${f.id}', ${!f.inStock})"
+              class="px-3.5 py-1.5 rounded-full text-xs font-medium border transition ${
+                f.inStock
+                  ? "bg-[#22211F] text-white border-[#22211F]"
+                  : "bg-[#F7F6F2] text-[#6E6A63] border-[#E2DFD7]"
+              }">
+              ${f.inStock ? "Vorrätig" : "Leer"}
+            </button>
+            <button onclick="deleteFilament('${f.id}')" class="text-xs text-[#6E6A63] hover:text-red-600 px-2">✕</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // --- Admin: Kategorien ---
+    window.addCategory = async function(e) {
+      e.preventDefault();
+      const name = document.getElementById("newCategoryName").value.trim();
+      if (!name) return;
+      if (isCloudConfigured) {
+        await addDoc(collection(db, "categories"), { name, order: categories.length });
+      } else {
+        categories.push({ id: "cat-" + Date.now(), name, order: categories.length });
+        syncDemoStorage();
+      }
+      document.getElementById("newCategoryName").value = "";
+      showToast("Kategorie hinzugefügt.");
+    };
+
+    window.deleteCategory = async function(catId) {
+      if (catId.startsWith("def-")) {
+        showToast("Lege zuerst eine eigene Kategorie an.");
+        return;
+      }
+      if (isCloudConfigured) {
+        await deleteDoc(doc(db, "categories", catId));
+      } else {
+        categories = categories.filter(c => c.id !== catId);
+        syncDemoStorage();
+      }
+      showToast("Kategorie entfernt.");
+    };
+
+    function renderAdminCategoriesList() {
+      const box = document.getElementById("adminCategoriesList");
+      box.innerHTML = categories.map(c => `
+        <div class="py-3 flex items-center justify-between">
+          <span class="text-sm font-medium text-[#22211F]">${c.name}</span>
+          <button onclick="deleteCategory('${c.id}')" class="text-xs text-[#6E6A63] hover:text-red-600">Entfernen</button>
+        </div>
+      `).join("");
+    }
+
+    // --- Beispieldaten für schnellen Start ---
+    window.seedStarterData = async function() {
+      const sampleFilaments = [
+        { name: "Mattschwarz", material: "PLA", hex: "#22211F", inStock: true, createdAt: Date.now() },
+        { name: "Reinweiß", material: "PETG", hex: "#F7F6F2", inStock: true, createdAt: Date.now() + 1 },
+        { name: "Warmgrau", material: "PLA Matte", hex: "#9A948C", inStock: true, createdAt: Date.now() + 2 },
+        { name: "Bronze", material: "PLA Silk", hex: "#8C7765", inStock: true, createdAt: Date.now() + 3 }
+      ];
+
+      let createdFilIds = [];
+      if (isCloudConfigured) {
+        for (const f of sampleFilaments) {
+          const ref = await addDoc(collection(db, "filaments"), f);
+          createdFilIds.push(ref.id);
+        }
+        for (let i = 0; i < DEFAULT_CATEGORIES.length; i++) {
+          await addDoc(collection(db, "categories"), { name: DEFAULT_CATEGORIES[i], order: i });
+        }
+      } else {
+        filaments = sampleFilaments.map((f, idx) => ({ id: "fil-s-" + idx, ...f }));
+        createdFilIds = filaments.map(f => f.id);
+      }
+
+      const sampleProducts = [
+        {
+          title: "Minimalistischer Kopfhörer-Ständer",
+          category: "Alltag & Ordnung",
+          materialNote: "PLA Matte",
+          weightGrams: 145,
+          price: 16.00,
+          description: "Standfester Tischhalter mit abgerundeter Auflagefläche für Over-Ear-Kopfhörer.",
+          filamentIds: createdFilIds.slice(0, 3),
+          imageData: createPlaceholderGraphic("Kopfhörer-Ständer"),
+          createdAt: Date.now()
+        },
+        {
+          title: "Untertisch-Kabelhalterung",
+          category: "Werkstatt",
+          materialNote: "PETG (formstabil)",
+          weightGrams: 95,
+          price: 11.50,
+          description: "Saubere Kabelführung für Schreibtisch oder Werkbank – zum Schrauben oder Kleben.",
+          filamentIds: createdFilIds.slice(0, 2),
+          imageData: createPlaceholderGraphic("Untertisch-Kabelhalter"),
+          createdAt: Date.now() + 1
+        }
+      ];
+
+      if (isCloudConfigured) {
+        for (const p of sampleProducts) {
+          await addDoc(collection(db, "products"), p);
+        }
+      } else {
+        products = sampleProducts.map((p, idx) => ({ id: "prod-s-" + idx, ...p }));
+        syncDemoStorage();
+      }
+      showToast("Beispieldaten angelegt!");
+    };
+  </script>
+</body>
+</html>
