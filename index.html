@@ -39,17 +39,18 @@
       font-family: 'Montserrat', 'Plus Jakarta Sans', sans-serif;
     }
     .site-logo {
-      height: 124px;
-      width: auto;
-      max-width: min(90vw, 380px);
+      display: block;
+      height: auto;
+      width: min(88vw, 340px);
+      max-height: 68px;
       object-fit: contain;
       border-radius: 0;
       filter: none;
     }
     @media (min-width: 640px) {
       .site-logo {
-        height: 150px;
-        max-width: 460px;
+        width: min(88vw, 420px);
+        max-height: 84px;
       }
     }
     .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -85,7 +86,7 @@
        2. HEADER & LOGO (TRANSPARENTES LOGO.PNG)
        ===================================================================== -->
   <header class="sticky top-0 z-30 bg-[#F7F6F2]/95 backdrop-blur-md border-b border-[#E2DFD7]">
-    <div class="max-w-6xl mx-auto px-3 sm:px-6 pt-3 pb-3">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 pt-1.5 pb-2.5">
       <div class="relative flex flex-col items-center justify-center">
         <!-- Zentriertes L&D PrintLab Studio Marken-Logo -->
         <button onclick="switchTab('catalog')" class="flex flex-col items-center text-center group focus:outline-none">
@@ -93,16 +94,16 @@
         </button>
       </div>
 
-      <!-- Navigations-Tabs (passen auf Mobilgeräten nebeneinander ohne Scrollen) -->
-      <nav class="flex items-center justify-center gap-1 sm:gap-2 mt-3 w-full">
-        <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm leading-tight font-medium bg-[#22211F] text-white transition whitespace-nowrap">
+      <!-- Navigations-Tabs (passen auf Mobilgeräten nebeneinander ohne Scrollen in voller Buttongröße) -->
+      <nav class="flex items-center justify-center gap-1.5 sm:gap-2 mt-1.5 w-full">
+        <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-[#22211F] text-white transition whitespace-nowrap">
           Katalog
         </button>
-        <button onclick="switchTab('custom-link')" id="nav-custom-link" class="nav-btn px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm leading-tight font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
-          Wunschmodell per Link
+        <button onclick="switchTab('custom-link')" id="nav-custom-link" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
+          Wunschmodell
         </button>
-        <button onclick="switchTab('my-orders')" id="nav-my-orders" class="nav-btn inline-flex items-center justify-center px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm leading-tight font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
-          <span>Anfragestatus</span><span id="myOrdersBadge" class="hidden inline-flex items-center justify-center ml-1 sm:ml-1.5 px-1.5 py-0.5 text-[10px] sm:text-[11px] leading-none rounded-full bg-[#57151E] text-white">0</span>
+        <button onclick="switchTab('my-orders')" id="nav-my-orders" class="nav-btn inline-flex items-center justify-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
+          <span>Anfragestatus</span><span id="myOrdersBadge" class="hidden inline-flex items-center justify-center ml-1.5 px-1.5 py-0.5 text-[10px] sm:text-[11px] leading-none rounded-full bg-[#57151E] text-white">0</span>
         </button>
       </nav>
     </div>
@@ -350,7 +351,7 @@
                   <select id="prodCategory" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]"></select>
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-[#22211F] mb-1">Preis (€) *</label>
+                  <label class="block text-xs font-semibold text-[#22211F] mb-1">Basispreis (€) *</label>
                   <input type="number" id="prodPrice" required min="0.5" step="0.5" placeholder="12.50" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
                 </div>
               </div>
@@ -360,14 +361,14 @@
                 <textarea id="prodDescription" rows="2" placeholder="Maße, Einsatzbereich, Lieferumfang …" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]"></textarea>
               </div>
 
-              <!-- Auswahl aus zentraler Filament-Liste -->
+              <!-- Auswahl aus zentraler Filament-Liste inkl. optionalem Modell-Aufpreis -->
               <div>
                 <div class="flex items-center justify-between mb-1.5">
                   <label class="block text-xs font-semibold text-[#22211F]">Mögliche Filamentfarben anhaken *</label>
                   <button type="button" onclick="selectAllFilamentsForProduct()" class="text-[11px] text-[#57151E] underline">Alle wählen</button>
                 </div>
-                <div id="productFilamentCheckboxes" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto p-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50"></div>
-                <p class="text-[11px] text-[#6E6A63] mt-1">Besucher sehen später automatisch nur Farben (inkl. Material), die in deiner Filament-Liste als „Vorrätig“ markiert sind.</p>
+                <div id="productFilamentCheckboxes" class="grid grid-cols-1 gap-2 max-h-56 overflow-y-auto p-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50"></div>
+                <p class="text-[11px] text-[#6E6A63] mt-1">Besucher sehen automatisch nur vorrätige Farben. Rechts kannst du optional einen eigenen Aufpreis (€) für dieses Modell eintragen (leer = Standard-Aufpreis der Rolle).</p>
               </div>
 
               <button type="submit" id="saveProductBtn" class="w-full py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
@@ -428,6 +429,12 @@
                 </div>
               </div>
 
+              <div>
+                <label class="block text-xs font-semibold text-[#22211F] mb-1">Standard-Aufpreis (€) <span class="font-normal text-[#6E6A63]">(optional)</span></label>
+                <input type="number" id="filSurcharge" step="0.5" value="0" placeholder="0.00" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                <p class="text-[11px] text-[#6E6A63] mt-1">0,00 € für Standard-Filamente, z. B. 2,00 € für teurere Spezialfilamente wie PLA Silk.</p>
+              </div>
+
               <button type="submit" class="w-full py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
                 Filament hinzufügen
               </button>
@@ -443,9 +450,9 @@
         <!-- SUB-TAB D: KATEGORIEN -->
         <div id="admin-view-categories" class="hidden max-w-2xl bg-white rounded-3xl p-6 border border-[#E2DFD7] space-y-4">
           <h3 class="font-display text-lg font-bold text-[#22211F]">Kategorien verwalten</h3>
-          <form onsubmit="addCategory(event)" class="flex gap-2">
-            <input type="text" id="newCategoryName" required placeholder="Neue Kategorie (z. B. Auto &amp; Fahrrad)" class="flex-1 px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
-            <button type="submit" class="px-5 py-2.5 rounded-2xl bg-[#22211F] text-white text-xs font-medium hover:bg-[#3A3835] transition">
+          <form onsubmit="addCategory(event)" class="flex items-stretch gap-2 w-full min-w-0">
+            <input type="text" id="newCategoryName" required placeholder="Neue Kategorie (z. B. Auto &amp; Fahrrad)" class="flex-1 min-w-0 w-full px-3.5 sm:px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-xs sm:text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
+            <button type="submit" class="shrink-0 whitespace-nowrap px-4 sm:px-5 py-2.5 rounded-2xl bg-[#22211F] text-white text-xs font-medium hover:bg-[#3A3835] transition">
               Hinzufügen
             </button>
           </form>
@@ -1242,10 +1249,10 @@
       document.getElementById("demoModeBanner").classList.remove("hidden");
       document.getElementById("catalogLoader").classList.add("hidden");
       filaments = JSON.parse(localStorage.getItem("ld_demo_filaments") || "null") || [
-        { id: "fil-1", name: "Mattschwarz", material: "PLA", hex: "#1E1E1E", inStock: true },
-        { id: "fil-2", name: "Reinweiß", material: "PETG", hex: "#F8F8F6", inStock: true },
-        { id: "fil-3", name: "Steingrau", material: "PLA Matte", hex: "#8A8D8F", inStock: true },
-        { id: "fil-4", name: "Salbeigrün", material: "PLA Matte", hex: "#768B78", inStock: false }
+        { id: "fil-1", name: "Mattschwarz", material: "PLA", hex: "#1E1E1E", surcharge: 0, inStock: true },
+        { id: "fil-2", name: "Reinweiß", material: "PETG", hex: "#F8F8F6", surcharge: 0.5, inStock: true },
+        { id: "fil-3", name: "Steingrau", material: "PLA Matte", hex: "#8A8D8F", surcharge: 0, inStock: true },
+        { id: "fil-4", name: "Salbeigrün", material: "PLA Matte", hex: "#768B78", surcharge: 0, inStock: false }
       ];
       categories = JSON.parse(localStorage.getItem("ld_demo_categories") || "null") ||
         DEFAULT_CATEGORIES.map((name, i) => ({ id: "cat-" + i, name, order: i }));
@@ -1319,13 +1326,40 @@
     };
 
     // =====================================================================
-    // KATALOG & FILAMENT-FILTERUNG (NUR VORRÄTIGE FARBEN SICHTBAR)
+    // KATALOG & FILAMENT-FILTERUNG + AUFPREIS-LOGIK
     // =====================================================================
     function getAvailableFilamentsForProduct(product) {
       const assignedIds = product.filamentIds || [];
       return assignedIds
         .map(id => filaments.find(f => f.id === id))
         .filter(f => f && f.inStock === true);
+    }
+
+    function getFilamentSurchargeForProduct(product, filament) {
+      if (!filament) return 0;
+      if (
+        product &&
+        product.filamentSurcharges &&
+        Object.prototype.hasOwnProperty.call(product.filamentSurcharges, filament.id) &&
+        product.filamentSurcharges[filament.id] !== null &&
+        product.filamentSurcharges[filament.id] !== ""
+      ) {
+        return Number(product.filamentSurcharges[filament.id]) || 0;
+      }
+      return Number(filament.surcharge) || 0;
+    }
+
+    function getProductUnitPriceWithFilament(product, filament) {
+      const base = Number(product?.price || 0);
+      const extra = getFilamentSurchargeForProduct(product, filament);
+      return Math.max(0, base + extra);
+    }
+
+    function formatSurchargeTag(surcharge) {
+      const val = Number(surcharge || 0);
+      if (val === 0) return "";
+      const sign = val > 0 ? "+" : "-";
+      return `${sign}${formatPrice(Math.abs(val))}`;
     }
 
     function renderCategoryPills() {
@@ -1372,6 +1406,13 @@
         const hasColors = availableColors.length > 0;
         const imgs = getProductImages(p);
 
+        const surcharges = availableColors.map(f => getFilamentSurchargeForProduct(p, f));
+        const minSurcharge = surcharges.length > 0 ? Math.min(...surcharges) : 0;
+        const maxSurcharge = surcharges.length > 0 ? Math.max(...surcharges) : 0;
+        const displayPriceText = maxSurcharge > minSurcharge
+          ? `ab ${formatPrice(Math.max(0, Number(p.price || 0) + minSurcharge))}`
+          : formatPrice(Math.max(0, Number(p.price || 0) + minSurcharge));
+
         return `
           <article class="bg-white rounded-3xl border border-[#E2DFD7] overflow-hidden flex flex-col shadow-sm hover:shadow-md transition duration-200">
             ${buildImageCarouselHtml(p.id, imgs, p.title, p.category)}
@@ -1380,7 +1421,7 @@
               <div>
                 <div class="flex items-start justify-between gap-3">
                   <h3 class="font-display font-bold text-base sm:text-lg text-[#22211F] leading-snug">${escapeHtml(p.title)}</h3>
-                  <span class="font-display text-lg font-bold text-[#22211F] whitespace-nowrap">${formatPrice(p.price)}</span>
+                  <span class="font-display text-lg font-bold text-[#22211F] whitespace-nowrap">${displayPriceText}</span>
                 </div>
                 ${p.description ? `<p class="text-sm text-[#6E6A63] mt-2.5 leading-relaxed line-clamp-2">${escapeHtml(p.description)}</p>` : ""}
 
@@ -1390,12 +1431,15 @@
                   </div>
                   ${hasColors ? `
                     <div class="flex flex-wrap gap-1.5">
-                      ${availableColors.map(f => `
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs bg-[#F7F6F2] border border-[#E2DFD7] text-[#22211F]">
-                          <span class="w-2.5 h-2.5 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
-                          <span>${escapeHtml(f.name)} <span class="text-[#6E6A63]">(${escapeHtml(f.material)})</span></span>
-                        </span>
-                      `).join("")}
+                      ${availableColors.map(f => {
+                        const extraTag = formatSurchargeTag(getFilamentSurchargeForProduct(p, f));
+                        return `
+                          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs bg-[#F7F6F2] border border-[#E2DFD7] text-[#22211F]">
+                            <span class="w-2.5 h-2.5 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
+                            <span>${escapeHtml(f.name)} <span class="text-[#6E6A63]">(${escapeHtml(f.material)})</span>${extraTag ? ` <span class="font-semibold text-[#57151E]">${escapeHtml(extraTag)}</span>` : ""}</span>
+                          </span>
+                        `;
+                      }).join("")}
                     </div>
                   ` : `
                     <p class="text-xs text-[#8C7765]">Aktuell keine Filamentfarbe auf Lager</p>
@@ -1425,15 +1469,19 @@
     function renderOrderModalColorOptions(availableColors) {
       document.getElementById("modalColorOptions").innerHTML = availableColors.map(f => {
         const isSelected = f.id === selectedModalFilamentId;
+        const extraTag = formatSurchargeTag(getFilamentSurchargeForProduct(activeOrderProduct, f));
         return `
           <button type="button" onclick="selectModalFilament('${f.id}')"
-            class="flex items-center gap-2.5 p-2.5 rounded-2xl border text-left text-xs font-medium transition ${
+            class="flex items-center justify-between gap-2 p-2.5 rounded-2xl border text-left text-xs font-medium transition ${
               isSelected
                 ? "border-[#22211F] bg-[#F7F6F2] text-[#22211F]"
                 : "border-[#E2DFD7] hover:border-[#57151E] text-[#6E6A63]"
             }">
-            <span class="w-4 h-4 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
-            <span class="truncate">${escapeHtml(f.name)} (${escapeHtml(f.material)})</span>
+            <span class="flex items-center gap-2 min-w-0">
+              <span class="w-4 h-4 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
+              <span class="truncate">${escapeHtml(f.name)} (${escapeHtml(f.material)})</span>
+            </span>
+            ${extraTag ? `<span class="shrink-0 px-1.5 py-0.5 rounded-full bg-[#EFECE6] text-[#57151E] text-[11px] font-semibold">${escapeHtml(extraTag)}</span>` : ""}
           </button>
         `;
       }).join("");
@@ -1453,7 +1501,6 @@
       document.getElementById("modalCategory").textContent = activeOrderProduct.category;
       document.getElementById("modalTitle").textContent = activeOrderProduct.title;
       document.getElementById("modalDesc").textContent = activeOrderProduct.description || "";
-      document.getElementById("modalPrice").textContent = formatPrice(activeOrderProduct.price);
       document.getElementById("orderQty").value = 1;
 
       const imgs = getProductImages(activeOrderProduct);
@@ -1469,12 +1516,18 @@
       selectedModalFilamentId = filId;
       if (!activeOrderProduct) return;
       renderOrderModalColorOptions(getAvailableFilamentsForProduct(activeOrderProduct));
+      updateOrderTotal();
     };
 
     window.updateOrderTotal = function() {
       if (!activeOrderProduct) return;
+      const availableColors = getAvailableFilamentsForProduct(activeOrderProduct);
+      const chosenFil = availableColors.find(f => f.id === selectedModalFilamentId) || availableColors[0];
+      const unitPrice = getProductUnitPriceWithFilament(activeOrderProduct, chosenFil);
       const qty = Math.max(1, parseInt(document.getElementById("orderQty").value || "1", 10));
-      document.getElementById("orderTotalDisplay").textContent = formatPrice(activeOrderProduct.price * qty);
+
+      document.getElementById("modalPrice").textContent = formatPrice(unitPrice);
+      document.getElementById("orderTotalDisplay").textContent = formatPrice(unitPrice * qty);
     };
 
     window.closeOrderModal = function() {
@@ -1490,12 +1543,14 @@
       btn.textContent = "Wird gesendet …";
 
       const chosenFil = filaments.find(f => f.id === selectedModalFilamentId);
+      const surcharge = getFilamentSurchargeForProduct(activeOrderProduct, chosenFil);
+      const unitPrice = getProductUnitPriceWithFilament(activeOrderProduct, chosenFil);
       const qty = Math.max(1, parseInt(document.getElementById("orderQty").value || "1", 10));
       const customerName = document.getElementById("orderCustomerName").value.trim();
       const customerContact = document.getElementById("orderCustomerContact").value.trim();
       const comment = document.getElementById("orderComment").value.trim();
       const refId = "#LP-" + Math.floor(1000 + Math.random() * 9000);
-      const total = activeOrderProduct.price * qty;
+      const total = unitPrice * qty;
 
       const orderPayload = {
         refId,
@@ -1505,7 +1560,9 @@
         filamentName: chosenFil ? `${chosenFil.name} (${chosenFil.material})` : "Standard",
         filamentHex: chosenFil ? chosenFil.hex : "#1E1E1E",
         qty,
-        unitPrice: activeOrderProduct.price,
+        basePrice: Number(activeOrderProduct.price || 0),
+        surcharge,
+        unitPrice,
         totalPrice: total,
         customerName,
         customerContact,
@@ -1526,10 +1583,11 @@
         closeOrderModal();
         e.target.reset();
 
+        const surchargeNote = surcharge !== 0 ? ` (${formatSurchargeTag(surcharge)})` : "";
         const summaryText = [
           `Hallo Dorian, neue Anfrage über ${STUDIO_CONFIG.shopName} (${refId}):`,
           `• Modell: ${orderPayload.productTitle}`,
-          `• Farbe & Material: ${orderPayload.filamentName}`,
+          `• Farbe & Material: ${orderPayload.filamentName}${surchargeNote}`,
           `• Menge: ${qty}x`,
           `• Gesamtpreis: ${formatPrice(total)}`,
           `• Name: ${customerName} (${customerContact})`,
@@ -1555,13 +1613,16 @@
         box.innerHTML = "";
         return;
       }
-      box.innerHTML = inStockFils.map(f => `
-        <button type="button" onclick="pickCustomColorById('${f.id}')"
-          class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] bg-[#F7F6F2] hover:bg-[#EFECE6] border border-[#E2DFD7] text-[#22211F] transition">
-          <span class="w-2 h-2 rounded-full border border-black/15" style="background:${f.hex}"></span>
-          <span>${escapeHtml(f.name)} (${escapeHtml(f.material)})</span>
-        </button>
-      `).join("");
+      box.innerHTML = inStockFils.map(f => {
+        const extraTag = formatSurchargeTag(f.surcharge);
+        return `
+          <button type="button" onclick="pickCustomColorById('${f.id}')"
+            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] bg-[#F7F6F2] hover:bg-[#EFECE6] border border-[#E2DFD7] text-[#22211F] transition">
+            <span class="w-2 h-2 rounded-full border border-black/15" style="background:${f.hex}"></span>
+            <span>${escapeHtml(f.name)} (${escapeHtml(f.material)})${extraTag ? ` <span class="font-semibold text-[#57151E]">${escapeHtml(extraTag)}</span>` : ""}</span>
+          </button>
+        `;
+      }).join("");
     }
 
     window.pickCustomColorById = function(filId) {
@@ -1974,7 +2035,7 @@
       showToast("Anfrage gelöscht.");
     };
 
-    // --- Admin: 3D-Modelle (inkl. Multi-Bild-Upload) ---
+    // --- Admin: 3D-Modelle (inkl. Multi-Bild-Upload & Aufpreis-Overrides) ---
     function renderAdminProductsFormHelpers() {
       const catSelect = document.getElementById("prodCategory");
       const currentCat = catSelect.value;
@@ -1983,19 +2044,39 @@
 
       const filBox = document.getElementById("productFilamentCheckboxes");
       const checkedIds = [...document.querySelectorAll("input[name='prodFilCheck']:checked")].map(el => el.value);
+      const currentOverrides = {};
+      document.querySelectorAll("input[data-fil-surcharge]").forEach(inp => {
+        if (inp.value !== "") currentOverrides[inp.dataset.filSurcharge] = inp.value;
+      });
 
       if (filaments.length === 0) {
-        filBox.innerHTML = `<p class="text-xs text-[#6E6A63] col-span-2">Lege zuerst unter „Filament-Rollen“ eure Farben an.</p>`;
+        filBox.innerHTML = `<p class="text-xs text-[#6E6A63]">Lege zuerst unter „Filament-Rollen“ eure Farben an.</p>`;
         return;
       }
 
-      filBox.innerHTML = filaments.map(f => `
-        <label class="flex items-center gap-2 p-2 rounded-xl bg-white border border-[#E2DFD7] text-xs cursor-pointer">
-          <input type="checkbox" name="prodFilCheck" value="${f.id}" ${checkedIds.includes(f.id) ? "checked" : ""} class="rounded accent-[#22211F]" />
-          <span class="w-3 h-3 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
-          <span class="truncate ${f.inStock ? "text-[#22211F]" : "text-[#9A948C] line-through"}">${escapeHtml(f.name)} (${escapeHtml(f.material)})</span>
-        </label>
-      `).join("");
+      filBox.innerHTML = filaments.map(f => {
+        const stdExtra = Number(f.surcharge || 0);
+        const stdLabel = stdExtra !== 0 ? `Std: ${formatSurchargeTag(stdExtra)}` : "Std: 0,00 €";
+        const overrideVal = Object.prototype.hasOwnProperty.call(currentOverrides, f.id) ? currentOverrides[f.id] : "";
+        return `
+          <div class="flex items-center justify-between gap-2 p-2 rounded-xl bg-white border border-[#E2DFD7] text-xs">
+            <label class="flex items-center gap-2 min-w-0 flex-1 cursor-pointer">
+              <input type="checkbox" name="prodFilCheck" value="${f.id}" ${checkedIds.includes(f.id) ? "checked" : ""} class="rounded accent-[#22211F] shrink-0" />
+              <span class="w-3 h-3 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
+              <span class="truncate ${f.inStock ? "text-[#22211F]" : "text-[#9A948C] line-through"}">${escapeHtml(f.name)} (${escapeHtml(f.material)})</span>
+            </label>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <span class="text-[10px] text-[#6E6A63] hidden sm:inline">${stdLabel}</span>
+              <div class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-lg border border-[#E2DFD7] bg-[#F7F6F2]" title="Optionaler Modell-Aufpreis in € (leer = ${stdLabel})">
+                <span class="text-[10px] text-[#6E6A63]">+</span>
+                <input type="number" step="0.5" data-fil-surcharge="${f.id}" value="${escapeHtml(overrideVal)}" placeholder="${stdExtra.toFixed(2)}"
+                  class="w-12 bg-transparent text-[11px] font-medium text-[#22211F] text-right focus:outline-none" />
+                <span class="text-[10px] text-[#6E6A63]">€</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
     }
 
     window.selectAllFilamentsForProduct = function() {
@@ -2135,6 +2216,17 @@
         return;
       }
 
+      const filamentSurcharges = {};
+      filamentIds.forEach(fid => {
+        const inp = document.querySelector(`input[data-fil-surcharge="${fid}"]`);
+        if (inp && inp.value.trim() !== "") {
+          const parsed = parseFloat(inp.value);
+          if (Number.isFinite(parsed)) {
+            filamentSurcharges[fid] = parsed;
+          }
+        }
+      });
+
       const btn = document.getElementById("saveProductBtn");
       btn.disabled = true;
       btn.textContent = "Wird gespeichert …";
@@ -2151,6 +2243,7 @@
           price,
           description,
           filamentIds,
+          filamentSurcharges,
           images: finalImages,
           imageData: finalImages[0],
           createdAt: existing ? existing.createdAt : Date.now()
@@ -2204,6 +2297,14 @@
       document.querySelectorAll("input[name='prodFilCheck']").forEach(cb => {
         cb.checked = (p.filamentIds || []).includes(cb.value);
       });
+      document.querySelectorAll("input[data-fil-surcharge]").forEach(inp => {
+        const fid = inp.dataset.filSurcharge;
+        if (p.filamentSurcharges && Object.prototype.hasOwnProperty.call(p.filamentSurcharges, fid)) {
+          inp.value = p.filamentSurcharges[fid];
+        } else {
+          inp.value = "";
+        }
+      });
 
       document.getElementById("productAdminForm").scrollIntoView({ behavior: "smooth" });
     };
@@ -2214,6 +2315,9 @@
       document.getElementById("productFormTitle").textContent = "Neues 3D-Modell einstellen";
       document.getElementById("saveProductBtn").textContent = "Modell veröffentlichen";
       document.getElementById("cancelEditBtn").classList.add("hidden");
+      document.querySelectorAll("input[data-fil-surcharge]").forEach(inp => {
+        inp.value = "";
+      });
       uploadedImagesList = [];
       renderUploadedImagesPreview();
     };
@@ -2269,8 +2373,10 @@
       const name = document.getElementById("filName").value.trim();
       const material = document.getElementById("filMaterial").value;
       const hex = document.getElementById("filHex").value;
+      const surchargeRaw = parseFloat(document.getElementById("filSurcharge").value);
+      const surcharge = Number.isFinite(surchargeRaw) ? surchargeRaw : 0;
 
-      const payload = { name, material, hex, inStock: true, createdAt: Date.now() };
+      const payload = { name, material, hex, surcharge, inStock: true, createdAt: Date.now() };
       if (isCloudConfigured) {
         await addDoc(collection(db, "filaments"), payload);
       } else {
@@ -2278,8 +2384,22 @@
         syncDemoStorage();
       }
       document.getElementById("filName").value = "";
+      document.getElementById("filSurcharge").value = "0";
       lastSelectedPresetName = "";
       showToast(`${name} (${material}) angelegt.`);
+    };
+
+    window.updateFilamentSurcharge = async function(filId, rawVal) {
+      const parsed = parseFloat(rawVal);
+      const surcharge = Number.isFinite(parsed) ? parsed : 0;
+      if (isCloudConfigured) {
+        await updateDoc(doc(db, "filaments", filId), { surcharge });
+      } else {
+        const f = filaments.find(x => x.id === filId);
+        if (f) f.surcharge = surcharge;
+        syncDemoStorage();
+      }
+      showToast(`Standard-Aufpreis auf ${formatPrice(surcharge)} aktualisiert.`);
     };
 
     window.toggleFilamentStock = async function(filId, nextState) {
@@ -2313,26 +2433,33 @@
       }
 
       box.innerHTML = filaments.map(f => `
-        <div class="py-3.5 flex items-center justify-between gap-3">
-          <div class="flex items-center gap-3">
+        <div class="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div class="flex items-center gap-3 min-w-0">
             <span class="w-6 h-6 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
-            <div>
-              <div class="text-sm font-semibold text-[#22211F]">${escapeHtml(f.name)} <span class="text-xs font-normal text-[#6E6A63]">(${escapeHtml(f.material)})</span></div>
+            <div class="min-w-0">
+              <div class="text-sm font-semibold text-[#22211F] truncate">${escapeHtml(f.name)} <span class="text-xs font-normal text-[#6E6A63]">(${escapeHtml(f.material)})</span></div>
               <div class="text-[11px] ${f.inStock ? "text-emerald-700" : "text-[#8C7765]"}">
                 ${f.inStock ? "● Vorrätig (im Shop sichtbar)" : "○ Nicht vorrätig (für Kunden unsichtbar)"}
               </div>
             </div>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center justify-end gap-2 shrink-0">
+            <label class="inline-flex items-center gap-1 text-[11px] text-[#6E6A63] bg-[#F7F6F2] border border-[#E2DFD7] rounded-xl px-2 py-1" title="Standard-Aufpreis in Euro">
+              <span>+</span>
+              <input type="number" step="0.5" value="${Number(f.surcharge || 0)}"
+                onchange="updateFilamentSurcharge('${f.id}', this.value)"
+                class="w-14 bg-transparent text-xs font-semibold text-[#22211F] text-right focus:outline-none" />
+              <span>€</span>
+            </label>
             <button onclick="toggleFilamentStock('${f.id}', ${!f.inStock})"
-              class="px-3.5 py-1.5 rounded-full text-xs font-medium border transition ${
+              class="px-3 py-1.5 rounded-full text-xs font-medium border transition ${
                 f.inStock
                   ? "bg-[#22211F] text-white border-[#22211F]"
                   : "bg-[#F7F6F2] text-[#6E6A63] border-[#E2DFD7]"
               }">
               ${f.inStock ? "Vorrätig" : "Leer"}
             </button>
-            <button onclick="deleteFilament('${f.id}')" class="text-xs text-[#6E6A63] hover:text-red-600 px-2">✕</button>
+            <button onclick="deleteFilament('${f.id}')" class="text-xs text-[#6E6A63] hover:text-red-600 px-1.5">✕</button>
           </div>
         </div>
       `).join("");
@@ -2380,10 +2507,10 @@
     // --- Beispieldaten für schnellen Start ---
     window.seedStarterData = async function() {
       const sampleFilaments = [
-        { name: "Mattschwarz", material: "PLA", hex: "#1E1E1E", inStock: true, createdAt: Date.now() },
-        { name: "Reinweiß", material: "PETG", hex: "#F8F8F6", inStock: true, createdAt: Date.now() + 1 },
-        { name: "Steingrau", material: "PLA Matte", hex: "#8A8D8F", inStock: true, createdAt: Date.now() + 2 },
-        { name: "Weinrot / Burgund", material: "PLA Silk", hex: "#57151E", inStock: true, createdAt: Date.now() + 3 }
+        { name: "Mattschwarz", material: "PLA", hex: "#1E1E1E", surcharge: 0, inStock: true, createdAt: Date.now() },
+        { name: "Reinweiß", material: "PETG", hex: "#F8F8F6", surcharge: 0.5, inStock: true, createdAt: Date.now() + 1 },
+        { name: "Steingrau", material: "PLA Matte", hex: "#8A8D8F", surcharge: 0, inStock: true, createdAt: Date.now() + 2 },
+        { name: "Weinrot / Burgund", material: "PLA Silk", hex: "#57151E", surcharge: 2.0, inStock: true, createdAt: Date.now() + 3 }
       ];
 
       let createdFilIds = [];
