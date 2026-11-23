@@ -9,13 +9,13 @@
   <meta name="apple-mobile-web-app-title" content="L&D PrintLab" />
   <title>L&D PrintLab Studio</title>
 
-  <!-- Minimalistisches L&D Monogramm als App-Icon & Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23F7F6F2'/%3E%3Cpolygon points='32,10 52,21 52,43 32,54 12,43 12,21' fill='none' stroke='%238C7765' stroke-width='2.5'/%3E%3Cpath d='M22 22V40H32' fill='none' stroke='%23232220' stroke-width='3.5' stroke-linecap='square'/%3E%3Cpath d='M34 22H39C44 22 47 26 47 31C47 36 44 40 39 40H34V22Z' fill='none' stroke='%23232220' stroke-width='3.2'/%3E%3C/svg%3E" />
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23F7F6F2'/%3E%3Cpolygon points='32,10 52,21 52,43 32,54 12,43 12,21' fill='none' stroke='%238C7765' stroke-width='2.5'/%3E%3Cpath d='M22 22V40H32' fill='none' stroke='%23232220' stroke-width='3.5' stroke-linecap='square'/%3E%3Cpath d='M34 22H39C44 22 47 26 47 31C47 36 44 40 39 40H34V22Z' fill='none' stroke='%23232220' stroke-width='3.2'/%3E%3C/svg%3E" />
+  <!-- L&D PrintLab Studio App-Icon & Favicon (Burgunder 3D-Monogramm) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23F8ECEB'/%3E%3Cpolygon points='32,6 54,19 54,45 32,58 10,45 10,19' fill='none' stroke='%2357151E' stroke-width='1.8'/%3E%3Cpolygon points='14,19 20,16 20,39 32,46 32,52 14,42' fill='%2357151E'/%3E%3Crect x='29.5' y='11' width='5' height='42' fill='%23C9838A'/%3E%3Cpath d='M34.5 16C44.5 16 49.5 23 49.5 32C49.5 41 44.5 48 34.5 48V43C41.5 43 45 38 45 32C45 26 41.5 21 34.5 21Z' fill='%2357151E'/%3E%3Ctext x='32' y='38' fill='%23430E16' font-family='Georgia,serif' font-size='20' text-anchor='middle'%3E%26amp;%3C/text%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23F8ECEB'/%3E%3Cpolygon points='32,6 54,19 54,45 32,58 10,45 10,19' fill='none' stroke='%2357151E' stroke-width='1.8'/%3E%3Cpolygon points='14,19 20,16 20,39 32,46 32,52 14,42' fill='%2357151E'/%3E%3Crect x='29.5' y='11' width='5' height='42' fill='%23C9838A'/%3E%3Cpath d='M34.5 16C44.5 16 49.5 23 49.5 32C49.5 41 44.5 48 34.5 48V43C41.5 43 45 38 45 32C45 26 41.5 21 34.5 21Z' fill='%2357151E'/%3E%3Ctext x='32' y='38' fill='%23430E16' font-family='Georgia,serif' font-size='20' text-anchor='middle'%3E%26amp;%3C/text%3E%3C/svg%3E" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
     :root {
       --bg-canvas: #F7F6F2;
       --bg-surface: #FFFFFF;
@@ -24,6 +24,7 @@
       --text-primary: #22211F;
       --text-secondary: #6E6A63;
       --accent-bronze: #8C7765;
+      --brand-burgundy: #57151E;
     }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -34,6 +35,9 @@
     h1, h2, h3, .font-display {
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
+    .font-brand {
+      font-family: 'Montserrat', 'Plus Jakarta Sans', sans-serif;
+    }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
@@ -41,7 +45,7 @@
 <body class="min-h-screen flex flex-col selection:bg-[#8C7765]/20">
 
   <!-- =====================================================================
-       1. KONFIGURATION (HIER EINMALIG FIREBASE-DATEN EINFÜGEN)
+       1. KONFIGURATION
        ===================================================================== -->
   <script>
     const STUDIO_CONFIG = {
@@ -49,11 +53,10 @@
       whatsappNumber: "491785271446",
       whatsappDisplay: "0178 5271446",
       contactEmail: "dorian3d-print@web.de",
+      paypalEmail: "dorian.weinreich@web.de",
       currency: "€"
     };
 
-    // HIER DEINE FIREBASE-KONFIGURATION AUS DER FIREBASE CONSOLE EINFÜGEN:
-    // (Solange hier "DEIN_API_KEY" steht, läuft die Seite automatisch im lokalen Vorschau-Modus)
     const FIREBASE_CONFIG = {
       apiKey: "AIzaSyDU3zHIAZBznuA46UiL1rKnJNYpqNIBEKE",
       authDomain: "ld-printlab-studio.firebaseapp.com",
@@ -65,38 +68,108 @@
   </script>
 
   <!-- =====================================================================
-       2. HEADER & MINIMALISTISCHE NAVIGATION
+       2. HEADER & LOGO (IDENTISCH ZUM L&D PRINTLAB STUDIO LOGO)
        ===================================================================== -->
-  <header class="sticky top-0 z-30 bg-[#F7F6F2]/90 backdrop-blur-md border-b border-[#E2DFD7]">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4">
-      <div class="flex items-center justify-between gap-4">
-        <!-- Logo & Markenname (ohne Untertitel) -->
-        <button onclick="switchTab('catalog')" class="flex items-center gap-3.5 text-left group focus:outline-none">
-          <div class="w-10 h-10 rounded-xl bg-white border border-[#E2DFD7] shadow-sm flex items-center justify-center shrink-0 group-hover:border-[#8C7765] transition">
-            <!-- Geometrisches L&D 3D-Monogramm -->
-            <svg class="w-6 h-6" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="32,6 54,18.5 54,45.5 32,58 10,45.5 10,18.5" stroke="#8C7765" stroke-width="2.6"/>
-              <line x1="32" y1="6" x2="32" y2="58" stroke="#D6D1C7" stroke-width="1.8"/>
-              <path d="M19 20V42H30" stroke="#22211F" stroke-width="4" stroke-linecap="square"/>
-              <path d="M34 20H39.5C45 20 48.5 24.5 48.5 31C48.5 37.5 45 42 39.5 42H34V20Z" stroke="#22211F" stroke-width="3.6"/>
+  <header class="sticky top-0 z-30 bg-[#F7F6F2]/95 backdrop-blur-md border-b border-[#E2DFD7]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-3.5 pb-3.5">
+      <div class="relative flex flex-col items-center justify-center">
+        <!-- Studio-Link teilen oben rechts -->
+        <div class="w-full flex justify-end sm:absolute sm:top-0 sm:right-0 mb-1 sm:mb-0">
+          <button onclick="shareCatalogLink()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-[#EFECE6] text-[#22211F] text-[11px] sm:text-xs font-medium border border-[#E2DFD7] shadow-2xs transition shrink-0">
+            <svg class="w-3.5 h-3.5 text-[#57151E]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
             </svg>
-          </div>
-          <span class="font-display text-lg sm:text-xl font-bold tracking-tight text-[#22211F]">
+            <span>Studio-Link teilen</span>
+          </button>
+        </div>
+
+        <!-- Zentriertes L&D PrintLab Studio Marken-Logo -->
+        <button onclick="switchTab('catalog')" class="flex flex-col items-center text-center group focus:outline-none">
+          <!-- Isometrisches 3D L&D Hexagon-Emblem -->
+          <svg class="w-[72px] h-[72px] sm:w-[86px] sm:h-[86px] transition-transform duration-200 group-hover:scale-[1.02]" viewBox="0 0 220 212" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="L&D PrintLab Studio Logo">
+            <defs>
+              <linearGradient id="ldCenterPillar" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#F3D6D8"/>
+                <stop offset="30%" stop-color="#C88188"/>
+                <stop offset="68%" stop-color="#EBC2C5"/>
+                <stop offset="100%" stop-color="#74212B"/>
+              </linearGradient>
+              <linearGradient id="ldLeftInner" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#EFC8CB"/>
+                <stop offset="55%" stop-color="#C98289"/>
+                <stop offset="100%" stop-color="#8C353F"/>
+              </linearGradient>
+              <linearGradient id="ldLeftDark" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#611822"/>
+                <stop offset="100%" stop-color="#3E0B12"/>
+              </linearGradient>
+              <linearGradient id="ldBottomSlant" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#B86C73"/>
+                <stop offset="52%" stop-color="#ECC5C8"/>
+                <stop offset="100%" stop-color="#9A454F"/>
+              </linearGradient>
+              <linearGradient id="ldTopCap" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#F8E4E5"/>
+                <stop offset="100%" stop-color="#D4959B"/>
+              </linearGradient>
+              <linearGradient id="ldCurveD" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#6A1C26"/>
+                <stop offset="50%" stop-color="#4B0F17"/>
+                <stop offset="100%" stop-color="#661A24"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Äußeres isometrisches Sechseck -->
+            <polygon points="110,12 192,59 192,153 110,200 28,153 28,59" stroke="#4D1119" stroke-width="1.8" fill="none"/>
+
+            <!-- Feine isometrische Konstruktionslinien -->
+            <line x1="110" y1="12" x2="56" y2="44" stroke="#4D1119" stroke-width="1.3"/>
+            <line x1="28" y1="153" x2="100" y2="111" stroke="#4D1119" stroke-width="1.3"/>
+            <line x1="110" y1="12" x2="110" y2="200" stroke="#4D1119" stroke-width="1.2"/>
+
+            <!-- Zentraler vertikaler 3D-Balken -->
+            <polygon points="100,18 110,12 120,18 120,194 110,200 100,194" fill="url(#ldCenterPillar)" stroke="#4D1119" stroke-width="1.4"/>
+
+            <!-- Geschwungenes 3D-"D" rechts -->
+            <path d="M120,34 C156,34 176,63 176,105 C176,147 156,176 120,176 L120,160 C145,160 160,138 160,105 C160,72 145,50 120,50 Z" fill="url(#ldCurveD)" stroke="#4D1119" stroke-width="1.3"/>
+            <!-- Äußere parallele Konturlinie des "D" -->
+            <path d="M120,21 C166,21 190,57 190,105 C190,153 166,189 120,189" stroke="#4D1119" stroke-width="1.4" fill="none"/>
+
+            <!-- Isometrisches 3D-"L" links -->
+            <!-- Linke dunkle Vorderseite der vertikalen Säule -->
+            <polygon points="28,59 42,67 42,145 28,153" fill="url(#ldLeftDark)" stroke="#4D1119" stroke-width="1.4" stroke-linejoin="round"/>
+            <!-- Rechte helle Rosé-Flanke der vertikalen Säule -->
+            <polygon points="42,67 56,59 56,137 42,145" fill="url(#ldLeftInner)" stroke="#4D1119" stroke-width="1.4" stroke-linejoin="round"/>
+            <!-- Obere isometrische Deckfläche der L-Säule -->
+            <polygon points="42,51 56,59 42,67 28,59" fill="url(#ldTopCap)" stroke="#4D1119" stroke-width="1.4" stroke-linejoin="round"/>
+
+            <!-- Unterer schräger L-Schenkel: obere helle Fläche -->
+            <polygon points="42,145 56,137 110,169 110,185" fill="url(#ldBottomSlant)" stroke="#4D1119" stroke-width="1.4" stroke-linejoin="round"/>
+            <!-- Unterer schräger L-Schenkel: untere dunkle Kante -->
+            <polygon points="28,153 42,145 110,185 110,200" fill="url(#ldLeftDark)" stroke="#4D1119" stroke-width="1.4" stroke-linejoin="round"/>
+
+            <!-- Klassisches "&" im Zentrum -->
+            <text x="103" y="131" fill="#52121B" stroke="#F8E6E7" stroke-width="0.6" paint-order="stroke" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="400" text-anchor="middle">&amp;</text>
+          </svg>
+
+          <!-- Markenname -->
+          <span class="font-brand text-xl sm:text-[26px] font-normal tracking-[0.03em] text-[#57151E] leading-tight mt-0.5">
             L&amp;D PrintLab Studio
           </span>
-        </button>
 
-        <!-- Link teilen -->
-        <button onclick="shareCatalogLink()" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-white hover:bg-[#EFECE6] text-[#22211F] text-xs font-medium border border-[#E2DFD7] transition shrink-0">
-          <svg class="w-3.5 h-3.5 text-[#8C7765]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
-          </svg>
-          <span>Link teilen</span>
+          <!-- Untertitel mit feinen Linien links & rechts -->
+          <div class="flex items-center justify-center gap-2.5 sm:gap-3.5 mt-1">
+            <span class="w-9 sm:w-16 h-[1px] bg-[#57151E]/60"></span>
+            <span class="font-brand text-[9px] sm:text-[10.5px] font-medium tracking-[0.26em] text-[#57151E] uppercase">
+              DESIGN &bull; 3D PRINT &bull; CREATE
+            </span>
+            <span class="w-9 sm:w-16 h-[1px] bg-[#57151E]/60"></span>
+          </div>
         </button>
       </div>
 
-      <!-- Navigations-Tabs -->
-      <nav class="flex items-center gap-1.5 mt-4 overflow-x-auto no-scrollbar">
+      <!-- Navigations-Tabs (Studio-Verwaltung ist dezent im Footer versteckt) -->
+      <nav class="flex items-center justify-start sm:justify-center gap-1.5 mt-4 overflow-x-auto no-scrollbar">
         <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-[#22211F] text-white transition whitespace-nowrap">
           Katalog
         </button>
@@ -104,10 +177,7 @@
           Wunschmodell per Link
         </button>
         <button onclick="switchTab('my-orders')" id="nav-my-orders" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
-          Anfragestatus <span id="myOrdersBadge" class="hidden ml-1.5 px-1.5 py-0.5 text-[11px] rounded-full bg-[#8C7765] text-white">0</span>
-        </button>
-        <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap ml-auto">
-          Studio-Verwaltung
+          Anfragestatus <span id="myOrdersBadge" class="hidden ml-1.5 px-1.5 py-0.5 text-[11px] rounded-full bg-[#57151E] text-white">0</span>
         </button>
       </nav>
     </div>
@@ -128,6 +198,18 @@
 
     <!-- TAB 1: PRODUKTKATALOG -->
     <section id="view-catalog" class="space-y-6">
+      <!-- Kompakte Infoleiste: Fertigung auf Anfrage & Bezahlung -->
+      <div class="bg-white rounded-2xl border border-[#E2DFD7] px-4 py-3.5 sm:px-5 sm:py-4 flex flex-col md:flex-row md:items-center justify-between gap-2.5 text-xs text-[#6E6A63]">
+        <div class="flex items-start sm:items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-[#57151E] mt-1 sm:mt-0 shrink-0"></span>
+          <span><strong class="text-[#22211F]">Frisch gedruckt auf Anfrage:</strong> Modelle sind nicht auf Lager, werden aber schnellstmöglich nach deiner Bestellung gedruckt.</span>
+        </div>
+        <div class="flex items-start sm:items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-[#8C7765] mt-1 sm:mt-0 shrink-0"></span>
+          <span><strong class="text-[#22211F]">Bezahlung:</strong> Keine Zahlung über die Website – privat per PayPal (Freunde &amp; Bekannte) oder Bar.</span>
+        </div>
+      </div>
+
       <!-- Filterleiste -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div id="categoryPills" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1"></div>
@@ -147,7 +229,7 @@
       <!-- Leerer Katalog -->
       <div id="emptyCatalogState" class="hidden bg-white rounded-3xl border border-[#E2DFD7] p-10 text-center max-w-lg mx-auto space-y-3">
         <p class="font-display text-lg font-semibold text-[#22211F]">Aktuell sind noch keine Modelle eingestellt</p>
-        <p class="text-sm text-[#6E6A63]">Logge dich in der Studio-Verwaltung ein, um dein erstes 3D-Druckmodell hinzuzufügen, oder sende direkt einen Link von MakerWorld oder Thingiverse.</p>
+        <p class="text-sm text-[#6E6A63]">Schau bald wieder vorbei oder sende direkt einen Link von MakerWorld oder Thingiverse.</p>
         <div class="pt-2">
           <button onclick="switchTab('custom-link')" class="px-5 py-2.5 rounded-full bg-[#22211F] text-white text-xs font-medium hover:bg-[#3A3835] transition">
             Wunschmodell per Link anfragen
@@ -160,34 +242,34 @@
     <section id="view-custom-link" class="hidden max-w-3xl mx-auto space-y-6">
       <div class="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2DFD7] shadow-sm space-y-6">
         <div class="space-y-2">
-          <span class="inline-block px-3 py-1 rounded-full bg-[#EFECE6] text-[#8C7765] text-[11px] font-semibold uppercase tracking-wider">
+          <span class="inline-block px-3 py-1 rounded-full bg-[#EFECE6] text-[#57151E] text-[11px] font-semibold uppercase tracking-wider">
             Auftragsdruck nach Link
           </span>
           <h2 class="font-display text-2xl font-bold text-[#22211F]">Wunschmodell auf MakerWorld oder Thingiverse gefunden?</h2>
           <p class="text-sm text-[#6E6A63] leading-relaxed">
-            Suche dir kostenlos ein 3D-Modell aus, kopiere den Link und füge ihn hier ein. Wir prüfen die Druckbarkeit, berechnen Materialgewicht sowie Druckzeit und melden uns mit einem konkreten Angebot.
+            Suche dir kostenlos ein 3D-Modell aus, kopiere den Link und füge ihn hier ein. Wir prüfen die Druckbarkeit sowie die Umsetzbarkeit und melden uns mit einem konkreten Angebot.
           </p>
         </div>
 
-        <!-- Direktlinks zu MakerWorld & Thingiverse -->
+        <!-- Direktlinks zu MakerWorld & Thingiverse (öffnen immer im neuen Tab) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          <a href="https://makerworld.com" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/70 hover:bg-[#EFECE6]/70 hover:border-[#8C7765] transition group">
+          <a href="https://makerworld.com" target="_blank" rel="noopener noreferrer" onclick="window.open('https://makerworld.com', '_blank', 'noopener,noreferrer'); return false;" class="flex items-center justify-between p-4 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/70 hover:bg-[#EFECE6]/70 hover:border-[#57151E] transition group">
             <div>
               <div class="font-display font-semibold text-sm text-[#22211F] flex items-center gap-2">
                 MakerWorld öffnen
-                <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white border border-[#E2DFD7] text-[#8C7765]">Tipp</span>
+                <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white border border-[#E2DFD7] text-[#57151E]">Tipp</span>
               </div>
-              <p class="text-xs text-[#6E6A63] mt-0.5">Geprüfte Druckprofile & moderne Designs</p>
+              <p class="text-xs text-[#6E6A63] mt-0.5">Geprüfte Druckprofile &amp; moderne Designs</p>
             </div>
-            <span class="text-[#8C7765] font-semibold text-base group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition">↗</span>
+            <span class="text-[#57151E] font-semibold text-base group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition">↗</span>
           </a>
 
-          <a href="https://www.thingiverse.com" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-4 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/70 hover:bg-[#EFECE6]/70 hover:border-[#8C7765] transition group">
+          <a href="https://www.thingiverse.com" target="_blank" rel="noopener noreferrer" onclick="window.open('https://www.thingiverse.com', '_blank', 'noopener,noreferrer'); return false;" class="flex items-center justify-between p-4 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/70 hover:bg-[#EFECE6]/70 hover:border-[#57151E] transition group">
             <div>
               <div class="font-display font-semibold text-sm text-[#22211F]">Thingiverse öffnen</div>
-              <p class="text-xs text-[#6E6A63] mt-0.5">Große Auswahl an Haltern, Gadgets & Ersatzteilen</p>
+              <p class="text-xs text-[#6E6A63] mt-0.5">Große Auswahl an Haltern, Gadgets &amp; Ersatzteilen</p>
             </div>
-            <span class="text-[#8C7765] font-semibold text-base group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition">↗</span>
+            <span class="text-[#57151E] font-semibold text-base group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition">↗</span>
           </a>
         </div>
 
@@ -198,7 +280,7 @@
           <div>
             <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Link zum 3D-Modell *</label>
             <div class="relative">
-              <input type="url" id="customModelUrl" required oninput="detectPlatformBadge()" placeholder="https://makerworld.com/de/models/... oder https://www.thingiverse.com/thing:..." class="w-full px-4 py-3 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+              <input type="url" id="customModelUrl" required oninput="detectPlatformBadge()" placeholder="https://makerworld.com/de/models/... oder https://www.thingiverse.com/thing:..." class="w-full px-4 py-3 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
               <span id="platformBadge" class="hidden absolute right-3 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#EFECE6] text-[#22211F]"></span>
             </div>
           </div>
@@ -206,30 +288,36 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="sm:col-span-2">
               <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Gewünschte Farbe / Material</label>
-              <input type="text" id="customColorPref" placeholder="z. B. Mattschwarz PETG oder egal" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+              <input type="text" id="customColorPref" placeholder="z. B. Mattschwarz PETG oder egal" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
               <!-- Klickbare Chips nur für aktuell vorrätige Filamente -->
               <div id="customInStockChips" class="flex flex-wrap gap-1.5 mt-2"></div>
             </div>
             <div>
               <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Stückzahl</label>
-              <input type="number" id="customQty" min="1" max="50" value="1" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+              <input type="number" id="customQty" min="1" max="50" value="1" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
             </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Dein Name *</label>
-              <input type="text" id="customCustomerName" required placeholder="Vorname Nachname" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+              <input type="text" id="customCustomerName" required placeholder="Vorname Nachname" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
             </div>
             <div>
               <label class="block text-xs font-semibold text-[#22211F] mb-1.5">WhatsApp-Nummer oder E-Mail *</label>
-              <input type="text" id="customCustomerContact" required placeholder="Für Rückfragen & dein Angebot" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+              <input type="text" id="customCustomerContact" required placeholder="Für Rückfragen &amp; dein Angebot" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
             </div>
           </div>
 
           <div>
             <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Kommentar / Sonderwunsch (optional)</label>
-            <textarea id="customNotes" rows="2" placeholder="z. B. Besondere Größe, Einsatzbereich oder Wunsch nach Versand" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]"></textarea>
+            <textarea id="customNotes" rows="2" placeholder="z. B. Besondere Größe, Einsatzbereich oder Wunsch nach Versand" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]"></textarea>
+          </div>
+
+          <!-- Hinweise für Wunschmodell per Link -->
+          <div class="p-3.5 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] space-y-1.5 text-xs text-[#6E6A63] leading-relaxed">
+            <p><strong class="text-[#22211F]">Hinweis zum Druckbild:</strong> Farbe und Aussehen des fertigen 3D-Drucks können minimal von den Vorschaubildern auf MakerWorld / Thingiverse abweichen.</p>
+            <p><strong class="text-[#22211F]">Fertigung &amp; Zahlung:</strong> Das Modell wird nach deiner Freigabe schnellstmöglich frisch gedruckt. Eine Zahlung über die Website ist nicht möglich – die Bezahlung erfolgt privat per PayPal (Freunde &amp; Bekannte) oder in Bar.</p>
           </div>
 
           <button type="submit" id="customSubmitBtn" class="w-full sm:w-auto px-6 py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
@@ -243,13 +331,13 @@
     <section id="view-my-orders" class="hidden max-w-3xl mx-auto space-y-6">
       <div class="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2DFD7] shadow-sm space-y-5">
         <div>
-          <h2 class="font-display text-xl font-bold text-[#22211F]">Status deiner Bestellungen & Anfragen</h2>
+          <h2 class="font-display text-xl font-bold text-[#22211F]">Status deiner Bestellungen &amp; Anfragen</h2>
           <p class="text-sm text-[#6E6A63] mt-1">Hier siehst du den aktuellen Stand deiner Anfragen – inklusive hinterlegtem Angebotspreis bei Link-Anfragen.</p>
         </div>
 
         <!-- Suche nach Bestellnummer -->
         <form onsubmit="lookupOrderByCode(event)" class="flex gap-2">
-          <input type="text" id="lookupRefInput" placeholder="Bestellnummer eingeben (z. B. #LP-4821)" class="flex-1 px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60 text-sm uppercase focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+          <input type="text" id="lookupRefInput" placeholder="Bestellnummer eingeben (z. B. #LP-4821)" class="flex-1 px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60 text-sm uppercase focus:bg-white focus:outline-none focus:border-[#57151E]" />
           <button type="submit" class="px-5 py-2.5 rounded-2xl bg-[#22211F] text-white text-xs font-medium hover:bg-[#3A3835] transition">
             Abrufen
           </button>
@@ -259,24 +347,24 @@
       </div>
     </section>
 
-    <!-- TAB 4: STUDIO-VERWALTUNG (FIREBASE AUTH EMAIL & PASSWORT) -->
+    <!-- TAB 4: STUDIO-VERWALTUNG (VERSTECKT ÜBER FOOTER-ZUGANG / #admin) -->
     <section id="view-admin" class="hidden space-y-6">
-      <!-- Login-Box -->
+      <!-- Login-Box (E-Mail-Feld bewusst komplett leer!) -->
       <div id="adminLoginBox" class="max-w-md mx-auto bg-white rounded-3xl p-7 border border-[#E2DFD7] shadow-sm space-y-5">
         <div class="space-y-1 text-center">
-          <span class="inline-block px-3 py-1 rounded-full bg-[#EFECE6] text-[#8C7765] text-[11px] font-semibold uppercase tracking-wider">Admin-Bereich</span>
+          <span class="inline-block px-3 py-1 rounded-full bg-[#EFECE6] text-[#57151E] text-[11px] font-semibold uppercase tracking-wider">Interner Bereich</span>
           <h2 class="font-display text-xl font-bold text-[#22211F] pt-1">Studio-Verwaltung</h2>
           <p class="text-xs text-[#6E6A63]">Melde dich mit eurer Studio-E-Mail und Passwort an, um Modelle, Filamente und Bestellungen zu verwalten.</p>
         </div>
 
-        <form onsubmit="handleAdminLogin(event)" class="space-y-3.5">
+        <form onsubmit="handleAdminLogin(event)" autocomplete="off" class="space-y-3.5">
           <div>
             <label class="block text-xs font-semibold text-[#22211F] mb-1">E-Mail-Adresse</label>
-            <input type="email" id="adminEmailInput" required value="dorian3d-print@web.de" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+            <input type="email" id="adminEmailInput" name="studio_user_field" required value="" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" placeholder="E-Mail-Adresse eingeben" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
           </div>
           <div>
             <label class="block text-xs font-semibold text-[#22211F] mb-1">Passwort</label>
-            <input type="password" id="adminPasswordInput" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+            <input type="password" id="adminPasswordInput" name="studio_pass_field" required value="" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');" placeholder="••••••••" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
           </div>
           <button type="submit" id="adminLoginBtn" class="w-full py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
             Anmelden
@@ -290,7 +378,7 @@
         <div class="bg-white rounded-3xl p-4 sm:p-5 border border-[#E2DFD7] flex flex-wrap items-center justify-between gap-3">
           <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
             <button onclick="switchAdminSubTab('orders')" id="admin-tab-orders" class="admin-sub-btn px-4 py-2 rounded-full text-xs font-semibold bg-[#22211F] text-white transition whitespace-nowrap">
-              Bestellungen & Links <span id="openOrdersCounter" class="ml-1 px-1.5 py-0.5 rounded-full bg-[#8C7765] text-white text-[10px]">0</span>
+              Bestellungen &amp; Links <span id="openOrdersCounter" class="ml-1 px-1.5 py-0.5 rounded-full bg-[#57151E] text-white text-[10px]">0</span>
             </button>
             <button onclick="switchAdminSubTab('products')" id="admin-tab-products" class="admin-sub-btn px-4 py-2 rounded-full text-xs font-semibold text-[#6E6A63] hover:bg-[#EFECE6] transition whitespace-nowrap">
               3D-Modelle
@@ -318,65 +406,58 @@
           <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-[#E2DFD7] space-y-4 self-start">
             <div class="flex items-center justify-between">
               <h3 id="productFormTitle" class="font-display text-lg font-bold text-[#22211F]">Neues 3D-Modell einstellen</h3>
-              <button type="button" id="cancelEditBtn" onclick="resetProductForm()" class="hidden text-xs text-[#8C7765] underline">Abbrechen</button>
+              <button type="button" id="cancelEditBtn" onclick="resetProductForm()" class="hidden text-xs text-[#57151E] underline">Abbrechen</button>
             </div>
 
             <form id="productAdminForm" onsubmit="saveProduct(event)" class="space-y-3.5">
               <input type="hidden" id="editProductId" value="" />
 
-              <!-- Foto-Upload direkt vom Handy -->
-              <div>
-                <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Foto des 3D-Drucks *</label>
-                <label class="flex flex-col items-center justify-center w-full h-36 rounded-2xl border-2 border-dashed border-[#D6D1C7] bg-[#F7F6F2]/60 hover:bg-[#EFECE6]/60 cursor-pointer overflow-hidden relative transition">
-                  <img id="productImagePreview" class="hidden w-full h-full object-cover" />
-                  <div id="productImagePlaceholder" class="text-center p-4">
-                    <span class="text-xs font-semibold text-[#22211F] block">Foto auswählen oder aufnehmen</span>
-                    <span class="text-[11px] text-[#6E6A63] mt-0.5 block">Wird automatisch für schnelles Laden optimiert</span>
-                  </div>
-                  <input type="file" id="productImageInput" accept="image/*" onchange="handleProductPhotoSelect(event)" class="hidden" />
+              <!-- Mehrere Fotos direkt vom Handy auswählen -->
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <label class="block text-xs font-semibold text-[#22211F]">Fotos des 3D-Drucks (mehrere möglich)</label>
+                  <span id="productImageCountLabel" class="text-[11px] text-[#6E6A63]">0 / 6 Fotos</span>
+                </div>
+
+                <!-- Vorschau-Galerie der hochgeladenen Bilder -->
+                <div id="productImagesPreviewGrid" class="hidden grid grid-cols-3 gap-2"></div>
+
+                <label class="flex flex-col items-center justify-center w-full py-4 px-3 rounded-2xl border-2 border-dashed border-[#D6D1C7] bg-[#F7F6F2]/60 hover:bg-[#EFECE6]/60 cursor-pointer text-center transition">
+                  <span class="text-xs font-semibold text-[#22211F] block">+ Fotos auswählen oder aufnehmen</span>
+                  <span class="text-[11px] text-[#6E6A63] mt-0.5 block">Du kannst mehrere Bilder gleichzeitig oder nacheinander hinzufügen</span>
+                  <input type="file" id="productImageInput" accept="image/*" multiple onchange="handleProductPhotoSelect(event)" class="hidden" />
                 </label>
               </div>
 
               <div>
                 <label class="block text-xs font-semibold text-[#22211F] mb-1">Modellname *</label>
-                <input type="text" id="prodTitle" required placeholder="z. B. Kabel-Organizer Untertisch" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+                <input type="text" id="prodTitle" required placeholder="z. B. Kabel-Organizer Untertisch" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
               </div>
 
-              <div class="grid grid-cols-2 gap-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label class="block text-xs font-semibold text-[#22211F] mb-1">Kategorie *</label>
-                  <select id="prodCategory" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]"></select>
-                </div>
-                <div>
-                  <label class="block text-xs font-semibold text-[#22211F] mb-1">Material-Info</label>
-                  <input type="text" id="prodMaterialNote" placeholder="z. B. PETG / PLA+" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
-                </div>
-              </div>
-
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-xs font-semibold text-[#22211F] mb-1">Gewicht (Gramm) *</label>
-                  <input type="number" id="prodWeight" required min="1" placeholder="120" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+                  <select id="prodCategory" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]"></select>
                 </div>
                 <div>
                   <label class="block text-xs font-semibold text-[#22211F] mb-1">Preis (€) *</label>
-                  <input type="number" id="prodPrice" required min="0.5" step="0.5" placeholder="12.50" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+                  <input type="number" id="prodPrice" required min="0.5" step="0.5" placeholder="12.50" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
                 </div>
               </div>
 
               <div>
                 <label class="block text-xs font-semibold text-[#22211F] mb-1">Beschreibung</label>
-                <textarea id="prodDescription" rows="2" placeholder="Maße, Einsatzbereich, Lieferumfang …" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]"></textarea>
+                <textarea id="prodDescription" rows="2" placeholder="Maße, Einsatzbereich, Lieferumfang …" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]"></textarea>
               </div>
 
               <!-- Auswahl aus zentraler Filament-Liste -->
               <div>
                 <div class="flex items-center justify-between mb-1.5">
                   <label class="block text-xs font-semibold text-[#22211F]">Mögliche Filamentfarben anhaken *</label>
-                  <button type="button" onclick="selectAllFilamentsForProduct()" class="text-[11px] text-[#8C7765] underline">Alle wählen</button>
+                  <button type="button" onclick="selectAllFilamentsForProduct()" class="text-[11px] text-[#57151E] underline">Alle wählen</button>
                 </div>
                 <div id="productFilamentCheckboxes" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto p-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50"></div>
-                <p class="text-[11px] text-[#6E6A63] mt-1">Besucher sehen später automatisch nur Farben, die zusätzlich in deiner Filament-Liste als „Vorrätig“ markiert sind.</p>
+                <p class="text-[11px] text-[#6E6A63] mt-1">Besucher sehen später automatisch nur Farben (inkl. Material), die in deiner Filament-Liste als „Vorrätig“ markiert sind.</p>
               </div>
 
               <button type="submit" id="saveProductBtn" class="w-full py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
@@ -401,32 +482,42 @@
         <div id="admin-view-filaments" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-[#E2DFD7] space-y-4 self-start">
             <h3 class="font-display text-lg font-bold text-[#22211F]">Neue Filament-Rolle anlegen</h3>
-            <p class="text-xs text-[#6E6A63]">Lege hier einmal alle eure Filamente an. Wenn eine Rolle leer ist, schalte sie einfach auf „Nicht vorrätig“ – sie verschwindet sofort bei allen Modellen im Shop.</p>
+            <p class="text-xs text-[#6E6A63]">Wähle eine der gängigen 3D-Druck-Farben aus oder nutze den Farbwähler für eine benutzerdefinierte Farbe. Leere Rollen kannst du später mit einem Tipp ausblenden.</p>
             <form onsubmit="addFilament(event)" class="space-y-3.5">
+              <!-- Schnellauswahl gängiger 3D-Druck-Farben -->
+              <div>
+                <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Gängige 3D-Druck-Farben auswählen</label>
+                <div id="presetFilamentSwatches" class="grid grid-cols-8 sm:grid-cols-9 gap-1.5 p-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60"></div>
+              </div>
+
               <div>
                 <label class="block text-xs font-semibold text-[#22211F] mb-1">Farbbezeichnung *</label>
-                <input type="text" id="filName" required placeholder="z. B. Mattschwarz" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+                <input type="text" id="filName" required placeholder="z. B. Mattschwarz (oder oben Farbe wählen)" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
               </div>
+
               <div class="grid grid-cols-2 gap-3">
                 <div>
                   <label class="block text-xs font-semibold text-[#22211F] mb-1">Material *</label>
-                  <select id="filMaterial" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]">
+                  <select id="filMaterial" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]">
                     <option value="PLA">PLA</option>
                     <option value="PLA Matte">PLA Matte</option>
                     <option value="PLA Silk">PLA Silk</option>
+                    <option value="PLA+">PLA+</option>
                     <option value="PETG">PETG</option>
                     <option value="ASA">ASA</option>
+                    <option value="ABS">ABS</option>
                     <option value="TPU">TPU</option>
                   </select>
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-[#22211F] mb-1">Farbton</label>
+                  <label class="block text-xs font-semibold text-[#22211F] mb-1">Benutzerdefinierte Farbe</label>
                   <div class="flex items-center gap-2">
-                    <input type="color" id="filHex" value="#22211F" class="w-11 h-10 rounded-xl border border-[#E2DFD7] cursor-pointer bg-white p-1" />
-                    <span id="filHexText" class="text-xs font-mono text-[#6E6A63]">#22211F</span>
+                    <input type="color" id="filHex" value="#1E1E1E" class="w-11 h-10 rounded-xl border border-[#E2DFD7] cursor-pointer bg-white p-1" />
+                    <span id="filHexText" class="text-xs font-mono text-[#6E6A63]">#1E1E1E</span>
                   </div>
                 </div>
               </div>
+
               <button type="submit" class="w-full py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
                 Filament hinzufügen
               </button>
@@ -443,7 +534,7 @@
         <div id="admin-view-categories" class="hidden max-w-2xl bg-white rounded-3xl p-6 border border-[#E2DFD7] space-y-4">
           <h3 class="font-display text-lg font-bold text-[#22211F]">Kategorien verwalten</h3>
           <form onsubmit="addCategory(event)" class="flex gap-2">
-            <input type="text" id="newCategoryName" required placeholder="Neue Kategorie (z. B. Auto & Fahrrad)" class="flex-1 px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+            <input type="text" id="newCategoryName" required placeholder="Neue Kategorie (z. B. Auto &amp; Fahrrad)" class="flex-1 px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
             <button type="submit" class="px-5 py-2.5 rounded-2xl bg-[#22211F] text-white text-xs font-medium hover:bg-[#3A3835] transition">
               Hinzufügen
             </button>
@@ -455,23 +546,48 @@
   </main>
 
   <!-- =====================================================================
-       4. BESTELL-MODAL ("MÖCHTE ICH HABEN")
+       4. FOOTER MIT PRIVATEM HINWEIS & DEZENTEM ADMIN-ZUGANG
+       ===================================================================== -->
+  <footer class="mt-10 border-t border-[#E2DFD7] bg-[#F7F6F2]">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-[11px] text-[#6E6A63] leading-relaxed">
+      <div class="space-y-1 max-w-3xl">
+        <p class="font-medium text-[#22211F]">Privates Hobby-Projekt für Freunde &amp; Bekannte</p>
+        <p>
+          Kein gewerblicher Online-Shop. Alle 3D-Drucke werden ausschließlich auf private Anfrage im Freundes- und Bekanntenkreis gegen Unkostenbeitrag (Material- &amp; Stromkosten) individuell angefertigt.
+          Verlinkte Plattformen (MakerWorld, Thingiverse) und deren Modelle unterliegen den jeweiligen Lizenzbedingungen der Designer.
+        </p>
+      </div>
+      <!-- Versteckter / dezenter Zugang zur Studio-Verwaltung -->
+      <button onclick="switchTab('admin')" class="inline-flex items-center gap-1 text-[11px] text-[#9A948C] hover:text-[#57151E] transition shrink-0 self-end sm:self-center" title="Interne Studio-Verwaltung">
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+        </svg>
+        <span>Intern</span>
+      </button>
+    </div>
+  </footer>
+
+  <!-- =====================================================================
+       5. BESTELL-MODAL ("MÖCHTE ICH HABEN")
        ===================================================================== -->
   <div id="orderModal" class="fixed inset-0 z-40 hidden bg-[#22211F]/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-[#E2DFD7] space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex items-start justify-between gap-3">
         <div>
-          <span id="modalCategory" class="text-[11px] font-semibold uppercase tracking-wider text-[#8C7765]">Kategorie</span>
+          <span id="modalCategory" class="text-[11px] font-semibold uppercase tracking-wider text-[#57151E]">Kategorie</span>
           <h3 id="modalTitle" class="font-display text-xl font-bold text-[#22211F] mt-0.5">Modellname</h3>
         </div>
-        <button onclick="closeOrderModal()" class="w-8 h-8 rounded-full bg-[#F7F6F2] text-[#6E6A63] hover:text-[#22211F] flex items-center justify-center">✕</button>
+        <button onclick="closeOrderModal()" class="w-8 h-8 rounded-full bg-[#F7F6F2] text-[#6E6A63] hover:text-[#22211F] flex items-center justify-center shrink-0">✕</button>
       </div>
+
+      <!-- Swipe-Bildergalerie auch im Bestell-Modal -->
+      <div id="modalImageGalleryWrapper"></div>
 
       <p id="modalDesc" class="text-sm text-[#6E6A63] leading-relaxed"></p>
 
       <div class="flex items-center justify-between px-4 py-3 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] text-xs sm:text-sm">
-        <div><span class="text-[#6E6A63]">Gewicht:</span> <strong id="modalWeight" class="text-[#22211F]">0 g</strong></div>
-        <div><span class="text-[#6E6A63]">Stückpreis:</span> <strong id="modalPrice" class="text-[#22211F]">0,00 €</strong></div>
+        <span class="text-[#6E6A63]">Stückpreis (inkl. Wunschfilament):</span>
+        <strong id="modalPrice" class="text-[#22211F] font-display text-base">0,00 €</strong>
       </div>
 
       <form onsubmit="submitCatalogOrder(event)" class="space-y-4">
@@ -494,17 +610,24 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-[#22211F] mb-1">Dein Name *</label>
-            <input type="text" id="orderCustomerName" required placeholder="Vorname Nachname" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+            <input type="text" id="orderCustomerName" required placeholder="Vorname Nachname" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
           </div>
           <div>
             <label class="block text-xs font-semibold text-[#22211F] mb-1">WhatsApp oder E-Mail *</label>
-            <input type="text" id="orderCustomerContact" required placeholder="Für Rückfragen" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+            <input type="text" id="orderCustomerContact" required placeholder="Für Rückfragen" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
           </div>
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-[#22211F] mb-1">Kommentar / Sonderwunsch (optional)</label>
-          <input type="text" id="orderComment" placeholder="z. B. Notiz oder Wunsch nach Versand" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#8C7765]" />
+          <input type="text" id="orderComment" placeholder="z. B. Notiz oder Wunsch nach Versand" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
+        </div>
+
+        <!-- Pflichthinweise im Bestell-Modal -->
+        <div class="p-3.5 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] space-y-1.5 text-[11px] text-[#6E6A63] leading-relaxed">
+          <p><strong class="text-[#22211F]">Fertigung auf Bestellung:</strong> Modelle befinden sich nicht auf Lager, werden aber schnellstmöglich nach Bestellung frisch für dich gedruckt.</p>
+          <p><strong class="text-[#22211F]">Optik &amp; Farbe:</strong> Farbe und Aussehen können im 3D-Druck minimal von den Abbildungen abweichen.</p>
+          <p><strong class="text-[#22211F]">Bezahlung:</strong> Keine Zahlung über die Website – die Bezahlung erfolgt privat per PayPal (Freunde &amp; Bekannte) oder Bar.</p>
         </div>
 
         <button type="submit" id="confirmOrderBtn" class="w-full py-3.5 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
@@ -515,7 +638,7 @@
   </div>
 
   <!-- =====================================================================
-       5. BESTÄTIGUNGS-MODAL MIT WHATSAPP & E-MAIL BUTTON
+       6. BESTÄTIGUNGS-MODAL MIT WHATSAPP & E-MAIL BUTTON
        ===================================================================== -->
   <div id="confirmationModal" class="fixed inset-0 z-50 hidden bg-[#22211F]/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-[#E2DFD7] space-y-4">
@@ -525,7 +648,7 @@
       </div>
       <h3 class="font-display text-xl font-bold text-[#22211F]">Deine Anfrage ist eingegangen</h3>
       <p class="text-xs sm:text-sm text-[#6E6A63] leading-relaxed">
-        Deine Anfrage wurde direkt im Studio-System hinterlegt. Wenn du uns zusätzlich direkt schreiben möchtest, nutze gerne den WhatsApp- oder E-Mail-Button:
+        Deine Anfrage wurde direkt im Studio-System hinterlegt. Dein Modell wird schnellstmöglich nach Bestellung frisch gedruckt. Die Bezahlung erfolgt privat per PayPal (Freunde &amp; Bekannte) oder in Bar (nicht über die Website).
       </p>
 
       <pre id="confPreviewText" class="p-3.5 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] text-[#22211F] text-xs whitespace-pre-wrap font-mono leading-relaxed"></pre>
@@ -534,7 +657,7 @@
         <a id="confWhatsappBtn" href="#" target="_blank" rel="noopener noreferrer" class="py-3 px-4 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-xs text-center transition">
           Per WhatsApp senden
         </a>
-        <a id="confEmailBtn" href="#" class="py-3 px-4 rounded-full bg-[#EFECE6] hover:bg-[#E2DFD7] text-[#22211F] font-medium text-xs text-center transition">
+        <a id="confEmailBtn" href="#" target="_blank" rel="noopener noreferrer" class="py-3 px-4 rounded-full bg-[#EFECE6] hover:bg-[#E2DFD7] text-[#22211F] font-medium text-xs text-center transition">
           Per E-Mail senden
         </a>
       </div>
@@ -542,7 +665,7 @@
   </div>
 
   <!-- =====================================================================
-       6. CLOUD-DATENBANK (FIREBASE) & ANWENDUNGSLOGIK
+       7. CLOUD-DATENBANK (FIREBASE) & ANWENDUNGSLOGIK
        ===================================================================== -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
@@ -567,14 +690,86 @@
     let activeCategory = "ALL";
     let activeOrderProduct = null;
     let selectedModalFilamentId = "";
-    let uploadedCompressedImage = "";
+    let uploadedImagesList = [];
+    let lastSelectedPresetName = "";
 
     const DEFAULT_CATEGORIES = ["Alltag & Ordnung", "Werkstatt", "Deko & Wohnen", "Ersatzteile"];
+
+    // Umfangreiche Farbpalette aller gängigen 3D-Druck-Farben
+    const PRESET_FILAMENT_COLORS = [
+      { name: "Mattschwarz", hex: "#1E1E1E" },
+      { name: "Tiefschwarz", hex: "#0B0B0C" },
+      { name: "Anthrazit", hex: "#4A4D50" },
+      { name: "Steingrau", hex: "#8A8D8F" },
+      { name: "Silbergrau", hex: "#C0C4C8" },
+      { name: "Reinweiß", hex: "#F8F8F6" },
+      { name: "Elfenbein / Creme", hex: "#EFE9DC" },
+      { name: "Beige / Sand", hex: "#D6C5A9" },
+      { name: "Holz / Hellbraun", hex: "#B5895A" },
+      { name: "Dunkelbraun", hex: "#5C3A21" },
+      { name: "Terrakotta", hex: "#B85D3B" },
+      { name: "Feuerrot", hex: "#D92B2B" },
+      { name: "Weinrot / Burgund", hex: "#57151E" },
+      { name: "Koralle / Lachs", hex: "#F06449" },
+      { name: "Signalorange", hex: "#F26419" },
+      { name: "Pfirsich / Pastellorange", hex: "#F6A06E" },
+      { name: "Sonnengelb", hex: "#F5C518" },
+      { name: "Pastellgelb", hex: "#F7E27D" },
+      { name: "Neongrün / Lime", hex: "#7AC943" },
+      { name: "Grasgrün", hex: "#2E8B57" },
+      { name: "Dunkelgrün", hex: "#1B4D3E" },
+      { name: "Salbeigrün", hex: "#768B78" },
+      { name: "Mintgrün", hex: "#8FD3C1" },
+      { name: "Türkis / Cyan", hex: "#00A6B4" },
+      { name: "Himmelblau", hex: "#5BC0EB" },
+      { name: "Königsblau", hex: "#1D5DEC" },
+      { name: "Marineblau", hex: "#162B4D" },
+      { name: "Lavendel / Flieder", hex: "#A689E1" },
+      { name: "Violett / Lila", hex: "#6A2C91" },
+      { name: "Magenta / Pink", hex: "#D81B60" },
+      { name: "Pastellrosa", hex: "#F2B5C4" },
+      { name: "Gold", hex: "#D4AF37" },
+      { name: "Bronze", hex: "#8C7765" },
+      { name: "Transparent / Natur", hex: "#E6EAEE" }
+    ];
 
     // Farb-Picker Live-Anzeige
     document.getElementById("filHex").addEventListener("input", e => {
       document.getElementById("filHexText").textContent = e.target.value.toUpperCase();
+      renderPresetFilamentSwatches();
     });
+
+    function renderPresetFilamentSwatches() {
+      const box = document.getElementById("presetFilamentSwatches");
+      if (!box) return;
+      const currentHex = document.getElementById("filHex").value.toUpperCase();
+      box.innerHTML = PRESET_FILAMENT_COLORS.map((c, idx) => {
+        const isSelected = currentHex === c.hex.toUpperCase();
+        return `
+          <button type="button" onclick="selectPresetFilamentColor(${idx})" title="${escapeHtml(c.name)} (${c.hex})"
+            class="w-7 h-7 rounded-full border transition-transform hover:scale-110 focus:outline-none ${
+              isSelected ? "ring-2 ring-offset-2 ring-[#57151E] border-black/30 scale-105" : "border-black/15"
+            }"
+            style="background:${c.hex}">
+          </button>
+        `;
+      }).join("");
+    }
+
+    window.selectPresetFilamentColor = function(idx) {
+      const preset = PRESET_FILAMENT_COLORS[idx];
+      if (!preset) return;
+      document.getElementById("filHex").value = preset.hex;
+      document.getElementById("filHexText").textContent = preset.hex.toUpperCase();
+      const nameInput = document.getElementById("filName");
+      if (!nameInput.value.trim() || nameInput.value.trim() === lastSelectedPresetName) {
+        nameInput.value = preset.name;
+      }
+      lastSelectedPresetName = preset.name;
+      renderPresetFilamentSwatches();
+    };
+
+    renderPresetFilamentSwatches();
 
     function formatPrice(val) {
       return Number(val || 0).toFixed(2).replace(".", ",") + " " + STUDIO_CONFIG.currency;
@@ -605,7 +800,7 @@
     function createPlaceholderGraphic(title) {
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="720" height="540" viewBox="0 0 720 540">
         <rect width="720" height="540" fill="#EFECE6"/>
-        <polygon points="360,150 445,198 445,295 360,343 275,295 275,198" fill="none" stroke="#8C7765" stroke-width="4"/>
+        <polygon points="360,150 445,198 445,295 360,343 275,295 275,198" fill="none" stroke="#57151E" stroke-width="3.5"/>
         <line x1="360" y1="246" x2="445" y2="198" stroke="#B8AFA3" stroke-width="2.5"/>
         <line x1="360" y1="246" x2="275" y2="198" stroke="#B8AFA3" stroke-width="2.5"/>
         <line x1="360" y1="246" x2="360" y2="343" stroke="#B8AFA3" stroke-width="2.5"/>
@@ -613,6 +808,102 @@
       </svg>`;
       return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
     }
+
+    function getProductImages(product) {
+      if (Array.isArray(product.images) && product.images.length > 0) {
+        return product.images;
+      }
+      if (product.imageData) {
+        return [product.imageData];
+      }
+      return [createPlaceholderGraphic(product.title)];
+    }
+
+    // =====================================================================
+    // BILDER-KARUSSELL (SWIPE + PAGINATION-PUNKTE)
+    // =====================================================================
+    function buildImageCarouselHtml(galleryId, images, altTitle, showCategoryBadge = "", extraClass = "") {
+      if (images.length <= 1) {
+        return `
+          <div class="relative aspect-[4/3] bg-[#EFECE6] overflow-hidden ${extraClass}">
+            <img src="${images[0]}" alt="${escapeHtml(altTitle)}" class="w-full h-full object-cover" />
+            ${showCategoryBadge ? `
+              <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm text-[#22211F] text-[11px] font-medium border border-[#E2DFD7]">
+                ${escapeHtml(showCategoryBadge)}
+              </span>
+            ` : ""}
+          </div>
+        `;
+      }
+
+      return `
+        <div class="relative aspect-[4/3] bg-[#EFECE6] overflow-hidden group ${extraClass}">
+          <div id="carousel-${galleryId}" onscroll="updateCarouselDots('${galleryId}', ${images.length})"
+            class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar"
+            style="touch-action: pan-x pan-y;">
+            ${images.map((src, idx) => `
+              <img src="${src}" alt="${escapeHtml(altTitle)} (${idx + 1}/${images.length})" loading="lazy"
+                class="w-full h-full shrink-0 snap-center object-cover select-none" />
+            `).join("")}
+          </div>
+
+          ${showCategoryBadge ? `
+            <span class="absolute top-3.5 left-3.5 z-10 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm text-[#22211F] text-[11px] font-medium border border-[#E2DFD7] pointer-events-none">
+              ${escapeHtml(showCategoryBadge)}
+            </span>
+          ` : ""}
+
+          <!-- Dezente Pfeile für Desktop-Mausbedienung -->
+          <button type="button" aria-label="Vorheriges Bild" onclick="event.stopPropagation(); stepCarouselSlide('${galleryId}', -1, ${images.length})"
+            class="hidden sm:flex opacity-0 group-hover:opacity-100 transition absolute left-2.5 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-white/85 hover:bg-white text-[#22211F] items-center justify-center shadow text-xs font-bold">
+            ‹
+          </button>
+          <button type="button" aria-label="Nächstes Bild" onclick="event.stopPropagation(); stepCarouselSlide('${galleryId}', 1, ${images.length})"
+            class="hidden sm:flex opacity-0 group-hover:opacity-100 transition absolute right-2.5 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-white/85 hover:bg-white text-[#22211F] items-center justify-center shadow text-xs font-bold">
+            ›
+          </button>
+
+          <!-- Kleine Punkte unten am Bild für Anzahl & aktive Position -->
+          <div id="dots-${galleryId}" class="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/35 backdrop-blur-sm">
+            ${images.map((_, idx) => `
+              <button type="button" aria-label="Bild ${idx + 1}" onclick="event.stopPropagation(); goToCarouselSlide('${galleryId}', ${idx})"
+                class="h-1.5 rounded-full transition-all duration-200 ${idx === 0 ? "w-3.5 bg-white" : "w-1.5 bg-white/55 hover:bg-white/85"}"></button>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    window.updateCarouselDots = function(galleryId, total) {
+      const el = document.getElementById("carousel-" + galleryId);
+      const dotsWrap = document.getElementById("dots-" + galleryId);
+      if (!el || !dotsWrap || !el.clientWidth) return;
+      const activeIdx = Math.max(0, Math.min(total - 1, Math.round(el.scrollLeft / el.clientWidth)));
+      const dots = dotsWrap.querySelectorAll("button");
+      dots.forEach((dot, i) => {
+        if (i === activeIdx) {
+          dot.classList.remove("w-1.5", "bg-white/55");
+          dot.classList.add("w-3.5", "bg-white");
+        } else {
+          dot.classList.remove("w-3.5", "bg-white");
+          dot.classList.add("w-1.5", "bg-white/55");
+        }
+      });
+    };
+
+    window.goToCarouselSlide = function(galleryId, idx) {
+      const el = document.getElementById("carousel-" + galleryId);
+      if (!el) return;
+      el.scrollTo({ left: idx * el.clientWidth, behavior: "smooth" });
+    };
+
+    window.stepCarouselSlide = function(galleryId, delta, total) {
+      const el = document.getElementById("carousel-" + galleryId);
+      if (!el || !el.clientWidth) return;
+      const currentIdx = Math.round(el.scrollLeft / el.clientWidth);
+      const nextIdx = (currentIdx + delta + total) % total;
+      el.scrollTo({ left: nextIdx * el.clientWidth, behavior: "smooth" });
+    };
 
     // =====================================================================
     // INITIALISIERUNG (CLOUD ODER LOKALER VORSCHAU-MODUS)
@@ -635,13 +926,11 @@
         showToast("Datenbank-Hinweis: " + (err?.message || "Zugriff nicht möglich"));
       };
 
-      // Live-Listener: Filamente (Collection: "filaments")
       onSnapshot(query(collection(db, "filaments"), orderBy("createdAt", "asc")), snap => {
         filaments = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         renderAllViews();
       }, handleFirestoreError);
 
-      // Live-Listener: Kategorien (Collection: "categories")
       onSnapshot(query(collection(db, "categories"), orderBy("order", "asc")), snap => {
         categories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         if (categories.length === 0) {
@@ -650,14 +939,12 @@
         renderAllViews();
       }, handleFirestoreError);
 
-      // Live-Listener: Produkte (Collection: "products")
       onSnapshot(query(collection(db, "products"), orderBy("createdAt", "desc")), snap => {
         products = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         document.getElementById("catalogLoader").classList.add("hidden");
         renderAllViews();
       }, handleFirestoreError);
 
-      // Live-Listener: Bestellungen & Anfragen (Collection: "orders")
       onSnapshot(query(collection(db, "orders"), orderBy("createdAt", "desc")), snap => {
         allOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         updateBadges();
@@ -666,13 +953,12 @@
       }, handleFirestoreError);
 
     } else {
-      // Lokaler Vorschau-Modus solange FIREBASE_CONFIG noch Platzhalter enthält
       document.getElementById("demoModeBanner").classList.remove("hidden");
       document.getElementById("catalogLoader").classList.add("hidden");
       filaments = JSON.parse(localStorage.getItem("ld_demo_filaments") || "null") || [
-        { id: "fil-1", name: "Mattschwarz", material: "PLA", hex: "#22211F", inStock: true },
-        { id: "fil-2", name: "Reinweiß", material: "PETG", hex: "#F7F6F2", inStock: true },
-        { id: "fil-3", name: "Warmgrau", material: "PLA Matte", hex: "#9A948C", inStock: true },
+        { id: "fil-1", name: "Mattschwarz", material: "PLA", hex: "#1E1E1E", inStock: true },
+        { id: "fil-2", name: "Reinweiß", material: "PETG", hex: "#F8F8F6", inStock: true },
+        { id: "fil-3", name: "Steingrau", material: "PLA Matte", hex: "#8A8D8F", inStock: true },
         { id: "fil-4", name: "Salbeigrün", material: "PLA Matte", hex: "#768B78", inStock: false }
       ];
       categories = JSON.parse(localStorage.getItem("ld_demo_categories") || "null") ||
@@ -708,29 +994,46 @@
       ["catalog", "custom-link", "my-orders", "admin"].forEach(id => {
         document.getElementById("view-" + id).classList.add("hidden");
         const btn = document.getElementById("nav-" + id);
-        btn.classList.remove("bg-[#22211F]", "text-white");
-        btn.classList.add("text-[#6E6A63]");
+        if (btn) {
+          btn.classList.remove("bg-[#22211F]", "text-white");
+          btn.classList.add("text-[#6E6A63]");
+        }
       });
       document.getElementById("view-" + tab).classList.remove("hidden");
       const activeBtn = document.getElementById("nav-" + tab);
-      activeBtn.classList.add("bg-[#22211F]", "text-white");
-      activeBtn.classList.remove("text-[#6E6A63]");
+      if (activeBtn) {
+        activeBtn.classList.add("bg-[#22211F]", "text-white");
+        activeBtn.classList.remove("text-[#6E6A63]");
+      }
 
       if (tab === "my-orders") renderMyOrders();
-      if (tab === "admin" && isAdminLoggedIn) renderAdminAll();
+      if (tab === "admin") {
+        if (!isAdminLoggedIn) {
+          document.getElementById("adminEmailInput").value = "";
+          document.getElementById("adminPasswordInput").value = "";
+        } else {
+          renderAdminAll();
+        }
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
     };
 
+    if (window.location.hash === "#admin") {
+      switchTab("admin");
+    }
+
     window.shareCatalogLink = function() {
+      const cleanUrl = window.location.origin + window.location.pathname;
       if (navigator.share) {
-        navigator.share({ title: STUDIO_CONFIG.shopName, url: window.location.href }).catch(() => {});
+        navigator.share({ title: STUDIO_CONFIG.shopName, url: cleanUrl }).catch(() => {});
       } else {
-        navigator.clipboard.writeText(window.location.href);
-        showToast("Link zum L&D PrintLab Studio kopiert!");
+        navigator.clipboard.writeText(cleanUrl);
+        showToast("Studio-Link kopiert!");
       }
     };
 
     // =====================================================================
-    // KATALOG & FILAMENT-FILTERUNG (NUR VORRÄTIGE FARBEN SICHTBAR!)
+    // KATALOG & FILAMENT-FILTERUNG (NUR VORRÄTIGE FARBEN SICHTBAR)
     // =====================================================================
     function getAvailableFilamentsForProduct(product) {
       const assignedIds = product.filamentIds || [];
@@ -781,18 +1084,11 @@
       grid.innerHTML = filtered.map(p => {
         const availableColors = getAvailableFilamentsForProduct(p);
         const hasColors = availableColors.length > 0;
+        const imgs = getProductImages(p);
 
         return `
           <article class="bg-white rounded-3xl border border-[#E2DFD7] overflow-hidden flex flex-col shadow-sm hover:shadow-md transition duration-200">
-            <div class="relative aspect-[4/3] bg-[#EFECE6] overflow-hidden">
-              <img src="${p.imageData || createPlaceholderGraphic(p.title)}" alt="${escapeHtml(p.title)}" class="w-full h-full object-cover" />
-              <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm text-[#22211F] text-[11px] font-medium border border-[#E2DFD7]">
-                ${escapeHtml(p.category)}
-              </span>
-              <span class="absolute bottom-3.5 right-3.5 px-2.5 py-1 rounded-full bg-[#22211F]/85 text-white text-[11px] font-medium">
-                ${p.weightGrams} g
-              </span>
-            </div>
+            ${buildImageCarouselHtml(p.id, imgs, p.title, p.category)}
 
             <div class="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-5">
               <div>
@@ -800,12 +1096,11 @@
                   <h3 class="font-display font-bold text-base sm:text-lg text-[#22211F] leading-snug">${escapeHtml(p.title)}</h3>
                   <span class="font-display text-lg font-bold text-[#22211F] whitespace-nowrap">${formatPrice(p.price)}</span>
                 </div>
-                ${p.materialNote ? `<p class="text-xs text-[#8C7765] font-medium mt-1">${escapeHtml(p.materialNote)}</p>` : ""}
                 ${p.description ? `<p class="text-sm text-[#6E6A63] mt-2.5 leading-relaxed line-clamp-2">${escapeHtml(p.description)}</p>` : ""}
 
                 <div class="mt-4 pt-3.5 border-t border-[#F0EEE9]">
                   <div class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6A63] mb-2">
-                    Verfügbare Farben
+                    Verfügbare Farben &amp; Materialien
                   </div>
                   ${hasColors ? `
                     <div class="flex flex-wrap gap-1.5">
@@ -822,14 +1117,19 @@
                 </div>
               </div>
 
-              <button onclick="openOrderModal('${p.id}')" ${hasColors ? "" : "disabled"}
-                class="w-full py-3 px-4 rounded-full font-medium text-sm transition ${
-                  hasColors
-                    ? "bg-[#22211F] hover:bg-[#3A3835] text-white"
-                    : "bg-[#EFECE6] text-[#9A948C] cursor-not-allowed"
-                }">
-                ${hasColors ? "Möchte ich haben" : "Aktuell vergriffen"}
-              </button>
+              <div class="space-y-2.5">
+                <p class="text-[11px] text-[#6E6A63] leading-snug">
+                  Hinweis: Farbe &amp; Aussehen können minimal von den Abbildungen abweichen.
+                </p>
+                <button onclick="openOrderModal('${p.id}')" ${hasColors ? "" : "disabled"}
+                  class="w-full py-3 px-4 rounded-full font-medium text-sm transition ${
+                    hasColors
+                      ? "bg-[#22211F] hover:bg-[#3A3835] text-white"
+                      : "bg-[#EFECE6] text-[#9A948C] cursor-not-allowed"
+                  }">
+                  ${hasColors ? "Möchte ich haben" : "Aktuell vergriffen"}
+                </button>
+              </div>
             </div>
           </article>
         `;
@@ -839,6 +1139,23 @@
     // =====================================================================
     // BESTELL-MODAL ("MÖCHTE ICH HABEN")
     // =====================================================================
+    function renderOrderModalColorOptions(availableColors) {
+      document.getElementById("modalColorOptions").innerHTML = availableColors.map(f => {
+        const isSelected = f.id === selectedModalFilamentId;
+        return `
+          <button type="button" onclick="selectModalFilament('${f.id}')"
+            class="flex items-center gap-2.5 p-2.5 rounded-2xl border text-left text-xs font-medium transition ${
+              isSelected
+                ? "border-[#22211F] bg-[#F7F6F2] text-[#22211F]"
+                : "border-[#E2DFD7] hover:border-[#57151E] text-[#6E6A63]"
+            }">
+            <span class="w-4 h-4 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
+            <span class="truncate">${escapeHtml(f.name)} (${escapeHtml(f.material)})</span>
+          </button>
+        `;
+      }).join("");
+    }
+
     window.openOrderModal = function(productId) {
       activeOrderProduct = products.find(p => p.id === productId);
       if (!activeOrderProduct) return;
@@ -853,32 +1170,22 @@
       document.getElementById("modalCategory").textContent = activeOrderProduct.category;
       document.getElementById("modalTitle").textContent = activeOrderProduct.title;
       document.getElementById("modalDesc").textContent = activeOrderProduct.description || "";
-      document.getElementById("modalWeight").textContent = activeOrderProduct.weightGrams + " g";
       document.getElementById("modalPrice").textContent = formatPrice(activeOrderProduct.price);
       document.getElementById("orderQty").value = 1;
 
-      document.getElementById("modalColorOptions").innerHTML = availableColors.map(f => {
-        const isSelected = f.id === selectedModalFilamentId;
-        return `
-          <button type="button" onclick="selectModalFilament('${f.id}')"
-            class="flex items-center gap-2.5 p-2.5 rounded-2xl border text-left text-xs font-medium transition ${
-              isSelected
-                ? "border-[#22211F] bg-[#F7F6F2] text-[#22211F]"
-                : "border-[#E2DFD7] hover:border-[#8C7765] text-[#6E6A63]"
-            }">
-            <span class="w-4 h-4 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
-            <span class="truncate">${escapeHtml(f.name)} (${escapeHtml(f.material)})</span>
-          </button>
-        `;
-      }).join("");
+      const imgs = getProductImages(activeOrderProduct);
+      document.getElementById("modalImageGalleryWrapper").innerHTML =
+        buildImageCarouselHtml("modal-" + activeOrderProduct.id, imgs, activeOrderProduct.title, "", "rounded-2xl");
 
+      renderOrderModalColorOptions(availableColors);
       updateOrderTotal();
       document.getElementById("orderModal").classList.remove("hidden");
     };
 
     window.selectModalFilament = function(filId) {
       selectedModalFilamentId = filId;
-      openOrderModal(activeOrderProduct.id);
+      if (!activeOrderProduct) return;
+      renderOrderModalColorOptions(getAvailableFilamentsForProduct(activeOrderProduct));
     };
 
     window.updateOrderTotal = function() {
@@ -913,11 +1220,10 @@
         productId: activeOrderProduct.id,
         productTitle: activeOrderProduct.title,
         filamentName: chosenFil ? `${chosenFil.name} (${chosenFil.material})` : "Standard",
-        filamentHex: chosenFil ? chosenFil.hex : "#22211F",
+        filamentHex: chosenFil ? chosenFil.hex : "#1E1E1E",
         qty,
         unitPrice: activeOrderProduct.price,
         totalPrice: total,
-        weightGrams: activeOrderProduct.weightGrams * qty,
         customerName,
         customerContact,
         comment,
@@ -940,8 +1246,8 @@
         const summaryText = [
           `Hallo Dorian, neue Anfrage über ${STUDIO_CONFIG.shopName} (${refId}):`,
           `• Modell: ${orderPayload.productTitle}`,
-          `• Farbe: ${orderPayload.filamentName}`,
-          `• Menge: ${qty}x (ca. ${orderPayload.weightGrams} g)`,
+          `• Farbe & Material: ${orderPayload.filamentName}`,
+          `• Menge: ${qty}x`,
           `• Gesamtpreis: ${formatPrice(total)}`,
           `• Name: ${customerName} (${customerContact})`,
           comment ? `• Kommentar: ${comment}` : null
@@ -1023,7 +1329,6 @@
         comment,
         status: "Neu eingegangen",
         quotedPrice: null,
-        quotedWeight: null,
         adminNote: "",
         createdAt: Date.now()
       };
@@ -1134,7 +1439,7 @@
                 <span class="text-xs text-[#6E6A63]">${dateStr}</span>
               </div>
               <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white border border-[#E2DFD7] text-[#22211F]">
-                ${o.status}
+                ${escapeHtml(o.status)}
               </span>
             </div>
 
@@ -1148,8 +1453,8 @@
             </div>
 
             ${o.quotedPrice ? `
-              <div class="p-3 rounded-xl bg-white border border-[#8C7765]/40 text-xs space-y-1">
-                <div class="font-semibold text-[#22211F]">Angebot vom Studio: ${formatPrice(o.quotedPrice)} ${o.quotedWeight ? `(ca. ${o.quotedWeight} g)` : ""}</div>
+              <div class="p-3 rounded-xl bg-white border border-[#57151E]/30 text-xs space-y-1">
+                <div class="font-semibold text-[#22211F]">Angebot vom Studio: ${formatPrice(o.quotedPrice)}</div>
                 ${o.adminNote ? `<div class="text-[#6E6A63]">${escapeHtml(o.adminNote)}</div>` : ""}
               </div>
             ` : o.adminNote ? `
@@ -1184,6 +1489,8 @@
       btn.textContent = "Anmeldung …";
       try {
         await signInWithEmailAndPassword(auth, email, pass);
+        document.getElementById("adminEmailInput").value = "";
+        document.getElementById("adminPasswordInput").value = "";
         showToast("Willkommen im L&D PrintLab Studio!");
       } catch (err) {
         showToast("Login fehlgeschlagen. Bitte E-Mail & Passwort prüfen.");
@@ -1201,6 +1508,8 @@
         document.getElementById("adminLoginBox").classList.remove("hidden");
         document.getElementById("adminDashboard").classList.add("hidden");
       }
+      document.getElementById("adminEmailInput").value = "";
+      document.getElementById("adminPasswordInput").value = "";
       showToast("Abgemeldet.");
     };
 
@@ -1233,16 +1542,35 @@
         return;
       }
 
+      const LINK_STATUSES = [
+        "Neu eingegangen",
+        "Umsetzung wird geprüft",
+        "Angebot liegt vor",
+        "In Druck",
+        "Abholbereit / Fertig",
+        "Nicht umsetzbar"
+      ];
+
+      const CATALOG_STATUSES = [
+        "Neu eingegangen",
+        "In Druck",
+        "Abholbereit / Fertig",
+        "Nicht umsetzbar"
+      ];
+
       box.innerHTML = allOrders.map(o => {
         const dateStr = o.createdAt ? new Date(o.createdAt).toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" }) : "";
         const isLink = o.type === "link";
+        const statusOptions = isLink ? LINK_STATUSES : CATALOG_STATUSES;
+        const finalStatuses = statusOptions.includes(o.status) ? statusOptions : [o.status, ...statusOptions];
+
         return `
           <div class="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2DFD7] space-y-4">
             <div class="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <div class="flex items-center gap-2">
                   <span class="font-mono text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#22211F] text-white">${o.refId}</span>
-                  <span class="text-xs font-semibold text-[#8C7765]">${isLink ? "MakerWorld / Thingiverse Link" : "Katalog-Bestellung"}</span>
+                  <span class="text-xs font-semibold text-[#57151E]">${isLink ? "MakerWorld / Thingiverse Link" : "Katalog-Bestellung"}</span>
                   <span class="text-xs text-[#6E6A63]">• ${dateStr}</span>
                 </div>
                 <h4 class="font-display font-bold text-base text-[#22211F] mt-1.5">
@@ -1258,21 +1586,31 @@
               <button onclick="deleteOrder('${o.id}')" class="text-xs text-[#6E6A63] hover:text-red-600 underline">Löschen</button>
             </div>
 
-            <!-- Bearbeitung: Status, Angebotspreis, Notiz -->
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-2.5 pt-2 border-t border-[#F0EEE9]">
-              <select id="status-${o.id}" class="px-3 py-2 rounded-xl border border-[#E2DFD7] bg-[#F7F6F2] text-xs font-medium">
-                ${["Neu eingegangen", "Angebot liegt vor", "In Druck", "Abholbereit / Fertig", "Nicht umsetzbar"].map(st =>
-                  `<option value="${st}" ${o.status === st ? "selected" : ""}>${st}</option>`
-                ).join("")}
-              </select>
-              <input type="number" step="0.5" id="qprice-${o.id}" value="${o.quotedPrice || ""}" placeholder="Angebotspreis (€)" class="px-3 py-2 rounded-xl border border-[#E2DFD7] bg-[#F7F6F2] text-xs" />
-              <input type="number" id="qweight-${o.id}" value="${o.quotedWeight || ""}" placeholder="Gewicht (g)" class="px-3 py-2 rounded-xl border border-[#E2DFD7] bg-[#F7F6F2] text-xs" />
-              <input type="text" id="qnote-${o.id}" value="${(o.adminNote || "").replace(/"/g, "&quot;")}" placeholder="Notiz / Rückmeldung" class="px-3 py-2 rounded-xl border border-[#E2DFD7] bg-[#F7F6F2] text-xs" />
-            </div>
+            <!-- Bearbeitung: Bei Link-Anfragen mit Angebotspreis, bei Katalog-Bestellungen ohne Angebotspreis & ohne Gewicht -->
+            ${isLink ? `
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-[#F0EEE9]">
+                <select id="status-${o.id}" class="px-3 py-2 rounded-xl border border-[#E2DFD7] bg-[#F7F6F2] text-xs font-medium">
+                  ${finalStatuses.map(st =>
+                    `<option value="${escapeHtml(st)}" ${o.status === st ? "selected" : ""}>${escapeHtml(st)}</option>`
+                  ).join("")}
+                </select>
+                <input type="number" step="0.5" id="qprice-${o.id}" value="${o.quotedPrice || ""}" placeholder="Angebotspreis (€)" class="px-3 py-2 rounded-xl border border-[#E2DFD7] bg-[#F7F6F2] text-xs" />
+                <input type="text" id="qnote-${o.id}" value="${escapeHtml(o.adminNote || "")}" placeholder="Notiz / Rückmeldung" class="px-3 py-2 rounded-xl border border-[#E2DFD7] bg-[#F7F6F2] text-xs" />
+              </div>
+            ` : `
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 border-t border-[#F0EEE9]">
+                <select id="status-${o.id}" class="px-3 py-2 rounded-xl border border-[#E2DFD7] bg-[#F7F6F2] text-xs font-medium">
+                  ${finalStatuses.map(st =>
+                    `<option value="${escapeHtml(st)}" ${o.status === st ? "selected" : ""}>${escapeHtml(st)}</option>`
+                  ).join("")}
+                </select>
+                <input type="text" id="qnote-${o.id}" value="${escapeHtml(o.adminNote || "")}" placeholder="Notiz / Rückmeldung" class="px-3 py-2 rounded-xl border border-[#E2DFD7] bg-[#F7F6F2] text-xs" />
+              </div>
+            `}
 
             <div class="flex flex-wrap items-center gap-2">
               <button onclick="saveOrderUpdate('${o.id}')" class="px-4 py-2 rounded-full bg-[#22211F] text-white text-xs font-medium hover:bg-[#3A3835] transition">
-                Status & Angebot speichern
+                Status ${isLink ? "& Angebot " : ""}speichern
               </button>
               <button onclick="copyAdminReply('${o.id}')" class="px-4 py-2 rounded-full bg-[#EFECE6] text-[#22211F] text-xs font-medium hover:bg-[#E2DFD7] transition">
                 Antworttext kopieren
@@ -1285,14 +1623,13 @@
 
     window.saveOrderUpdate = async function(orderId) {
       const status = document.getElementById("status-" + orderId).value;
-      const qPriceRaw = document.getElementById("qprice-" + orderId).value;
-      const qWeightRaw = document.getElementById("qweight-" + orderId).value;
+      const qPriceEl = document.getElementById("qprice-" + orderId);
+      const qPriceRaw = qPriceEl ? qPriceEl.value : "";
       const adminNote = document.getElementById("qnote-" + orderId).value.trim();
 
       const updates = {
         status,
         quotedPrice: qPriceRaw ? parseFloat(qPriceRaw) : null,
-        quotedWeight: qWeightRaw ? parseInt(qWeightRaw, 10) : null,
         adminNote
       };
 
@@ -1303,27 +1640,31 @@
         if (idx > -1) Object.assign(allOrders[idx], updates);
         syncDemoStorage();
       }
-      showToast("Status & Angebot gespeichert.");
+      showToast("Änderungen gespeichert.");
     };
 
     window.copyAdminReply = function(orderId) {
       const o = allOrders.find(x => x.id === orderId);
       if (!o) return;
       const status = document.getElementById("status-" + orderId).value;
-      const price = document.getElementById("qprice-" + orderId).value;
-      const weight = document.getElementById("qweight-" + orderId).value;
+      const qPriceEl = document.getElementById("qprice-" + orderId);
+      const quotedPrice = qPriceEl ? qPriceEl.value : "";
       const note = document.getElementById("qnote-" + orderId).value.trim();
+
+      const amountLine = o.type === "link"
+        ? (quotedPrice ? `Angebotspreis: ${formatPrice(quotedPrice)}` : null)
+        : (o.totalPrice ? `Gesamtbetrag: ${formatPrice(o.totalPrice)}` : null);
 
       const lines = [
         `Hallo ${o.customerName}, hier ist ein Update vom ${STUDIO_CONFIG.shopName} zu deiner Anfrage (${o.refId}):`,
         `Status: ${status}`,
-        price ? `Angebotspreis: ${formatPrice(price)}` : null,
-        weight ? `Geschätztes Gewicht: ca. ${weight} g` : null,
-        note ? `Hinweis: ${note}` : null
+        amountLine,
+        note ? `Hinweis: ${note}` : null,
+        `Bitte sende die Summe per PayPal (Freunde & Bekannte) an ${STUDIO_CONFIG.paypalEmail} oder zahle bei Übergabe in Bar.`
       ].filter(Boolean).join("\n");
 
       navigator.clipboard.writeText(lines);
-      showToast("Antworttext kopiert!");
+      showToast("Antworttext inkl. PayPal-/Bar-Info kopiert!");
     };
 
     window.deleteOrder = async function(orderId) {
@@ -1337,11 +1678,11 @@
       showToast("Anfrage gelöscht.");
     };
 
-    // --- Admin: 3D-Modelle ---
+    // --- Admin: 3D-Modelle (inkl. Multi-Bild-Upload) ---
     function renderAdminProductsFormHelpers() {
       const catSelect = document.getElementById("prodCategory");
       const currentCat = catSelect.value;
-      catSelect.innerHTML = categories.map(c => `<option value="${c.name}">${c.name}</option>`).join("");
+      catSelect.innerHTML = categories.map(c => `<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join("");
       if ([...catSelect.options].some(o => o.value === currentCat)) catSelect.value = currentCat;
 
       const filBox = document.getElementById("productFilamentCheckboxes");
@@ -1356,7 +1697,7 @@
         <label class="flex items-center gap-2 p-2 rounded-xl bg-white border border-[#E2DFD7] text-xs cursor-pointer">
           <input type="checkbox" name="prodFilCheck" value="${f.id}" ${checkedIds.includes(f.id) ? "checked" : ""} class="rounded accent-[#22211F]" />
           <span class="w-3 h-3 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
-          <span class="truncate ${f.inStock ? "text-[#22211F]" : "text-[#9A948C] line-through"}">${f.name} (${f.material})</span>
+          <span class="truncate ${f.inStock ? "text-[#22211F]" : "text-[#9A948C] line-through"}">${escapeHtml(f.name)} (${escapeHtml(f.material)})</span>
         </label>
       `).join("");
     }
@@ -1365,35 +1706,123 @@
       document.querySelectorAll("input[name='prodFilCheck']").forEach(cb => cb.checked = true);
     };
 
-    window.handleProductPhotoSelect = function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          const maxDim = 720;
-          const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
-          canvas.width = Math.round(img.width * scale);
-          canvas.height = Math.round(img.height * scale);
-          canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
-          let quality = 0.78;
-          uploadedCompressedImage = canvas.toDataURL("image/jpeg", quality);
-          while (uploadedCompressedImage.length > 650000 && quality > 0.35) {
-            quality -= 0.12;
-            uploadedCompressedImage = canvas.toDataURL("image/jpeg", quality);
-          }
+    function renderUploadedImagesPreview() {
+      const grid = document.getElementById("productImagesPreviewGrid");
+      const label = document.getElementById("productImageCountLabel");
+      label.textContent = `${uploadedImagesList.length} / 6 Fotos`;
 
-          const preview = document.getElementById("productImagePreview");
-          preview.src = uploadedCompressedImage;
-          preview.classList.remove("hidden");
-          document.getElementById("productImagePlaceholder").classList.add("hidden");
-          showToast("Foto optimiert & bereit!");
+      if (uploadedImagesList.length === 0) {
+        grid.classList.add("hidden");
+        grid.innerHTML = "";
+        return;
+      }
+
+      grid.classList.remove("hidden");
+      grid.innerHTML = uploadedImagesList.map((src, idx) => `
+        <div class="relative aspect-[4/3] rounded-xl overflow-hidden border ${idx === 0 ? "border-[#57151E] ring-1 ring-[#57151E]" : "border-[#E2DFD7]"} bg-[#EFECE6] group">
+          <img src="${src}" class="w-full h-full object-cover" />
+          ${idx === 0 ? `
+            <span class="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-[#57151E] text-white text-[9px] font-semibold">Titelbild</span>
+          ` : `
+            <button type="button" onclick="setCoverProductImage(${idx})" title="Als Titelbild festlegen"
+              class="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-black/65 hover:bg-black text-white text-[9px]">
+              ★ Titel
+            </button>
+          `}
+          <button type="button" onclick="removeProductImage(${idx})" title="Foto entfernen"
+            class="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/70 hover:bg-red-600 text-white text-[10px] flex items-center justify-center">
+            ✕
+          </button>
+        </div>
+      `).join("");
+    }
+
+    window.removeProductImage = function(idx) {
+      uploadedImagesList.splice(idx, 1);
+      renderUploadedImagesPreview();
+    };
+
+    window.setCoverProductImage = function(idx) {
+      if (idx <= 0 || idx >= uploadedImagesList.length) return;
+      const [picked] = uploadedImagesList.splice(idx, 1);
+      uploadedImagesList.unshift(picked);
+      renderUploadedImagesPreview();
+    };
+
+    function compressImageFile(file, maxDim = 680, initialQuality = 0.74) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = reject;
+        reader.onload = ev => {
+          const img = new Image();
+          img.onerror = reject;
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+            canvas.width = Math.round(img.width * scale);
+            canvas.height = Math.round(img.height * scale);
+            canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            let quality = initialQuality;
+            let dataUrl = canvas.toDataURL("image/jpeg", quality);
+            while (dataUrl.length > 180000 && quality > 0.36) {
+              quality -= 0.1;
+              dataUrl = canvas.toDataURL("image/jpeg", quality);
+            }
+            resolve(dataUrl);
+          };
+          img.src = ev.target.result;
         };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    window.handleProductPhotoSelect = async function(e) {
+      const files = Array.from(e.target.files || []);
+      if (files.length === 0) return;
+
+      const remainingSlots = 6 - uploadedImagesList.length;
+      if (remainingSlots <= 0) {
+        showToast("Maximal 6 Fotos pro Modell möglich.");
+        e.target.value = "";
+        return;
+      }
+
+      const filesToProcess = files.slice(0, remainingSlots);
+      showToast(`${filesToProcess.length} Foto(s) werden optimiert …`);
+
+      try {
+        const compressedBatch = await Promise.all(
+          filesToProcess.map(f => compressImageFile(f, 680, 0.74))
+        );
+        uploadedImagesList.push(...compressedBatch);
+
+        // Sicherstellen, dass alle Bilder zusammen deutlich unter dem 1-MB-Firestore-Limit bleiben
+        const totalChars = uploadedImagesList.reduce((acc, s) => acc + s.length, 0);
+        if (totalChars > 760000) {
+          uploadedImagesList = await Promise.all(
+            uploadedImagesList.map(src => new Promise(resolve => {
+              const img = new Image();
+              img.onload = () => {
+                const c = document.createElement("canvas");
+                const sc = Math.min(1, 520 / Math.max(img.width, img.height));
+                c.width = Math.round(img.width * sc);
+                c.height = Math.round(img.height * sc);
+                c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+                resolve(c.toDataURL("image/jpeg", 0.58));
+              };
+              img.src = src;
+            }))
+          );
+        }
+
+        renderUploadedImagesPreview();
+        showToast(`${uploadedImagesList.length} Foto(s) bereit!`);
+      } catch (err) {
+        showToast("Foto konnte nicht verarbeitet werden.");
+      } finally {
+        e.target.value = "";
+      }
     };
 
     window.saveProduct = async function(e) {
@@ -1401,8 +1830,6 @@
       const editId = document.getElementById("editProductId").value;
       const title = document.getElementById("prodTitle").value.trim();
       const category = document.getElementById("prodCategory").value;
-      const materialNote = document.getElementById("prodMaterialNote").value.trim();
-      const weightGrams = parseInt(document.getElementById("prodWeight").value, 10);
       const price = parseFloat(document.getElementById("prodPrice").value);
       const description = document.getElementById("prodDescription").value.trim();
       const filamentIds = [...document.querySelectorAll("input[name='prodFilCheck']:checked")].map(cb => cb.value);
@@ -1418,15 +1845,18 @@
 
       try {
         const existing = editId ? products.find(p => p.id === editId) : null;
+        const finalImages = uploadedImagesList.length > 0
+          ? [...uploadedImagesList]
+          : (existing ? getProductImages(existing) : [createPlaceholderGraphic(title)]);
+
         const payload = {
           title,
           category,
-          materialNote,
-          weightGrams,
           price,
           description,
           filamentIds,
-          imageData: uploadedCompressedImage || (existing ? existing.imageData : createPlaceholderGraphic(title)),
+          images: finalImages,
+          imageData: finalImages[0],
           createdAt: existing ? existing.createdAt : Date.now()
         };
 
@@ -1467,18 +1897,13 @@
 
       document.getElementById("prodTitle").value = p.title;
       document.getElementById("prodCategory").value = p.category;
-      document.getElementById("prodMaterialNote").value = p.materialNote || "";
-      document.getElementById("prodWeight").value = p.weightGrams;
       document.getElementById("prodPrice").value = p.price;
       document.getElementById("prodDescription").value = p.description || "";
 
-      uploadedCompressedImage = p.imageData || "";
-      if (uploadedCompressedImage) {
-        const preview = document.getElementById("productImagePreview");
-        preview.src = uploadedCompressedImage;
-        preview.classList.remove("hidden");
-        document.getElementById("productImagePlaceholder").classList.add("hidden");
-      }
+      uploadedImagesList = Array.isArray(p.images) && p.images.length > 0
+        ? [...p.images]
+        : (p.imageData ? [p.imageData] : []);
+      renderUploadedImagesPreview();
 
       document.querySelectorAll("input[name='prodFilCheck']").forEach(cb => {
         cb.checked = (p.filamentIds || []).includes(cb.value);
@@ -1493,9 +1918,8 @@
       document.getElementById("productFormTitle").textContent = "Neues 3D-Modell einstellen";
       document.getElementById("saveProductBtn").textContent = "Modell veröffentlichen";
       document.getElementById("cancelEditBtn").classList.add("hidden");
-      uploadedCompressedImage = "";
-      document.getElementById("productImagePreview").classList.add("hidden");
-      document.getElementById("productImagePlaceholder").classList.remove("hidden");
+      uploadedImagesList = [];
+      renderUploadedImagesPreview();
     };
 
     window.deleteProduct = async function(prodId) {
@@ -1521,13 +1945,17 @@
 
       box.innerHTML = products.map(p => {
         const availCount = getAvailableFilamentsForProduct(p).length;
+        const imgs = getProductImages(p);
         return `
           <div class="py-3.5 flex items-center justify-between gap-3">
             <div class="flex items-center gap-3 min-w-0">
-              <img src="${p.imageData || createPlaceholderGraphic(p.title)}" class="w-12 h-12 rounded-xl object-cover bg-[#EFECE6] shrink-0" />
+              <div class="relative w-12 h-12 rounded-xl overflow-hidden bg-[#EFECE6] shrink-0">
+                <img src="${imgs[0]}" class="w-full h-full object-cover" />
+                ${imgs.length > 1 ? `<span class="absolute bottom-0.5 right-0.5 px-1 rounded bg-black/70 text-white text-[9px]">${imgs.length}</span>` : ""}
+              </div>
               <div class="min-w-0">
                 <div class="text-sm font-semibold text-[#22211F] truncate">${escapeHtml(p.title)}</div>
-                <div class="text-xs text-[#6E6A63]">${escapeHtml(p.category)} • ${p.weightGrams} g • ${formatPrice(p.price)} • ${availCount} vorrätige Farben</div>
+                <div class="text-xs text-[#6E6A63]">${escapeHtml(p.category)} • ${formatPrice(p.price)} • ${availCount} vorrätige Farben</div>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
@@ -1554,6 +1982,7 @@
         syncDemoStorage();
       }
       document.getElementById("filName").value = "";
+      lastSelectedPresetName = "";
       showToast(`${name} (${material}) angelegt.`);
     };
 
@@ -1655,10 +2084,10 @@
     // --- Beispieldaten für schnellen Start ---
     window.seedStarterData = async function() {
       const sampleFilaments = [
-        { name: "Mattschwarz", material: "PLA", hex: "#22211F", inStock: true, createdAt: Date.now() },
-        { name: "Reinweiß", material: "PETG", hex: "#F7F6F2", inStock: true, createdAt: Date.now() + 1 },
-        { name: "Warmgrau", material: "PLA Matte", hex: "#9A948C", inStock: true, createdAt: Date.now() + 2 },
-        { name: "Bronze", material: "PLA Silk", hex: "#8C7765", inStock: true, createdAt: Date.now() + 3 }
+        { name: "Mattschwarz", material: "PLA", hex: "#1E1E1E", inStock: true, createdAt: Date.now() },
+        { name: "Reinweiß", material: "PETG", hex: "#F8F8F6", inStock: true, createdAt: Date.now() + 1 },
+        { name: "Steingrau", material: "PLA Matte", hex: "#8A8D8F", inStock: true, createdAt: Date.now() + 2 },
+        { name: "Weinrot / Burgund", material: "PLA Silk", hex: "#57151E", inStock: true, createdAt: Date.now() + 3 }
       ];
 
       let createdFilIds = [];
@@ -1681,22 +2110,20 @@
         {
           title: "Minimalistischer Kopfhörer-Ständer",
           category: "Alltag & Ordnung",
-          materialNote: "PLA Matte",
-          weightGrams: 145,
           price: 16.00,
           description: "Standfester Tischhalter mit abgerundeter Auflagefläche für Over-Ear-Kopfhörer.",
           filamentIds: createdFilIds.slice(0, 3),
+          images: [createPlaceholderGraphic("Kopfhörer-Ständer")],
           imageData: createPlaceholderGraphic("Kopfhörer-Ständer"),
           createdAt: Date.now()
         },
         {
           title: "Untertisch-Kabelhalterung",
           category: "Werkstatt",
-          materialNote: "PETG (formstabil)",
-          weightGrams: 95,
           price: 11.50,
           description: "Saubere Kabelführung für Schreibtisch oder Werkbank – zum Schrauben oder Kleben.",
           filamentIds: createdFilIds.slice(0, 2),
+          images: [createPlaceholderGraphic("Untertisch-Kabelhalter")],
           imageData: createPlaceholderGraphic("Untertisch-Kabelhalter"),
           createdAt: Date.now() + 1
         }
