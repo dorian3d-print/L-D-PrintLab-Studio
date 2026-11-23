@@ -39,17 +39,17 @@
       font-family: 'Montserrat', 'Plus Jakarta Sans', sans-serif;
     }
     .site-logo {
-      height: 96px;
+      height: 124px;
       width: auto;
-      max-width: min(88vw, 340px);
+      max-width: min(90vw, 380px);
       object-fit: contain;
       border-radius: 0;
       filter: none;
     }
     @media (min-width: 640px) {
       .site-logo {
-        height: 118px;
-        max-width: 420px;
+        height: 150px;
+        max-width: 460px;
       }
     }
     .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -82,37 +82,27 @@
   </script>
 
   <!-- =====================================================================
-       2. HEADER & LOGO (ORIGINAL LOGO.PNG)
+       2. HEADER & LOGO (TRANSPARENTES LOGO.PNG)
        ===================================================================== -->
   <header class="sticky top-0 z-30 bg-[#F7F6F2]/95 backdrop-blur-md border-b border-[#E2DFD7]">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-3.5 pb-3.5">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 pt-3 pb-3">
       <div class="relative flex flex-col items-center justify-center">
-        <!-- Studio-Link teilen oben rechts -->
-        <div class="w-full flex justify-end sm:absolute sm:top-0 sm:right-0 mb-1 sm:mb-0">
-          <button onclick="shareCatalogLink()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-[#EFECE6] text-[#22211F] text-[11px] sm:text-xs font-medium border border-[#E2DFD7] shadow-2xs transition shrink-0">
-            <svg class="w-3.5 h-3.5 text-[#57151E]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
-            </svg>
-            <span>Studio-Link teilen</span>
-          </button>
-        </div>
-
         <!-- Zentriertes L&D PrintLab Studio Marken-Logo -->
         <button onclick="switchTab('catalog')" class="flex flex-col items-center text-center group focus:outline-none">
           <img src="logo.png" alt="L&D PrintLab Studio Logo" class="site-logo transition-transform duration-200 group-hover:scale-[1.02]" />
         </button>
       </div>
 
-      <!-- Navigations-Tabs (Studio-Verwaltung ist dezent im Footer versteckt) -->
-      <nav class="flex items-center justify-start sm:justify-center gap-1.5 mt-4 overflow-x-auto no-scrollbar">
-        <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-[#22211F] text-white transition whitespace-nowrap">
+      <!-- Navigations-Tabs (passen auf Mobilgeräten nebeneinander ohne Scrollen) -->
+      <nav class="flex items-center justify-center gap-1 sm:gap-2 mt-3 w-full">
+        <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm leading-tight font-medium bg-[#22211F] text-white transition whitespace-nowrap">
           Katalog
         </button>
-        <button onclick="switchTab('custom-link')" id="nav-custom-link" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
+        <button onclick="switchTab('custom-link')" id="nav-custom-link" class="nav-btn px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm leading-tight font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
           Wunschmodell per Link
         </button>
-        <button onclick="switchTab('my-orders')" id="nav-my-orders" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
-          Anfragestatus <span id="myOrdersBadge" class="hidden ml-1.5 px-1.5 py-0.5 text-[11px] rounded-full bg-[#57151E] text-white">0</span>
+        <button onclick="switchTab('my-orders')" id="nav-my-orders" class="nav-btn inline-flex items-center justify-center px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm leading-tight font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
+          <span>Anfragestatus</span><span id="myOrdersBadge" class="hidden inline-flex items-center justify-center ml-1 sm:ml-1.5 px-1.5 py-0.5 text-[10px] sm:text-[11px] leading-none rounded-full bg-[#57151E] text-white">0</span>
         </button>
       </nav>
     </div>
@@ -256,9 +246,9 @@
         </div>
 
         <!-- Suche nach Bestellnummer -->
-        <form onsubmit="lookupOrderByCode(event)" class="flex gap-2">
-          <input type="text" id="lookupRefInput" placeholder="Bestellnummer eingeben (z. B. #LP-4821)" class="flex-1 px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60 text-sm uppercase focus:bg-white focus:outline-none focus:border-[#57151E]" />
-          <button type="submit" class="px-5 py-2.5 rounded-2xl bg-[#22211F] text-white text-xs font-medium hover:bg-[#3A3835] transition">
+        <form onsubmit="lookupOrderByCode(event)" class="flex items-stretch gap-2 w-full min-w-0">
+          <input type="text" id="lookupRefInput" placeholder="Bestellnummer eingeben (z. B. #LP-4821)" class="flex-1 min-w-0 w-full px-3.5 sm:px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60 text-xs sm:text-sm placeholder:normal-case uppercase focus:bg-white focus:outline-none focus:border-[#57151E]" />
+          <button type="submit" class="shrink-0 whitespace-nowrap px-4 sm:px-5 py-2.5 rounded-2xl bg-[#22211F] text-white text-xs font-medium hover:bg-[#3A3835] transition">
             Abrufen
           </button>
         </form>
@@ -466,24 +456,36 @@
   </main>
 
   <!-- =====================================================================
-       4. FOOTER MIT PRIVATEM HINWEIS & DEZENTEM ADMIN-ZUGANG
+       4. FOOTER MIT STUDIO-LINK TEILEN, PRIVATEM HINWEIS & ADMIN-ZUGANG
        ===================================================================== -->
   <footer class="mt-10 border-t border-[#E2DFD7] bg-[#F7F6F2]">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-[11px] text-[#6E6A63] leading-relaxed">
-      <div class="space-y-1 max-w-3xl">
-        <p class="font-medium text-[#22211F]">Privates Hobby-Projekt für Freunde &amp; Bekannte</p>
-        <p>
-          Kein gewerblicher Online-Shop. Alle 3D-Drucke werden ausschließlich auf private Anfrage im Freundes- und Bekanntenkreis gegen Unkostenbeitrag (Material- &amp; Stromkosten, Arbeitszeit und sonstige Unkosten) individuell angefertigt.
-          Verlinkte Plattformen (MakerWorld, Thingiverse) und deren Modelle unterliegen den jeweiligen Lizenzbedingungen der Designer.
-        </p>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-5 pb-6 space-y-4 text-[11px] text-[#6E6A63] leading-relaxed">
+      <!-- Studio-Link teilen am Seitenende über dem Hinweis -->
+      <div class="flex items-center justify-start">
+        <button type="button" onclick="shareCatalogLink()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[#EFECE6] text-[#22211F] text-xs font-medium border border-[#E2DFD7] shadow-2xs transition">
+          <svg class="w-3.5 h-3.5 text-[#57151E]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+          </svg>
+          <span>Studio-Link teilen</span>
+        </button>
       </div>
-      <!-- Versteckter / dezenter Zugang zur Studio-Verwaltung -->
-      <button onclick="switchTab('admin')" class="inline-flex items-center gap-1 text-[11px] text-[#9A948C] hover:text-[#57151E] transition shrink-0 self-end sm:self-center" title="Interne Studio-Verwaltung">
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-        </svg>
-        <span>Intern</span>
-      </button>
+
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="space-y-1 max-w-3xl">
+          <p class="font-medium text-[#22211F]">Privates Hobby-Projekt für Freunde &amp; Bekannte</p>
+          <p>
+            Kein gewerblicher Online-Shop. Alle 3D-Drucke werden ausschließlich auf private Anfrage im Freundes- und Bekanntenkreis gegen Unkostenbeitrag (Material- &amp; Stromkosten, Arbeitszeit und sonstige Unkosten) individuell angefertigt.
+            Verlinkte Plattformen (MakerWorld, Thingiverse) und deren Modelle unterliegen den jeweiligen Lizenzbedingungen der Designer.
+          </p>
+        </div>
+        <!-- Versteckter / dezenter Zugang zur Studio-Verwaltung -->
+        <button type="button" onclick="switchTab('admin')" class="inline-flex items-center gap-1 text-[11px] text-[#9A948C] hover:text-[#57151E] transition shrink-0 self-end sm:self-center" title="Interne Studio-Verwaltung">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+          </svg>
+          <span>Intern</span>
+        </button>
+      </div>
     </div>
   </footer>
 
@@ -1225,6 +1227,12 @@
 
       onSnapshot(query(collection(db, "orders"), orderBy("createdAt", "desc")), snap => {
         allOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const existingRefs = new Set(allOrders.map(o => o.refId));
+        const cleanedRefs = Array.from(new Set(localSavedRefs)).filter(ref => existingRefs.has(ref));
+        if (cleanedRefs.length !== localSavedRefs.length) {
+          localSavedRefs = cleanedRefs;
+          localStorage.setItem("ld_printlab_refs", JSON.stringify(localSavedRefs));
+        }
         updateBadges();
         renderMyOrders();
         if (isAdminLoggedIn) renderAdminOrders();
@@ -1672,9 +1680,13 @@
 
     function updateBadges() {
       const badge = document.getElementById("myOrdersBadge");
-      if (localSavedRefs.length > 0) {
-        badge.textContent = localSavedRefs.length;
+      const matchedCount = allOrders.filter(o => localSavedRefs.includes(o.refId)).length;
+      if (matchedCount > 0) {
+        badge.textContent = matchedCount;
         badge.classList.remove("hidden");
+      } else {
+        badge.textContent = "0";
+        badge.classList.add("hidden");
       }
       const openCount = allOrders.filter(o => o.status === "Neu eingegangen").length;
       document.getElementById("openOrdersCounter").textContent = openCount;
