@@ -38,6 +38,20 @@
     .font-brand {
       font-family: 'Montserrat', 'Plus Jakarta Sans', sans-serif;
     }
+    .site-logo {
+      height: 96px;
+      width: auto;
+      max-width: min(88vw, 340px);
+      object-fit: contain;
+      border-radius: 0;
+      filter: none;
+    }
+    @media (min-width: 640px) {
+      .site-logo {
+        height: 118px;
+        max-width: 420px;
+      }
+    }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
@@ -68,7 +82,7 @@
   </script>
 
   <!-- =====================================================================
-       2. HEADER & LOGO (IDENTISCH ZUM L&D PRINTLAB STUDIO LOGO)
+       2. HEADER & LOGO (ORIGINAL LOGO.JPG)
        ===================================================================== -->
   <header class="sticky top-0 z-30 bg-[#F7F6F2]/95 backdrop-blur-md border-b border-[#E2DFD7]">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-3.5 pb-3.5">
@@ -85,86 +99,7 @@
 
         <!-- Zentriertes L&D PrintLab Studio Marken-Logo -->
         <button onclick="switchTab('catalog')" class="flex flex-col items-center text-center group focus:outline-none">
-          <!-- Isometrisches 3D L&D Hexagon-Emblem -->
-          <svg class="w-[72px] h-[72px] sm:w-[86px] sm:h-[86px] transition-transform duration-200 group-hover:scale-[1.02]" viewBox="0 0 220 212" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="L&D PrintLab Studio Logo">
-            <defs>
-              <linearGradient id="ldCenterPillar" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#F3D6D8"/>
-                <stop offset="30%" stop-color="#C88188"/>
-                <stop offset="68%" stop-color="#EBC2C5"/>
-                <stop offset="100%" stop-color="#74212B"/>
-              </linearGradient>
-              <linearGradient id="ldLeftInner" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#EFC8CB"/>
-                <stop offset="55%" stop-color="#C98289"/>
-                <stop offset="100%" stop-color="#8C353F"/>
-              </linearGradient>
-              <linearGradient id="ldLeftDark" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#611822"/>
-                <stop offset="100%" stop-color="#3E0B12"/>
-              </linearGradient>
-              <linearGradient id="ldBottomSlant" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#B86C73"/>
-                <stop offset="52%" stop-color="#ECC5C8"/>
-                <stop offset="100%" stop-color="#9A454F"/>
-              </linearGradient>
-              <linearGradient id="ldTopCap" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#F8E4E5"/>
-                <stop offset="100%" stop-color="#D4959B"/>
-              </linearGradient>
-              <linearGradient id="ldCurveD" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#6A1C26"/>
-                <stop offset="50%" stop-color="#4B0F17"/>
-                <stop offset="100%" stop-color="#661A24"/>
-              </linearGradient>
-            </defs>
-
-            <!-- Äußeres isometrisches Sechseck -->
-            <polygon points="110,12 192,59 192,153 110,200 28,153 28,59" stroke="#4D1119" stroke-width="1.8" fill="none"/>
-
-            <!-- Feine isometrische Konstruktionslinien -->
-            <line x1="110" y1="12" x2="56" y2="44" stroke="#4D1119" stroke-width="1.3"/>
-            <line x1="28" y1="153" x2="100" y2="111" stroke="#4D1119" stroke-width="1.3"/>
-            <line x1="110" y1="12" x2="110" y2="200" stroke="#4D1119" stroke-width="1.2"/>
-
-            <!-- Zentraler vertikaler 3D-Balken -->
-            <polygon points="100,18 110,12 120,18 120,194 110,200 100,194" fill="url(#ldCenterPillar)" stroke="#4D1119" stroke-width="1.4"/>
-
-            <!-- Geschwungenes 3D-"D" rechts -->
-            <path d="M120,34 C156,34 176,63 176,105 C176,147 156,176 120,176 L120,160 C145,160 160,138 160,105 C160,72 145,50 120,50 Z" fill="url(#ldCurveD)" stroke="#4D1119" stroke-width="1.3"/>
-            <!-- Äußere parallele Konturlinie des "D" -->
-            <path d="M120,21 C166,21 190,57 190,105 C190,153 166,189 120,189" stroke="#4D1119" stroke-width="1.4" fill="none"/>
-
-            <!-- Isometrisches 3D-"L" links -->
-            <!-- Linke dunkle Vorderseite der vertikalen Säule -->
-            <polygon points="28,59 42,67 42,145 28,153" fill="url(#ldLeftDark)" stroke="#4D1119" stroke-width="1.4" stroke-linejoin="round"/>
-            <!-- Rechte helle Rosé-Flanke der vertikalen Säule -->
-            <polygon points="42,67 56,59 56,137 42,145" fill="url(#ldLeftInner)" stroke="#4D1119" stroke-width="1.4" stroke-linejoin="round"/>
-            <!-- Obere isometrische Deckfläche der L-Säule -->
-            <polygon points="42,51 56,59 42,67 28,59" fill="url(#ldTopCap)" stroke="#4D1119" stroke-width="1.4" stroke-linejoin="round"/>
-
-            <!-- Unterer schräger L-Schenkel: obere helle Fläche -->
-            <polygon points="42,145 56,137 110,169 110,185" fill="url(#ldBottomSlant)" stroke="#4D1119" stroke-width="1.4" stroke-linejoin="round"/>
-            <!-- Unterer schräger L-Schenkel: untere dunkle Kante -->
-            <polygon points="28,153 42,145 110,185 110,200" fill="url(#ldLeftDark)" stroke="#4D1119" stroke-width="1.4" stroke-linejoin="round"/>
-
-            <!-- Klassisches "&" im Zentrum -->
-            <text x="103" y="131" fill="#52121B" stroke="#F8E6E7" stroke-width="0.6" paint-order="stroke" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="400" text-anchor="middle">&amp;</text>
-          </svg>
-
-          <!-- Markenname -->
-          <span class="font-brand text-xl sm:text-[26px] font-normal tracking-[0.03em] text-[#57151E] leading-tight mt-0.5">
-            L&amp;D PrintLab Studio
-          </span>
-
-          <!-- Untertitel mit feinen Linien links & rechts -->
-          <div class="flex items-center justify-center gap-2.5 sm:gap-3.5 mt-1">
-            <span class="w-9 sm:w-16 h-[1px] bg-[#57151E]/60"></span>
-            <span class="font-brand text-[9px] sm:text-[10.5px] font-medium tracking-[0.26em] text-[#57151E] uppercase">
-              DESIGN &bull; 3D PRINT &bull; CREATE
-            </span>
-            <span class="w-9 sm:w-16 h-[1px] bg-[#57151E]/60"></span>
-          </div>
+          <img src="logo.jpg" alt="L&D PrintLab Studio Logo" class="site-logo transition-transform duration-200 group-hover:scale-[1.02]" />
         </button>
       </div>
 
@@ -198,24 +133,9 @@
 
     <!-- TAB 1: PRODUKTKATALOG -->
     <section id="view-catalog" class="space-y-6">
-      <!-- Kompakte Infoleiste: Fertigung auf Anfrage & Bezahlung -->
-      <div class="bg-white rounded-2xl border border-[#E2DFD7] px-4 py-3.5 sm:px-5 sm:py-4 flex flex-col md:flex-row md:items-center justify-between gap-2.5 text-xs text-[#6E6A63]">
-        <div class="flex items-start sm:items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-[#57151E] mt-1 sm:mt-0 shrink-0"></span>
-          <span><strong class="text-[#22211F]">Frisch gedruckt auf Anfrage:</strong> Modelle sind nicht auf Lager, werden aber schnellstmöglich nach deiner Bestellung gedruckt.</span>
-        </div>
-        <div class="flex items-start sm:items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-[#8C7765] mt-1 sm:mt-0 shrink-0"></span>
-          <span><strong class="text-[#22211F]">Bezahlung:</strong> Keine Zahlung über die Website – privat per PayPal (Freunde &amp; Bekannte) oder Bar.</span>
-        </div>
-      </div>
-
       <!-- Filterleiste -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div id="categoryPills" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1"></div>
-        <button onclick="switchTab('custom-link')" class="self-start sm:self-auto px-4 py-2 rounded-full bg-white hover:bg-[#EFECE6] text-[#22211F] border border-[#E2DFD7] text-xs font-medium transition whitespace-nowrap">
-          Eigenen MakerWorld / Thingiverse Link senden →
-        </button>
       </div>
 
       <!-- Ladezustand -->
@@ -553,7 +473,7 @@
       <div class="space-y-1 max-w-3xl">
         <p class="font-medium text-[#22211F]">Privates Hobby-Projekt für Freunde &amp; Bekannte</p>
         <p>
-          Kein gewerblicher Online-Shop. Alle 3D-Drucke werden ausschließlich auf private Anfrage im Freundes- und Bekanntenkreis gegen Unkostenbeitrag (Material- &amp; Stromkosten) individuell angefertigt.
+          Kein gewerblicher Online-Shop. Alle 3D-Drucke werden ausschließlich auf private Anfrage im Freundes- und Bekanntenkreis gegen Unkostenbeitrag (Material- &amp; Stromkosten, Arbeitszeit und sonstige Unkosten) individuell angefertigt.
           Verlinkte Plattformen (MakerWorld, Thingiverse) und deren Modelle unterliegen den jeweiligen Lizenzbedingungen der Designer.
         </p>
       </div>
@@ -665,7 +585,64 @@
   </div>
 
   <!-- =====================================================================
-       7. CLOUD-DATENBANK (FIREBASE) & ANWENDUNGSLOGIK
+       7. VOLLBILD-LIGHTBOX & ZOOM FÜR PRODUKTBILDER
+       ===================================================================== -->
+  <div id="imageLightboxModal" class="fixed inset-0 z-[60] hidden bg-black/95 backdrop-blur-sm flex flex-col select-none">
+    <!-- Obere Steuerleiste -->
+    <div class="flex items-center justify-between px-4 sm:px-6 py-3.5 text-white border-b border-white/10 z-20 bg-black/40">
+      <div class="min-w-0 pr-3">
+        <div id="lightboxTitle" class="font-display text-sm sm:text-base font-semibold truncate">Modellansicht</div>
+        <div id="lightboxCounter" class="text-[11px] text-white/65">1 / 1</div>
+      </div>
+
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <button type="button" onclick="adjustLightboxZoom(-0.5)" aria-label="Herauszoomen"
+          class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 text-white font-bold text-base flex items-center justify-center transition">
+          −
+        </button>
+        <button type="button" onclick="resetLightboxZoom()" id="lightboxZoomLabel" title="Zoom zurücksetzen"
+          class="px-2.5 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-mono font-medium flex items-center justify-center transition min-w-[54px]">
+          100%
+        </button>
+        <button type="button" onclick="adjustLightboxZoom(0.5)" aria-label="Hineinzoomen"
+          class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 text-white font-bold text-base flex items-center justify-center transition">
+          +
+        </button>
+        <button type="button" onclick="closeImageLightbox()" aria-label="Vollbild schließen"
+          class="ml-1.5 w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 text-white font-semibold text-sm flex items-center justify-center transition">
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- Bildbereich mit Zoom & Pan -->
+    <div id="lightboxViewport" class="relative flex-1 w-full h-full overflow-hidden flex items-center justify-center touch-none">
+      <img id="lightboxImg" src="" alt="Vollbildansicht"
+        class="max-w-full max-h-full object-contain origin-center transition-transform duration-150 ease-out cursor-grab"
+        draggable="false" />
+
+      <!-- Vorheriges / Nächstes Bild -->
+      <button type="button" id="lightboxPrevBtn" onclick="stepLightboxImage(-1)" aria-label="Vorheriges Bild"
+        class="hidden absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/15 hover:bg-white/30 text-white text-xl font-bold flex items-center justify-center backdrop-blur-sm transition">
+        ‹
+      </button>
+      <button type="button" id="lightboxNextBtn" onclick="stepLightboxImage(1)" aria-label="Nächstes Bild"
+        class="hidden absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/15 hover:bg-white/30 text-white text-xl font-bold flex items-center justify-center backdrop-blur-sm transition">
+        ›
+      </button>
+    </div>
+
+    <!-- Untere Leiste mit Punkten & Bedienungshinweis -->
+    <div class="px-4 py-3 flex flex-col items-center justify-center gap-2 border-t border-white/10 bg-black/40 z-20">
+      <div id="lightboxDots" class="hidden flex items-center gap-2"></div>
+      <p class="text-[11px] text-white/60 text-center">
+        Doppeltippen / Doppelklick oder + / − zum Zoomen • Ziehen zum Verschieben
+      </p>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       8. CLOUD-DATENBANK (FIREBASE) & ANWENDUNGSLOGIK
        ===================================================================== -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
@@ -692,6 +669,8 @@
     let selectedModalFilamentId = "";
     let uploadedImagesList = [];
     let lastSelectedPresetName = "";
+
+    window._galleryRegistry = {};
 
     const DEFAULT_CATEGORIES = ["Alltag & Ordnung", "Werkstatt", "Deko & Wohnen", "Ersatzteile"];
 
@@ -820,18 +799,32 @@
     }
 
     // =====================================================================
-    // BILDER-KARUSSELL (SWIPE + PAGINATION-PUNKTE)
+    // BILDER-KARUSSELL (SWIPE + PAGINATION-PUNKTE + VOLLBILD-KLICK)
     // =====================================================================
     function buildImageCarouselHtml(galleryId, images, altTitle, showCategoryBadge = "", extraClass = "") {
+      window._galleryRegistry[galleryId] = { images, title: altTitle };
+
+      const zoomHintBadge = `
+        <button type="button" aria-label="Vollbild & Zoom öffnen"
+          onclick="event.stopPropagation(); openActiveCarouselLightbox('${galleryId}')"
+          class="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-full bg-black/45 hover:bg-black/65 text-white flex items-center justify-center backdrop-blur-sm transition"
+          title="Bild vergrößern">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.35zM10.5 7.5v6m-3-3h6" />
+          </svg>
+        </button>
+      `;
+
       if (images.length <= 1) {
         return `
-          <div class="relative aspect-[4/3] bg-[#EFECE6] overflow-hidden ${extraClass}">
-            <img src="${images[0]}" alt="${escapeHtml(altTitle)}" class="w-full h-full object-cover" />
+          <div onclick="openImageLightbox('${galleryId}', 0)" class="relative aspect-[4/3] bg-[#EFECE6] overflow-hidden cursor-zoom-in group ${extraClass}">
+            <img src="${images[0]}" alt="${escapeHtml(altTitle)}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
             ${showCategoryBadge ? `
-              <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm text-[#22211F] text-[11px] font-medium border border-[#E2DFD7]">
+              <span class="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm text-[#22211F] text-[11px] font-medium border border-[#E2DFD7] pointer-events-none">
                 ${escapeHtml(showCategoryBadge)}
               </span>
             ` : ""}
+            ${zoomHintBadge}
           </div>
         `;
       }
@@ -843,7 +836,8 @@
             style="touch-action: pan-x pan-y;">
             ${images.map((src, idx) => `
               <img src="${src}" alt="${escapeHtml(altTitle)} (${idx + 1}/${images.length})" loading="lazy"
-                class="w-full h-full shrink-0 snap-center object-cover select-none" />
+                onclick="openImageLightbox('${galleryId}', ${idx})"
+                class="w-full h-full shrink-0 snap-center object-cover select-none cursor-zoom-in" />
             `).join("")}
           </div>
 
@@ -852,6 +846,8 @@
               ${escapeHtml(showCategoryBadge)}
             </span>
           ` : ""}
+
+          ${zoomHintBadge}
 
           <!-- Dezente Pfeile für Desktop-Mausbedienung -->
           <button type="button" aria-label="Vorheriges Bild" onclick="event.stopPropagation(); stepCarouselSlide('${galleryId}', -1, ${images.length})"
@@ -873,6 +869,15 @@
         </div>
       `;
     }
+
+    window.openActiveCarouselLightbox = function(galleryId) {
+      const el = document.getElementById("carousel-" + galleryId);
+      let activeIdx = 0;
+      if (el && el.clientWidth) {
+        activeIdx = Math.round(el.scrollLeft / el.clientWidth);
+      }
+      openImageLightbox(galleryId, activeIdx);
+    };
 
     window.updateCarouselDots = function(galleryId, total) {
       const el = document.getElementById("carousel-" + galleryId);
@@ -904,6 +909,279 @@
       const nextIdx = (currentIdx + delta + total) % total;
       el.scrollTo({ left: nextIdx * el.clientWidth, behavior: "smooth" });
     };
+
+    // =====================================================================
+    // VOLLBILD-LIGHTBOX & ZOOM LOGIK (TOUCH PINCH, DOPPELKLICK, PAN, MAUSRAD)
+    // =====================================================================
+    let lbImages = [];
+    let lbIndex = 0;
+    let lbScale = 1;
+    let lbTx = 0;
+    let lbTy = 0;
+
+    let lbIsDragging = false;
+    let lbDidMove = false;
+    let lbStartX = 0;
+    let lbStartY = 0;
+    let lbStartTx = 0;
+    let lbStartTy = 0;
+    let lbPinchStartDist = 0;
+    let lbPinchStartScale = 1;
+    let lbLastTapTime = 0;
+
+    function clampLightboxPan() {
+      const viewport = document.getElementById("lightboxViewport");
+      const img = document.getElementById("lightboxImg");
+      if (!viewport || !img || lbScale <= 1) {
+        lbTx = 0;
+        lbTy = 0;
+        return;
+      }
+      const maxX = Math.max(0, (img.offsetWidth * lbScale - viewport.clientWidth) / 2 + 40);
+      const maxY = Math.max(0, (img.offsetHeight * lbScale - viewport.clientHeight) / 2 + 40);
+      lbTx = Math.max(-maxX, Math.min(maxX, lbTx));
+      lbTy = Math.max(-maxY, Math.min(maxY, lbTy));
+    }
+
+    function applyLightboxTransform(withTransition = true) {
+      const img = document.getElementById("lightboxImg");
+      const zoomLabel = document.getElementById("lightboxZoomLabel");
+      if (!img) return;
+      img.style.transition = withTransition ? "transform 160ms ease-out" : "none";
+      img.style.transform = `translate3d(${lbTx}px, ${lbTy}px, 0) scale(${lbScale})`;
+      img.style.cursor = lbScale > 1 ? (lbIsDragging ? "grabbing" : "grab") : "zoom-in";
+      if (zoomLabel) {
+        zoomLabel.textContent = Math.round(lbScale * 100) + "%";
+      }
+    }
+
+    function renderLightboxSlide() {
+      const img = document.getElementById("lightboxImg");
+      const counter = document.getElementById("lightboxCounter");
+      const prevBtn = document.getElementById("lightboxPrevBtn");
+      const nextBtn = document.getElementById("lightboxNextBtn");
+      const dotsWrap = document.getElementById("lightboxDots");
+
+      lbScale = 1;
+      lbTx = 0;
+      lbTy = 0;
+      img.src = lbImages[lbIndex];
+      counter.textContent = `${lbIndex + 1} / ${lbImages.length}`;
+
+      const hasMulti = lbImages.length > 1;
+      prevBtn.classList.toggle("hidden", !hasMulti);
+      nextBtn.classList.toggle("hidden", !hasMulti);
+      dotsWrap.classList.toggle("hidden", !hasMulti);
+
+      if (hasMulti) {
+        dotsWrap.innerHTML = lbImages.map((_, i) => `
+          <button type="button" onclick="goToLightboxImage(${i})" aria-label="Bild ${i + 1}"
+            class="h-2 rounded-full transition-all ${i === lbIndex ? "w-5 bg-white" : "w-2 bg-white/45 hover:bg-white/80"}"></button>
+        `).join("");
+      }
+
+      applyLightboxTransform(false);
+    }
+
+    window.openImageLightbox = function(galleryId, startIndex = 0) {
+      const entry = window._galleryRegistry[galleryId];
+      if (!entry || !entry.images || entry.images.length === 0) return;
+
+      lbImages = entry.images;
+      lbIndex = Math.max(0, Math.min(lbImages.length - 1, startIndex));
+      document.getElementById("lightboxTitle").textContent = entry.title || "Modellansicht";
+
+      renderLightboxSlide();
+      document.getElementById("imageLightboxModal").classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+    };
+
+    window.closeImageLightbox = function() {
+      document.getElementById("imageLightboxModal").classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+      lbScale = 1;
+      lbTx = 0;
+      lbTy = 0;
+    };
+
+    window.stepLightboxImage = function(delta) {
+      if (lbImages.length <= 1) return;
+      lbIndex = (lbIndex + delta + lbImages.length) % lbImages.length;
+      renderLightboxSlide();
+    };
+
+    window.goToLightboxImage = function(idx) {
+      if (idx < 0 || idx >= lbImages.length) return;
+      lbIndex = idx;
+      renderLightboxSlide();
+    };
+
+    window.adjustLightboxZoom = function(delta) {
+      lbScale = Math.max(1, Math.min(4, Number((lbScale + delta).toFixed(2))));
+      clampLightboxPan();
+      applyLightboxTransform(true);
+    };
+
+    window.resetLightboxZoom = function() {
+      lbScale = 1;
+      lbTx = 0;
+      lbTy = 0;
+      applyLightboxTransform(true);
+    };
+
+    function toggleLightboxPointZoom(clientX, clientY) {
+      const viewport = document.getElementById("lightboxViewport");
+      if (!viewport) return;
+      if (lbScale > 1) {
+        resetLightboxZoom();
+      } else {
+        const rect = viewport.getBoundingClientRect();
+        const offsetX = clientX - (rect.left + rect.width / 2);
+        const offsetY = clientY - (rect.top + rect.height / 2);
+        lbScale = 2.5;
+        lbTx = -offsetX * 0.9;
+        lbTy = -offsetY * 0.9;
+        clampLightboxPan();
+        applyLightboxTransform(true);
+      }
+    }
+
+    // Lightbox Event-Listener (Maus, Mausrad, Touch-Pinch, Touch-Pan, Swipe, Tastatur)
+    (function setupLightboxEvents() {
+      const viewport = document.getElementById("lightboxViewport");
+      if (!viewport) return;
+
+      // Mausrad zum Zoomen
+      viewport.addEventListener("wheel", e => {
+        e.preventDefault();
+        const delta = e.deltaY < 0 ? 0.35 : -0.35;
+        adjustLightboxZoom(delta);
+      }, { passive: false });
+
+      // Doppelklick zum Rein-/Rauszoomen
+      viewport.addEventListener("dblclick", e => {
+        if (e.target.closest("button")) return;
+        toggleLightboxPointZoom(e.clientX, e.clientY);
+      });
+
+      // Maus-Drag zum Verschieben im gezoomten Zustand
+      viewport.addEventListener("mousedown", e => {
+        if (e.button !== 0 || e.target.closest("button")) return;
+        lbIsDragging = true;
+        lbDidMove = false;
+        lbStartX = e.clientX;
+        lbStartY = e.clientY;
+        lbStartTx = lbTx;
+        lbStartTy = lbTy;
+        if (lbScale > 1) applyLightboxTransform(false);
+      });
+
+      window.addEventListener("mousemove", e => {
+        if (!lbIsDragging) return;
+        const dx = e.clientX - lbStartX;
+        const dy = e.clientY - lbStartY;
+        if (Math.abs(dx) > 4 || Math.abs(dy) > 4) lbDidMove = true;
+        if (lbScale > 1) {
+          lbTx = lbStartTx + dx;
+          lbTy = lbStartTy + dy;
+          clampLightboxPan();
+          applyLightboxTransform(false);
+        }
+      });
+
+      window.addEventListener("mouseup", e => {
+        if (!lbIsDragging) return;
+        lbIsDragging = false;
+        if (lbScale > 1) {
+          applyLightboxTransform(true);
+        } else if (!lbDidMove && e.target === viewport) {
+          closeImageLightbox();
+        }
+      });
+
+      // Touch-Steuerung: 2-Finger-Pinch, 1-Finger-Pan (gezoomt) & 1-Finger-Swipe (100%)
+      viewport.addEventListener("touchstart", e => {
+        if (e.target.closest("button")) return;
+        if (e.touches.length === 2) {
+          lbIsDragging = false;
+          lbPinchStartDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          lbPinchStartScale = lbScale;
+        } else if (e.touches.length === 1) {
+          lbIsDragging = true;
+          lbDidMove = false;
+          lbStartX = e.touches[0].clientX;
+          lbStartY = e.touches[0].clientY;
+          lbStartTx = lbTx;
+          lbStartTy = lbTy;
+        }
+      }, { passive: true });
+
+      viewport.addEventListener("touchmove", e => {
+        if (e.touches.length === 2 && lbPinchStartDist > 0) {
+          e.preventDefault();
+          const dist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          lbScale = Math.max(1, Math.min(4, Number((lbPinchStartScale * (dist / lbPinchStartDist)).toFixed(2))));
+          clampLightboxPan();
+          applyLightboxTransform(false);
+        } else if (e.touches.length === 1 && lbIsDragging) {
+          const dx = e.touches[0].clientX - lbStartX;
+          const dy = e.touches[0].clientY - lbStartY;
+          if (Math.abs(dx) > 6 || Math.abs(dy) > 6) lbDidMove = true;
+          if (lbScale > 1) {
+            e.preventDefault();
+            lbTx = lbStartTx + dx;
+            lbTy = lbStartTy + dy;
+            clampLightboxPan();
+            applyLightboxTransform(false);
+          }
+        }
+      }, { passive: false });
+
+      viewport.addEventListener("touchend", e => {
+        if (e.touches.length < 2) {
+          lbPinchStartDist = 0;
+        }
+        if (e.touches.length === 0 && lbIsDragging) {
+          lbIsDragging = false;
+          const touch = e.changedTouches[0];
+          const dx = touch ? touch.clientX - lbStartX : 0;
+          const dy = touch ? touch.clientY - lbStartY : 0;
+
+          if (lbScale > 1) {
+            clampLightboxPan();
+            applyLightboxTransform(true);
+          } else if (lbDidMove && Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) && lbImages.length > 1) {
+            stepLightboxImage(dx < 0 ? 1 : -1);
+          } else if (!lbDidMove && touch) {
+            const now = Date.now();
+            if (now - lbLastTapTime < 280) {
+              toggleLightboxPointZoom(touch.clientX, touch.clientY);
+              lbLastTapTime = 0;
+            } else {
+              lbLastTapTime = now;
+            }
+          }
+        }
+      });
+
+      // Tastatursteuerung
+      window.addEventListener("keydown", e => {
+        const modal = document.getElementById("imageLightboxModal");
+        if (!modal || modal.classList.contains("hidden")) return;
+        if (e.key === "Escape") closeImageLightbox();
+        else if (e.key === "ArrowLeft") stepLightboxImage(-1);
+        else if (e.key === "ArrowRight") stepLightboxImage(1);
+        else if (e.key === "+" || e.key === "=") adjustLightboxZoom(0.5);
+        else if (e.key === "-") adjustLightboxZoom(-0.5);
+        else if (e.key === "0") resetLightboxZoom();
+      });
+    })();
 
     // =====================================================================
     // INITIALISIERUNG (CLOUD ODER LOKALER VORSCHAU-MODUS)
@@ -1117,10 +1395,7 @@
                 </div>
               </div>
 
-              <div class="space-y-2.5">
-                <p class="text-[11px] text-[#6E6A63] leading-snug">
-                  Hinweis: Farbe &amp; Aussehen können minimal von den Abbildungen abweichen.
-                </p>
+              <div>
                 <button onclick="openOrderModal('${p.id}')" ${hasColors ? "" : "disabled"}
                   class="w-full py-3 px-4 rounded-full font-medium text-sm transition ${
                     hasColors
@@ -1651,20 +1926,29 @@
       const quotedPrice = qPriceEl ? qPriceEl.value : "";
       const note = document.getElementById("qnote-" + orderId).value.trim();
 
+      const normalizedStatus = status.trim().toLowerCase();
+      const hidePaymentNotice =
+        normalizedStatus === "umsetzung wird geprüft" ||
+        normalizedStatus === "nicht umsetzbar";
+
       const amountLine = o.type === "link"
         ? (quotedPrice ? `Angebotspreis: ${formatPrice(quotedPrice)}` : null)
         : (o.totalPrice ? `Gesamtbetrag: ${formatPrice(o.totalPrice)}` : null);
+
+      const paymentLine = hidePaymentNotice
+        ? null
+        : `Bitte sende die Summe per PayPal (Freunde & Bekannte) an ${STUDIO_CONFIG.paypalEmail} oder zahle bei Übergabe in Bar.`;
 
       const lines = [
         `Hallo ${o.customerName}, hier ist ein Update vom ${STUDIO_CONFIG.shopName} zu deiner Anfrage (${o.refId}):`,
         `Status: ${status}`,
         amountLine,
         note ? `Hinweis: ${note}` : null,
-        `Bitte sende die Summe per PayPal (Freunde & Bekannte) an ${STUDIO_CONFIG.paypalEmail} oder zahle bei Übergabe in Bar.`
+        paymentLine
       ].filter(Boolean).join("\n");
 
       navigator.clipboard.writeText(lines);
-      showToast("Antworttext inkl. PayPal-/Bar-Info kopiert!");
+      showToast(hidePaymentNotice ? "Antworttext kopiert!" : "Antworttext inkl. PayPal-/Bar-Info kopiert!");
     };
 
     window.deleteOrder = async function(orderId) {
