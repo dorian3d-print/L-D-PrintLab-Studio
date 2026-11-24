@@ -367,8 +367,8 @@
                   <label class="block text-xs font-semibold text-[#22211F]">Mögliche Filamentfarben anhaken *</label>
                   <button type="button" onclick="selectAllFilamentsForProduct()" class="text-[11px] text-[#57151E] underline">Alle wählen</button>
                 </div>
-                <div id="productFilamentCheckboxes" class="grid grid-cols-1 gap-2 max-h-56 overflow-y-auto p-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50"></div>
-                <p class="text-[11px] text-[#6E6A63] mt-1">Besucher sehen automatisch nur vorrätige Farben. Rechts kannst du optional einen eigenen Aufpreis (€) für dieses Modell eintragen (leer = Standard-Aufpreis der Rolle).</p>
+                <div id="productFilamentCheckboxes" class="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto p-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50"></div>
+                <p class="text-[11px] text-[#6E6A63] mt-1">Hake alle verfügbaren Farben an und wähle mit <span class="font-semibold text-[#57151E]">★ Standard</span> die Farbe aus, die im Katalog zuerst angezeigt wird (weitere Farben lassen sich dort aufklappen). Rechts optional eigener Aufpreis (€).</p>
               </div>
 
               <button type="submit" id="saveProductBtn" class="w-full py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
@@ -705,6 +705,7 @@
     let selectedModalFilamentId = "";
     let uploadedImagesList = [];
     let lastSelectedPresetName = "";
+    const expandedProductColors = new Set();
 
     window._galleryRegistry = {};
 
@@ -1384,6 +1385,19 @@
         .filter(f => f && f.inStock === true);
     }
 
+    function getOrderedAvailableFilamentsForProduct(product) {
+      const avail = getAvailableFilamentsForProduct(product);
+      if (avail.length <= 1) return avail;
+      const defaultId = product?.defaultFilamentId;
+      if (!defaultId) return avail;
+      const defIdx = avail.findIndex(f => f.id === defaultId);
+      if (defIdx <= 0) return avail;
+      const ordered = [...avail];
+      const [defFil] = ordered.splice(defIdx, 1);
+      ordered.unshift(defFil);
+      return ordered;
+    }
+
     function getFilamentSurchargeForProduct(product, filament) {
       if (!filament) return 0;
       if (
@@ -1436,6 +1450,79 @@
       renderCatalog();
     };
 
+    function buildSingleColorPillHtml(product, f) {
+      const extraTag = formatSurchargeTag(getFilamentSurchargeForProduct(product, f));
+      return `
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs bg-[#F7F6F2] border border-[#E2DFD7] text-[#22211F]">
+          <span class="w-2.5 h-2.5 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
+          <span>${escapeHtml(f.name)} <span class="text-[#6E6A63]">(${escapeHtml(f.material)})</span>${extraTag ? ` <span class="font-semibold text-[#57151E]">${escapeHtml(extraTag)}</span>` : ""}</span>
+        </span>
+      `;
+    }
+
+    function buildProductCatalogColorsHtml(product) {
+      const orderedColors = getOrderedAvailableFilamentsForProduct(product);
+      if (orderedColors.length === 0) {
+        return `<p class="text-xs text-[#8C7765]">Aktuell keine Filamentfarbe auf Lager</p>`;
+      }
+
+      const extraCount = orderedColors.length - 1;
+      const isExpanded = expandedProductColors.has(product.id);
+      const safeProdId = escapeHtml(String(product.id).replace(/\\/g, "\\\\").replace(/'/g, "\\'"));
+
+      if (extraCount === 0) {
+        return `
+          <div class="flex flex-wrap items-center gap-1.5">
+            ${buildSingleColorPillHtml(product, orderedColors[0])}
+          </div>
+        `;
+      }
+
+      if (!isExpanded) {
+        const moreLabel = extraCount === 1 ? "+ 1 weitere Farbe" : `+ ${extraCount} weitere Farben`;
+        return `
+          <div class="flex flex-wrap items-center gap-1.5">
+            ${buildSingleColorPillHtml(product, orderedColors[0])}
+            <button type="button" onclick="toggleProductColors('${safeProdId}')" aria-expanded="false"
+              class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[#EFECE6] hover:bg-[#E2DFD7] text-[#57151E] border border-[#E2DFD7] transition cursor-pointer">
+              <span>${moreLabel}</span>
+              <svg class="w-3 h-3 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="flex flex-wrap items-center gap-1.5">
+          ${orderedColors.map(f => buildSingleColorPillHtml(product, f)).join("")}
+          <button type="button" onclick="toggleProductColors('${safeProdId}')" aria-expanded="true"
+            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[#EFECE6] hover:bg-[#E2DFD7] text-[#57151E] border border-[#E2DFD7] transition cursor-pointer">
+            <span>Weniger anzeigen</span>
+            <svg class="w-3 h-3 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M14.77 12.79a.75.75 0 01-1.06-.02L10 8.832 6.29 12.77a.75.75 0 11-1.08-1.04l4.25-4.5a.75.75 0 011.08 0l4.25 4.5a.75.75 0 01-.02 1.06z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      `;
+    }
+
+    window.toggleProductColors = function(productId) {
+      if (expandedProductColors.has(productId)) {
+        expandedProductColors.delete(productId);
+      } else {
+        expandedProductColors.add(productId);
+      }
+      const product = products.find(p => p.id === productId);
+      const container = document.getElementById(`product-colors-${productId}`);
+      if (product && container) {
+        container.innerHTML = buildProductCatalogColorsHtml(product);
+      } else {
+        renderCatalog();
+      }
+    };
+
     function renderCatalog() {
       const grid = document.getElementById("productGrid");
       const emptyState = document.getElementById("emptyCatalogState");
@@ -1451,7 +1538,7 @@
 
       emptyState.classList.add("hidden");
       grid.innerHTML = filtered.map(p => {
-        const availableColors = getAvailableFilamentsForProduct(p);
+        const availableColors = getOrderedAvailableFilamentsForProduct(p);
         const hasColors = availableColors.length > 0;
         const imgs = getProductImages(p);
 
@@ -1478,21 +1565,9 @@
                   <div class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6A63] mb-2">
                     Verfügbare Farben &amp; Materialien
                   </div>
-                  ${hasColors ? `
-                    <div class="flex flex-wrap gap-1.5">
-                      ${availableColors.map(f => {
-                        const extraTag = formatSurchargeTag(getFilamentSurchargeForProduct(p, f));
-                        return `
-                          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs bg-[#F7F6F2] border border-[#E2DFD7] text-[#22211F]">
-                            <span class="w-2.5 h-2.5 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
-                            <span>${escapeHtml(f.name)} <span class="text-[#6E6A63]">(${escapeHtml(f.material)})</span>${extraTag ? ` <span class="font-semibold text-[#57151E]">${escapeHtml(extraTag)}</span>` : ""}</span>
-                          </span>
-                        `;
-                      }).join("")}
-                    </div>
-                  ` : `
-                    <p class="text-xs text-[#8C7765]">Aktuell keine Filamentfarbe auf Lager</p>
-                  `}
+                  <div id="product-colors-${escapeHtml(String(p.id))}">
+                    ${buildProductCatalogColorsHtml(p)}
+                  </div>
                 </div>
               </div>
 
@@ -1540,12 +1615,10 @@
       activeOrderProduct = products.find(p => p.id === productId);
       if (!activeOrderProduct) return;
 
-      const availableColors = getAvailableFilamentsForProduct(activeOrderProduct);
+      const availableColors = getOrderedAvailableFilamentsForProduct(activeOrderProduct);
       if (availableColors.length === 0) return;
 
-      if (!availableColors.some(f => f.id === selectedModalFilamentId)) {
-        selectedModalFilamentId = availableColors[0].id;
-      }
+      selectedModalFilamentId = availableColors[0].id;
 
       document.getElementById("modalCategory").textContent = activeOrderProduct.category;
       document.getElementById("modalTitle").textContent = activeOrderProduct.title;
@@ -1564,13 +1637,13 @@
     window.selectModalFilament = function(filId) {
       selectedModalFilamentId = filId;
       if (!activeOrderProduct) return;
-      renderOrderModalColorOptions(getAvailableFilamentsForProduct(activeOrderProduct));
+      renderOrderModalColorOptions(getOrderedAvailableFilamentsForProduct(activeOrderProduct));
       updateOrderTotal();
     };
 
     window.updateOrderTotal = function() {
       if (!activeOrderProduct) return;
-      const availableColors = getAvailableFilamentsForProduct(activeOrderProduct);
+      const availableColors = getOrderedAvailableFilamentsForProduct(activeOrderProduct);
       const chosenFil = availableColors.find(f => f.id === selectedModalFilamentId) || availableColors[0];
       const unitPrice = getProductUnitPriceWithFilament(activeOrderProduct, chosenFil);
       const qty = Math.max(1, parseInt(document.getElementById("orderQty").value || "1", 10));
@@ -2089,7 +2162,64 @@
       showToast("Anfrage gelöscht.");
     };
 
-    // --- Admin: 3D-Modelle (inkl. Multi-Bild-Upload & Aufpreis-Overrides) ---
+    // --- Admin: 3D-Modelle (inkl. Multi-Bild-Upload, Standardfarbe & Aufpreis-Overrides) ---
+    function syncProductDefaultFilBadges() {
+      const selectedDefault = document.querySelector("input[name='prodDefaultFil']:checked")?.value || "";
+      document.querySelectorAll("[data-prod-fil-row]").forEach(row => {
+        const fid = row.dataset.prodFilRow;
+        const isDef = fid === selectedDefault;
+        const badge = row.querySelector("[data-default-badge]");
+        const textEl = row.querySelector("[data-default-badge-text]");
+        if (isDef) {
+          row.classList.add("border-[#57151E]/45", "bg-[#57151E]/[0.03]");
+          row.classList.remove("border-[#E2DFD7]", "bg-white");
+          if (badge) {
+            badge.classList.add("bg-[#57151E]", "text-white", "border-[#57151E]");
+            badge.classList.remove("bg-[#F7F6F2]", "text-[#6E6A63]", "border-[#E2DFD7]");
+          }
+          if (textEl) textEl.textContent = "★ Standard";
+        } else {
+          row.classList.remove("border-[#57151E]/45", "bg-[#57151E]/[0.03]");
+          row.classList.add("border-[#E2DFD7]", "bg-white");
+          if (badge) {
+            badge.classList.remove("bg-[#57151E]", "text-white", "border-[#57151E]");
+            badge.classList.add("bg-[#F7F6F2]", "text-[#6E6A63]", "border-[#E2DFD7]");
+          }
+          if (textEl) textEl.textContent = "Standard";
+        }
+      });
+    }
+
+    window.handleProductFilCheckChange = function(filId) {
+      const cb = document.querySelector(`input[name='prodFilCheck'][value="${filId}"]`);
+      const checkedBoxes = [...document.querySelectorAll("input[name='prodFilCheck']:checked")];
+      const checkedIds = checkedBoxes.map(el => el.value);
+      const currentDefault = document.querySelector("input[name='prodDefaultFil']:checked")?.value || "";
+
+      if (cb && cb.checked) {
+        if (!currentDefault || !checkedIds.includes(currentDefault)) {
+          const radio = document.querySelector(`input[name='prodDefaultFil'][value="${filId}"]`);
+          if (radio) radio.checked = true;
+        }
+      } else {
+        if (currentDefault === filId) {
+          const oldRadio = document.querySelector(`input[name='prodDefaultFil'][value="${filId}"]`);
+          if (oldRadio) oldRadio.checked = false;
+          if (checkedIds.length > 0) {
+            const fallbackRadio = document.querySelector(`input[name='prodDefaultFil'][value="${checkedIds[0]}"]`);
+            if (fallbackRadio) fallbackRadio.checked = true;
+          }
+        }
+      }
+      syncProductDefaultFilBadges();
+    };
+
+    window.handleProductDefaultFilChange = function(filId) {
+      const cb = document.querySelector(`input[name='prodFilCheck'][value="${filId}"]`);
+      if (cb) cb.checked = true;
+      syncProductDefaultFilBadges();
+    };
+
     function renderAdminProductsFormHelpers() {
       const catSelect = document.getElementById("prodCategory");
       const currentCat = catSelect.value;
@@ -2098,6 +2228,7 @@
 
       const filBox = document.getElementById("productFilamentCheckboxes");
       const checkedIds = [...document.querySelectorAll("input[name='prodFilCheck']:checked")].map(el => el.value);
+      const currentDefaultId = document.querySelector("input[name='prodDefaultFil']:checked")?.value || "";
       const currentOverrides = {};
       document.querySelectorAll("input[data-fil-surcharge]").forEach(inp => {
         if (inp.value !== "") currentOverrides[inp.dataset.filSurcharge] = inp.value;
@@ -2112,19 +2243,27 @@
         const stdExtra = Number(f.surcharge || 0);
         const stdLabel = stdExtra !== 0 ? `Std: ${formatSurchargeTag(stdExtra)}` : "Std: 0,00 €";
         const overrideVal = Object.prototype.hasOwnProperty.call(currentOverrides, f.id) ? currentOverrides[f.id] : "";
+        const isDefault = currentDefaultId === f.id && checkedIds.includes(f.id);
         return `
-          <div class="flex items-center justify-between gap-2 p-2 rounded-xl bg-white border border-[#E2DFD7] text-xs">
+          <div data-prod-fil-row="${f.id}" class="flex items-center justify-between gap-2 p-2 rounded-xl border text-xs transition ${isDefault ? "border-[#57151E]/45 bg-[#57151E]/[0.03]" : "border-[#E2DFD7] bg-white"}">
             <label class="flex items-center gap-2 min-w-0 flex-1 cursor-pointer">
-              <input type="checkbox" name="prodFilCheck" value="${f.id}" ${checkedIds.includes(f.id) ? "checked" : ""} class="rounded accent-[#22211F] shrink-0" />
+              <input type="checkbox" name="prodFilCheck" value="${f.id}" ${checkedIds.includes(f.id) ? "checked" : ""} onchange="handleProductFilCheckChange('${f.id}')" class="rounded accent-[#22211F] shrink-0" />
               <span class="w-3 h-3 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
               <span class="truncate ${f.inStock ? "text-[#22211F]" : "text-[#9A948C] line-through"}">${escapeHtml(f.name)} (${escapeHtml(f.material)})</span>
             </label>
             <div class="flex items-center gap-1.5 shrink-0">
-              <span class="text-[10px] text-[#6E6A63] hidden sm:inline">${stdLabel}</span>
+              <label data-default-badge class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[10px] font-semibold cursor-pointer transition shrink-0 ${
+                isDefault
+                  ? "bg-[#57151E] text-white border-[#57151E]"
+                  : "bg-[#F7F6F2] text-[#6E6A63] border-[#E2DFD7] hover:border-[#57151E] hover:text-[#57151E]"
+              }" title="Als Standardfarbe im Katalog festlegen">
+                <input type="radio" name="prodDefaultFil" value="${f.id}" ${isDefault ? "checked" : ""} onchange="handleProductDefaultFilChange('${f.id}')" class="sr-only" />
+                <span data-default-badge-text>${isDefault ? "★ Standard" : "Standard"}</span>
+              </label>
               <div class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-lg border border-[#E2DFD7] bg-[#F7F6F2]" title="Optionaler Modell-Aufpreis in € (leer = ${stdLabel})">
                 <span class="text-[10px] text-[#6E6A63]">+</span>
                 <input type="number" step="0.5" data-fil-surcharge="${f.id}" value="${escapeHtml(overrideVal)}" placeholder="${stdExtra.toFixed(2)}"
-                  class="w-12 bg-transparent text-[11px] font-medium text-[#22211F] text-right focus:outline-none" />
+                  class="w-11 bg-transparent text-[11px] font-medium text-[#22211F] text-right focus:outline-none" />
                 <span class="text-[10px] text-[#6E6A63]">€</span>
               </div>
             </div>
@@ -2134,7 +2273,14 @@
     }
 
     window.selectAllFilamentsForProduct = function() {
-      document.querySelectorAll("input[name='prodFilCheck']").forEach(cb => cb.checked = true);
+      const boxes = [...document.querySelectorAll("input[name='prodFilCheck']")];
+      boxes.forEach(cb => cb.checked = true);
+      const currentDefault = document.querySelector("input[name='prodDefaultFil']:checked")?.value || "";
+      if (!currentDefault && boxes.length > 0) {
+        const firstRadio = document.querySelector(`input[name='prodDefaultFil'][value="${boxes[0].value}"]`);
+        if (firstRadio) firstRadio.checked = true;
+      }
+      syncProductDefaultFilBadges();
     };
 
     function renderUploadedImagesPreview() {
@@ -2270,6 +2416,9 @@
         return;
       }
 
+      const selectedDefaultRaw = document.querySelector("input[name='prodDefaultFil']:checked")?.value || "";
+      const defaultFilamentId = filamentIds.includes(selectedDefaultRaw) ? selectedDefaultRaw : filamentIds[0];
+
       const filamentSurcharges = {};
       filamentIds.forEach(fid => {
         const inp = document.querySelector(`input[data-fil-surcharge="${fid}"]`);
@@ -2297,6 +2446,7 @@
           price,
           description,
           filamentIds,
+          defaultFilamentId,
           filamentSurcharges,
           images: finalImages,
           createdAt: existing ? existing.createdAt : Date.now()
@@ -2347,9 +2497,18 @@
         : (p.imageData ? [p.imageData] : []);
       renderUploadedImagesPreview();
 
+      const assignedIds = p.filamentIds || [];
+      const targetDefaultId = (p.defaultFilamentId && assignedIds.includes(p.defaultFilamentId))
+        ? p.defaultFilamentId
+        : (assignedIds[0] || "");
+
       document.querySelectorAll("input[name='prodFilCheck']").forEach(cb => {
-        cb.checked = (p.filamentIds || []).includes(cb.value);
+        cb.checked = assignedIds.includes(cb.value);
       });
+      document.querySelectorAll("input[name='prodDefaultFil']").forEach(radio => {
+        radio.checked = radio.value === targetDefaultId;
+      });
+      syncProductDefaultFilBadges();
       document.querySelectorAll("input[data-fil-surcharge]").forEach(inp => {
         const fid = inp.dataset.filSurcharge;
         if (p.filamentSurcharges && Object.prototype.hasOwnProperty.call(p.filamentSurcharges, fid)) {
@@ -2368,6 +2527,10 @@
       document.getElementById("productFormTitle").textContent = "Neues 3D-Modell einstellen";
       document.getElementById("saveProductBtn").textContent = "Modell veröffentlichen";
       document.getElementById("cancelEditBtn").classList.add("hidden");
+      document.querySelectorAll("input[name='prodDefaultFil']").forEach(radio => {
+        radio.checked = false;
+      });
+      syncProductDefaultFilBadges();
       document.querySelectorAll("input[data-fil-surcharge]").forEach(inp => {
         inp.value = "";
       });
@@ -2397,7 +2560,10 @@
       }
 
       box.innerHTML = products.map(p => {
-        const availCount = getAvailableFilamentsForProduct(p).length;
+        const orderedColors = getOrderedAvailableFilamentsForProduct(p);
+        const availCount = orderedColors.length;
+        const defaultColor = orderedColors[0];
+        const defaultInfo = defaultColor ? ` • Standard: ${escapeHtml(defaultColor.name)}` : "";
         const imgs = getProductImages(p);
         return `
           <div class="py-3.5 flex items-center justify-between gap-3">
@@ -2408,7 +2574,7 @@
               </div>
               <div class="min-w-0">
                 <div class="text-sm font-semibold text-[#22211F] truncate">${escapeHtml(p.title)}</div>
-                <div class="text-xs text-[#6E6A63]">${escapeHtml(p.category)} • ${formatPrice(p.price)} • ${availCount} vorrätige Farben</div>
+                <div class="text-xs text-[#6E6A63]">${escapeHtml(p.category)} • ${formatPrice(p.price)} • ${availCount} vorrätige Farben${defaultInfo}</div>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
@@ -2777,6 +2943,7 @@
           price: 16.00,
           description: "Standfester Tischhalter mit abgerundeter Auflagefläche für Over-Ear-Kopfhörer.",
           filamentIds: createdFilIds.slice(0, 3),
+          defaultFilamentId: createdFilIds[0],
           images: [createPlaceholderGraphic("Kopfhörer-Ständer")],
           imageData: createPlaceholderGraphic("Kopfhörer-Ständer"),
           createdAt: Date.now()
@@ -2787,6 +2954,7 @@
           price: 11.50,
           description: "Saubere Kabelführung für Schreibtisch oder Werkbank – zum Schrauben oder Kleben.",
           filamentIds: createdFilIds.slice(0, 2),
+          defaultFilamentId: createdFilIds[0],
           images: [createPlaceholderGraphic("Untertisch-Kabelhalter")],
           imageData: createPlaceholderGraphic("Untertisch-Kabelhalter"),
           createdAt: Date.now() + 1
