@@ -422,7 +422,7 @@
                 </div>
                 <div>
                   <label class="block text-xs font-semibold text-[#22211F] mb-1">Bambu-Code</label>
-                  <input type="text" id="filBambuCode" placeholder="z. B. 10101" class="w-full px-3 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm font-mono focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                  <input type="text" id="filBambuCode" placeholder="z. B. 10101" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm font-mono focus:bg-white focus:outline-none focus:border-[#57151E]" />
                 </div>
               </div>
 
@@ -929,6 +929,111 @@
       window._toastTimer = setTimeout(() => t.classList.add("hidden"), 3200);
     }
 
+    // =====================================================================
+    // FILAMENT-SORTIERUNG (MATERIAL-REIHENFOLGE + FARBVERLAUF)
+    // =====================================================================
+    const MATERIAL_ORDER = [
+      "pla basic",
+      "pla matte",
+      "pla silk+",
+      "pla silk",
+      "pla translucent",
+      "pla+",
+      "pla",
+      "petg basic",
+      "petg matte",
+      "petg silk+",
+      "petg silk",
+      "petg translucent",
+      "petg hf",
+      "petg",
+      "asa",
+      "abs",
+      "tpu"
+    ];
+
+    function getMaterialRank(material = "") {
+      const normalized = String(material).trim().toLowerCase();
+      const exactIndex = MATERIAL_ORDER.indexOf(normalized);
+      if (exactIndex !== -1) return exactIndex;
+      const prefixIndex = MATERIAL_ORDER.findIndex(item => normalized.startsWith(item));
+      if (prefixIndex !== -1) return prefixIndex;
+      return 999;
+    }
+
+    function hexToHsl(hex = "#000000") {
+      let cleanHex = String(hex).replace("#", "").trim();
+      if (cleanHex.length === 3) {
+        cleanHex = cleanHex.split("").map(c => c + c).join("");
+      }
+      const r = parseInt(cleanHex.substring(0, 2), 16) / 255 || 0;
+      const g = parseInt(cleanHex.substring(2, 4), 16) / 255 || 0;
+      const b = parseInt(cleanHex.substring(4, 6), 16) / 255 || 0;
+
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      const l = (max + min) / 2;
+      let h = 0;
+      let s = 0;
+
+      if (max !== min) {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+          case g: h = ((b - r) / d + 2) / 6; break;
+          case b: h = ((r - g) / d + 4) / 6; break;
+        }
+      }
+
+      return {
+        h: h * 360,
+        s: s * 100,
+        l: l * 100
+      };
+    }
+
+    function sortFilaments(list) {
+      return [...(list || [])].sort((a, b) => {
+        const matA = a.material || a.type || "";
+        const matB = b.material || b.type || "";
+
+        // 1. Feste Material-Reihenfolge
+        const rankA = getMaterialRank(matA);
+        const rankB = getMaterialRank(matB);
+        if (rankA !== rankB) return rankA - rankB;
+
+        if (matA.toLowerCase() !== matB.toLowerCase()) {
+          return matA.localeCompare(matB, "de");
+        }
+
+        // 2. Farbverlauf innerhalb des Materials (Weiß -> Grau -> Schwarz -> Regenbogen)
+        const hslA = hexToHsl(a.hex || a.color);
+        const hslB = hexToHsl(b.hex || b.color);
+
+        const isNeutralA = hslA.s < 8 || hslA.l > 94 || hslA.l < 9;
+        const isNeutralB = hslB.s < 8 || hslB.l > 94 || hslB.l < 9;
+
+        if (isNeutralA && !isNeutralB) return -1;
+        if (!isNeutralA && isNeutralB) return 1;
+
+        if (isNeutralA && isNeutralB) {
+          if (Math.abs(hslB.l - hslA.l) > 0.5) return hslB.l - hslA.l;
+          return String(a.name || "").localeCompare(String(b.name || ""), "de");
+        }
+
+        // Dunkel-/Weinrot (>= 348°) an den Anfang des Regenbogens (Rot) ziehen
+        const hueA = hslA.h >= 348 ? hslA.h - 360 : hslA.h;
+        const hueB = hslB.h >= 348 ? hslB.h - 360 : hslB.h;
+        const bucketA = Math.floor((hueA + 12) / 10);
+        const bucketB = Math.floor((hueB + 12) / 10);
+
+        if (bucketA !== bucketB) return bucketA - bucketB;
+        if (Math.abs(hslB.l - hslA.l) > 0.5) return hslB.l - hslA.l;
+        return String(a.name || "").localeCompare(String(b.name || ""), "de");
+      });
+    }
+
     function createPlaceholderGraphic(title) {
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="720" height="540" viewBox="0 0 720 540">
         <rect width="720" height="540" fill="#EFECE6"/>
@@ -1379,7 +1484,7 @@
       };
 
       onSnapshot(query(collection(db, "filaments"), orderBy("createdAt", "asc")), snap => {
-        filaments = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        filaments = sortFilaments(snap.docs.map(d => ({ id: d.id, ...d.data() })));
         renderAllViews();
       }, handleFirestoreError);
 
@@ -1413,11 +1518,11 @@
     } else {
       document.getElementById("demoModeBanner").classList.remove("hidden");
       document.getElementById("catalogLoader").classList.add("hidden");
-      filaments = JSON.parse(localStorage.getItem("ld_demo_filaments") || "null") || [
+      filaments = sortFilaments(JSON.parse(localStorage.getItem("ld_demo_filaments") || "null") || [
         { id: "fil-1", name: "Mattschwarz", material: "PLA Basic", hex: "#000000", bambuCode: "10101", surcharge: 0, inStock: true },
         { id: "fil-2", name: "Reinweiß", material: "PETG Basic", hex: "#FFFFFF", bambuCode: "30106", surcharge: 0, inStock: true },
         { id: "fil-3", name: "Grau", material: "PETG Basic", hex: "#8E9089", bambuCode: "30107", surcharge: 0, inStock: true }
-      ];
+      ]);
       filamentCosts = JSON.parse(localStorage.getItem("ld_demo_filament_costs") || "{}");
       categories = JSON.parse(localStorage.getItem("ld_demo_categories") || "null") ||
         DEFAULT_CATEGORIES.map((name, i) => ({ id: "cat-" + i, name, order: i }));
@@ -1429,6 +1534,7 @@
 
     function syncDemoStorage() {
       if (isCloudConfigured) return;
+      filaments = sortFilaments(filaments);
       localStorage.setItem("ld_demo_filaments", JSON.stringify(filaments));
       localStorage.setItem("ld_demo_filament_costs", JSON.stringify(filamentCosts));
       localStorage.setItem("ld_demo_categories", JSON.stringify(categories));
@@ -1496,9 +1602,11 @@
     // =====================================================================
     function getAvailableFilamentsForProduct(product) {
       const assignedIds = product.filamentIds || [];
-      return assignedIds
-        .map(id => filaments.find(f => f.id === id))
-        .filter(f => f && f.inStock === true);
+      return sortFilaments(
+        assignedIds
+          .map(id => filaments.find(f => f.id === id))
+          .filter(f => f && f.inStock === true)
+      );
     }
 
     function getOrderedAvailableFilamentsForProduct(product) {
@@ -1846,7 +1954,7 @@
     // =====================================================================
     function renderCustomInStockChips() {
       const box = document.getElementById("customInStockChips");
-      const inStockFils = filaments.filter(f => f.inStock);
+      const inStockFils = sortFilaments(filaments.filter(f => f.inStock));
       if (inStockFils.length === 0) {
         box.innerHTML = "";
         return;
@@ -2367,12 +2475,14 @@
         if (inp.value !== "") currentOverrides[inp.dataset.filSurcharge] = inp.value;
       });
 
-      if (filaments.length === 0) {
+      const sortedFilaments = sortFilaments(filaments);
+
+      if (sortedFilaments.length === 0) {
         filBox.innerHTML = `<p class="text-xs text-[#6E6A63]">Lege zuerst unter „Filament-Rollen“ eure Farben an.</p>`;
         return;
       }
 
-      filBox.innerHTML = filaments.map(f => {
+      filBox.innerHTML = sortedFilaments.map(f => {
         const stdExtra = Number(f.surcharge || 0);
         const stdLabel = stdExtra !== 0 ? `Std: ${formatSurchargeTag(stdExtra)}` : "Std: 0,00 €";
         const overrideVal = Object.prototype.hasOwnProperty.call(currentOverrides, f.id) ? currentOverrides[f.id] : "";
@@ -2720,7 +2830,7 @@
     }
 
     // --- Admin: Zentrale Filament-Rollen (Öffentlich + Geschützte interne EK-Preise) ---
-    const BAMBU_LAB_SEED_B64 = "W3siYmFtYnVDb2RlIjogIjMwMTA2IiwgIm1hdGVyaWFsIjogIlBFVEcgQmFzaWMiLCAibmFtZSI6ICJXZWnDnyIsICJoZXgiOiAiI0ZGRkZGRiIsICJwdXJjaGFzZVByaWNlIjogMTIuMzQsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMTIuMzQsICJjb3N0Tm90ZSI6ICIxw5cgU3B1bGUgKDEyLDM0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMzAxMDUiLCAibWF0ZXJpYWwiOiAiUEVURyBCYXNpYyIsICJuYW1lIjogIlNjaHdhcnoiLCAiaGV4IjogIiMwMDAwMDAiLCAicHVyY2hhc2VQcmljZSI6IDExLjIsICJyb2xsQ291bnQiOiAyLCAidG90YWxDb3N0IjogMjIuNCwgImNvc3ROb3RlIjogIjLDlyBTcHVsZTogMTIsMzQg4oKsICsgMTAsMDYg4oKsICjDmCAxMSwyMCDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjEwMTAxIiwgIm1hdGVyaWFsIjogIlBMQSBCYXNpYyIsICJuYW1lIjogIlNjaHdhcnoiLCAiaGV4IjogIiMwMDAwMDAiLCAicHVyY2hhc2VQcmljZSI6IDEyLjk5LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEyLjk5LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMiw5OSDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjMwMTA3IiwgIm1hdGVyaWFsIjogIlBFVEcgQmFzaWMiLCAibmFtZSI6ICJHcmF1IiwgImhleCI6ICIjOEU5MDg5IiwgInB1cmNoYXNlUHJpY2UiOiAxMi4zNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMi4zNCwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTIsMzQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMTYwMSIsICJtYXRlcmlhbCI6ICJQTEEgTWF0dGUiLCAibmFtZSI6ICJFaXNibGF1IiwgImhleCI6ICIjQTNEOEUxIiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTEyMDIiLCAibWF0ZXJpYWwiOiAiUExBIE1hdHRlIiwgIm5hbWUiOiAiRHVua2Vscm90IiwgImhleCI6ICIjQkIzRDQzIiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTMxMDkiLCAibWF0ZXJpYWwiOiAiUExBIFNpbGsrIiwgIm5hbWUiOiAiU2lsYmVyIiwgImhleCI6ICIjQzhDOEM4IiwgInB1cmNoYXNlUHJpY2UiOiAxMi45OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMi45OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTIsOTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMTYwMiIsICJtYXRlcmlhbCI6ICJQTEEgTWF0dGUiLCAibmFtZSI6ICJEdW5rZWxibGF1IiwgImhleCI6ICIjMDQyRjU2IiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMzUxMDAiLCAibWF0ZXJpYWwiOiAiUEVURyBNYXR0ZSIsICJuYW1lIjogIldlacOfIiwgImhleCI6ICIjRkZGRkZGIiwgInB1cmNoYXNlUHJpY2UiOiAwLjAsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMC4wLCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgwLDAwIOKCrCBHZXNjaGVuaykifSwgeyJiYW1idUNvZGUiOiAiMTAyMDEiLCAibWF0ZXJpYWwiOiAiUExBIEJhc2ljIiwgIm5hbWUiOiAiQmVpZ2UiLCAiaGV4IjogIiNGN0U2REUiLCAicHVyY2hhc2VQcmljZSI6IDkuMDEsICJyb2xsQ291bnQiOiAyLCAidG90YWxDb3N0IjogMTguMDEsICJjb3N0Tm90ZSI6ICIyw5cgUmVmaWxsOiAxOCwwMSDigqwgZ2VzYW10ICg5LDAxIOKCrC9Sb2xsZSkifSwgeyJiYW1idUNvZGUiOiAiMzAxMDgiLCAibWF0ZXJpYWwiOiAiUEVURyBCYXNpYyIsICJuYW1lIjogIk1pc3R5IEJsdWUiLCAiaGV4IjogIiM2MTdCOEIiLCAicHVyY2hhc2VQcmljZSI6IDEwLjA2LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEwLjA2LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMCwwNiDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjExMjAxIiwgIm1hdGVyaWFsIjogIlBMQSBNYXR0ZSIsICJuYW1lIjogIlNha3VyYS1Sb3NhIiwgImhleCI6ICIjRThBRkNGIiwgInB1cmNoYXNlUHJpY2UiOiA5LjAsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogOS4wLCAiY29zdE5vdGUiOiAiMcOXIFJlZmlsbCAoOSwwMCDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjExMTAxIiwgIm1hdGVyaWFsIjogIlBMQSBNYXR0ZSIsICJuYW1lIjogIkFudGhyYXppdCIsICJoZXgiOiAiIzAwMDAwMCIsICJwdXJjaGFzZVByaWNlIjogMTAuNTksICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMTAuNTksICJjb3N0Tm90ZSI6ICIxw5cgU3B1bGUgKDEwLDU5IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTMyMDUiLCAibWF0ZXJpYWwiOiAiUExBIFNpbGsrIiwgIm5hbWUiOiAiQ2FuZHktUm90IiwgImhleCI6ICIjRDAyNzI3IiwgInB1cmNoYXNlUHJpY2UiOiAxMC41OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMC41OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTAsNTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICI0NTYwMCIsICJtYXRlcmlhbCI6ICJBU0EiLCAibmFtZSI6ICJCbGF1IiwgImhleCI6ICIjMjE0MEI0IiwgInB1cmNoYXNlUHJpY2UiOiAxNC45OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxNC45OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTQsOTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMDgwMiIsICJtYXRlcmlhbCI6ICJQTEEgQmFzaWMiLCAibmFtZSI6ICJLYWthb2JyYXVuIiwgImhleCI6ICIjNkY1MDM0IiwgInB1cmNoYXNlUHJpY2UiOiAxNS4wLCAicm9sbENvdW50IjogMiwgInRvdGFsQ29zdCI6IDI5Ljk5LCAiY29zdE5vdGUiOiAiMsOXIFNwdWxlOiAyOSw5OSDigqwgZ2VzYW10ICgxNSwwMCDigqwvUm9sbGUpIn0sIHsiYmFtYnVDb2RlIjogIjM1NzAwIiwgIm1hdGVyaWFsIjogIlBFVEcgTWF0dGUiLCAibmFtZSI6ICJQaW5rIiwgImhleCI6ICIjRjVCNkNEIiwgInB1cmNoYXNlUHJpY2UiOiAxNC4yNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxNC4yNCwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTQsMjQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMDMwMCIsICJtYXRlcmlhbCI6ICJQTEEgQmFzaWMiLCAibmFtZSI6ICJPcmFuZ2UiLCAiaGV4IjogIiNGRjZBMTMiLCAicHVyY2hhc2VQcmljZSI6IDEyLjc0LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEyLjc0LCAiY29zdE5vdGUiOiAiMcOXIFJlZmlsbCAoMTIsNzQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIzMjEwMSIsICJtYXRlcmlhbCI6ICJQRVRHIFRyYW5zbHVjZW50IiwgIm5hbWUiOiAiVHJhbnNwYXJlbnQiLCAiaGV4IjogIiNEOUQ5RDkiLCAicHVyY2hhc2VQcmljZSI6IDEwLjU5LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEwLjU5LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMCw1OSDigqwpIn1d";
+    const BAMBU_LAB_SEED_B64 = "W3siYmFtYnVDb2RlIjogIjMwMTA2IiwgIm1hdGVyaWFsIjogIlBFVEcgQmFzaWMiLCAibmFtZSI6ICJXZWnDnyIsICJoZXgiOiAiI0ZGRkZGRiIsICJwdXJjaGFzZVByaWNlIjogMTIuMzQsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMTIuMzQsICJjb3N0Tm90ZSI6ICIxw5cgU3B1bGUgKDEyLDM0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMzAxMDUiLCAibWF0ZXJpYWwiOiAiUEVURyBCYXNpYyIsICJuYW1lIjogIlNjaHdhcnoiLCAiaGV4IjogIiMwMDAwMDAiLCAicHVyY2hhc2VQcmljZSI6IDExLjIsICJyb2xsQ291bnQiOiAyLCAidG90YWxDb3N0IjogMjIuNCwgImNvc3ROb3RlIjogIjLDlyBTcHVsZTogMTIsMzQg4oKsICsgMTAsMDYg4oKsICjDmCAxMSwyMCDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjEwMTAxIiwgIm1hdGVyaWFsIjogIlBMQSBCYXNpYyIsICJuYW1lIjogIlNjaHdhcnoiLCAiaGV4IjogIiMwMDAwMDAiLCAicHVyY2hhc2VQcmljZSI6IDEyLjk5LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEyLjk5LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMiw5OSDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjMwMTA3IiwgIm1hdGVyaWFsIjogIlBFVEcgQmFzaWMiLCAibmFtZSI6ICJHcmF1IiwgImhleCI6ICIjOEU5MDg5IiwgInB1cmNoYXNlUHJpY2UiOiAxMi4zNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMi4zNCwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTIsMzQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMTYwMSIsICJtYXRlcmlhbCI6ICJQTEEgTWF0dGUiLCAibmFtZSI6ICJFaXNibGF1IiwgImhleCI6ICIjQTNEOEUxIiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTEyMDIiLCAibWF0ZXJpYWwiOiAiUExBIE1hdHRlIiwgIm5hbWUiOiAiRHVua2Vscm90IiwgImhleCI6ICIjQkIzRDQzIiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTMxMDkiLCAibWF0ZXJpYWwiOiAiUExBIFNpbGsrIiwgIm5hbWUiOiAiU2lsYmVyIiwgImhleCI6ICIjQzhDOEM4IiwgInB1cmNoYXNlUHJpY2UiOiAxMi45OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMi45OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTIsOTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMTYwMiIsICJtYXRlcmlhbCI6ICJQTEEgTWF0dGUiLCAibmFtZSI6ICJEdW5rZWxibGF1IiwgImhleCI6ICIjMDQyRjU2IiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMzUxMDAiLCAibWF0ZXJpYWwiOiAiUEVURyBNYXR0ZSIsICJuYW1lIjogIldlacOfIiwgImhleCI6ICIjRkZGRkZGIiwgInB1cmNoYXNlUHJpY2UiOiAwLjAsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMC4wLCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgwLDAwIOKCrCBHZXNjaGVuaykifSwgeyJiYW1idUNvZGUiOiAiMTAyMDEiLCAibWF0ZXJpYWwiOiAiUExBIEJhc2ljIiwgIm5hbWUiOiAiQmVpZ2UiLCAiaGV4IjogIiNGN0U2REUiLCAicHVyY2hhc2VQcmljZSI6IDkuMDEsICJyb2xsQ291bnQiOiAyLCAidG90YWxDb3N0IjogMTguMDEsICJjb3N0Tm90ZSI6ICIyw5cgUmVmaWxsOiAxOCwwMSDigqwgZ2VzYW10ICg5LDAxIOKCrC9Sb2xsZSkifSwgeyJiYW1idUNvZGUiOiAiMzAxMDgiLCAibWF0ZXJpYWwiOiAiUEVURyBCYXNpYyIsICJuYW1lIjogIk1pc3R5IEJsdWUiLCAiaGV4IjogIiM2MTdCOEIiLCAicHVyY2hhc2VQcmljZSI6IDEwLjA2LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEwLjA2LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMCwwNiDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjExMjAxIiwgIm1hdGVyaWFsIjogIlBMQSBNYXR0ZSIsICJuYW1lIjogIlNha3VyYS1Sb3NhIiwgImhleCI6ICIjRThBRkNGIiwgInB1cmNoYXNlUHJpY2UiOiA5LjAsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogOS4wLCAiY29zdE5vdGUiOiAiMcOXIFJlZmlsbCAoOSwwMCDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjExMTAxIiwgIm1hdGVyaWFsIjogIlBMQSBNYXR0ZSIsICJuYW1lIjogIkFudGhyYXppdCIsICJoZXgiOiAiIzAwMDAwMCIsICJwdXJjaGFzZVByaWNlIjogMTAuNTksICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMTAuNTksICJjb3N0Tm90ZSI6ICIxw5cgU3B1bGUgKDEwLDU5IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTMyMDUiLCAibWF0ZXJpYWwiOiAiUExBIFNpbGsrIiwgIm5hbWUiOiAiQ2FuZHktUm90IiwgImhleCI6ICIjRDAyNzI3IiwgInB1cmNoYXNlUHJpY2UiOiAxMC41OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMC41OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTAsNTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICI0NTYwMCIsICJtYXRlcmlhbCI6ICJBU0EiLCAibmFtZSI6ICJCbGF1IiwgImhleCI6ICIjMjE0MEI0IiwgInB1cmNoYXNlUHJpY2UiOiAxNC45OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxNC45OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTQsOTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMDgwMiIsICJtYXRlcmlhbCI6ICJQTEEgQmFzaWMiLCAibmFtZSI6ICJLYWthb2JyYXVuIiwgImhleCI6ICIjNkY1MDM0IiwgInB1cmNoYXNlUHJpY2UiOiAxNS4wLCAicm9sbENvdW50IjogMiwgInRvdGFsQ29zdCI6IDI5Ljk5LCAiY29zdE5vdGUiOiAiMsOXIFNwdWxlOiAyOSw5OSDigqwgZ2VzYW10ICgxNSwwMCDigqwvUm9sbGUpIn0sIHsiYmFtYnVDb2RlIjogIjM1NzAwIiwgIm1hdGVyaWFsIjogIlBFVEcgTWF0dGUiLCAibmFtZSI6ICJQaW5rIiwgImhleCI6ICIjRjVCNkNEIiwgInB1cmNoYXNlUHJpY2UiOiAxNC4yNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxNC4yNCwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTQsMjQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMDMwMCIsICJtYXRlcmlhbCI6ICJQTEEgQmFzaWMiLCAibmFtZSI6ICJPcmFuZ2UiLCAiaGV4IjogIiNGRjZBMTMiLCAicHVyY2hhc2VQcmljZSI6IDEyLjc0LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEyLjc0LCAiY29zdE5vdGUiOiAiMcOXIFJlZmlsbCAoMTIsNzQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIzMjEwMSIsICJtYXRlcmlhbCI6ICJQRVRHIFRyYW5zbHVjZW50IiwgIm5hbWUiOiAiVHJhbnNwYXJlbnQiLCAiaGV4IjogIiNEOUQ5RDkiLCAicHVyY2hhc2VQcmljZSI6IDEwLjU5LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEwLjU5LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMCw1OSDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjEwMzAwIiwgIm1hdGVyaWFsIjogIlBMQSBCYXNpYyIsICJuYW1lIjogIk9yYW5nZSIsICJoZXgiOiAiI0ZGNkExMyIsICJwdXJjaGFzZVByaWNlIjogMTIuNzQsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMTIuNzQsICJjb3N0Tm90ZSI6ICIxw5cgUmVmaWxsICgxMiw3NCDigqwpIn1d";
     function getBambuInitialSeed() {
       if (!isAdminLoggedIn) return [];
       try {
@@ -2951,7 +3061,9 @@
         summaryEl.textContent = `${totalRolls} Rollen gesamt • Interner Lagerwert: ${formatPrice(totalInventoryValue)} (nur für Admins sichtbar)`;
       }
 
-      box.innerHTML = filaments.map(f => {
+      const sortedFilaments = sortFilaments(filaments);
+
+      box.innerHTML = sortedFilaments.map(f => {
         const costInfo = filamentCosts[f.id] || {};
         const ekVal = typeof costInfo.purchasePrice === "number" ? costInfo.purchasePrice.toFixed(2) : "";
         const rollBadge = Number(costInfo.rollCount || 1) > 1 ? `<span class="px-1.5 py-0.5 rounded-md bg-[#EFECE6] text-[#22211F] text-[10px] font-semibold">${costInfo.rollCount}× Rollen</span>` : "";
