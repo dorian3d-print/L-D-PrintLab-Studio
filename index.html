@@ -930,7 +930,7 @@
     }
 
     // =====================================================================
-    // FILAMENT-SORTIERUNG (MATERIAL-REIHENFOLGE + FARBVERLAUF)
+    // FILAMENT-SORTIERUNG (PRIMÄR NACH FARBE, SEKUNDÄR NACH MATERIAL)
     // =====================================================================
     const MATERIAL_ORDER = [
       "pla basic",
@@ -993,44 +993,102 @@
       };
     }
 
+    function getFilamentColorKey(item) {
+      const name = String(item?.name || "").trim().toLowerCase();
+      const mat = String(item?.material || item?.type || "").trim().toLowerCase();
+      const hsl = hexToHsl(item?.hex || item?.color || "#000000");
+
+      // Farbfamilien:
+      // 0: Schwarz / Anthrazit
+      // 1: Grau / Silber
+      // 2: Weiß / Creme
+      // 3: Beige / Braun / Bronze
+      // 4: Rot / Burgund / Terrakotta
+      // 5: Orange / Koralle / Pfirsich
+      // 6: Gelb / Gold
+      // 7: Grün / Mint / Salbei
+      // 8: Türkis / Cyan / Blau
+      // 9: Violett / Lila / Lavendel
+      // 10: Rosa / Pink / Magenta
+      // 11: Transparent / Natur
+      let group = 4;
+
+      if (name.includes("transparent") || mat.includes("translucent") || name.includes("natur")) {
+        group = 11;
+      } else if (name.includes("schwarz") || name.includes("anthrazit") || hsl.l < 13) {
+        group = 0;
+      } else if (name.includes("grau") || name.includes("silber")) {
+        group = 1;
+      } else if (name.includes("weiß") || name.includes("weiss") || name.includes("elfenbein") || name.includes("creme")) {
+        group = 2;
+      } else if (name.includes("beige") || name.includes("sand") || name.includes("braun") || name.includes("holz") || name.includes("bronze")) {
+        group = 3;
+      } else if (name.includes("pink") || name.includes("rosa") || name.includes("magenta")) {
+        group = 10;
+      } else if (name.includes("violett") || name.includes("lila") || name.includes("lavendel") || name.includes("flieder")) {
+        group = 9;
+      } else if (name.includes("blau") || name.includes("blue") || name.includes("türkis") || name.includes("cyan")) {
+        group = 8;
+      } else if (name.includes("grün") || name.includes("gruen") || name.includes("mint") || name.includes("salbei") || name.includes("lime")) {
+        group = 7;
+      } else if (name.includes("gelb") || name.includes("gold")) {
+        group = 6;
+      } else if (name.includes("orange") || name.includes("koralle") || name.includes("lachs") || name.includes("pfirsich")) {
+        group = 5;
+      } else if (name.includes("rot") || name.includes("burgund") || name.includes("terrakotta")) {
+        group = 4;
+      } else if (hsl.s < 12 && hsl.l <= 88) {
+        group = 1;
+      } else if (hsl.s < 12 && hsl.l > 88) {
+        group = 2;
+      } else if (hsl.h >= 15 && hsl.h <= 45 && (hsl.l > 82 || hsl.l < 42 || hsl.s < 65)) {
+        group = 3;
+      } else if (hsl.h >= 295 && hsl.h < 346) {
+        group = 10;
+      } else if (hsl.h >= 255 && hsl.h < 295) {
+        group = 9;
+      } else if (hsl.h >= 168 && hsl.h < 255) {
+        group = 8;
+      } else if (hsl.h >= 70 && hsl.h < 168) {
+        group = 7;
+      } else if (hsl.h >= 43 && hsl.h < 70) {
+        group = 6;
+      } else if (hsl.h >= 14 && hsl.h < 43) {
+        group = 5;
+      } else {
+        group = 4;
+      }
+
+      let subRank = 0;
+      let shadeVal = hsl.l;
+
+      if (group === 0) {
+        subRank = name.includes("anthrazit") ? 1 : 0;
+        shadeVal = hsl.l;
+      } else if (group === 1 || group === 11) {
+        shadeVal = hsl.l;
+      } else if (group === 2 || group === 3) {
+        shadeVal = -hsl.l;
+      } else {
+        const shiftedH = hsl.h >= 346 ? hsl.h - 360 : hsl.h;
+        subRank = Math.round(shiftedH / 10);
+        shadeVal = -hsl.l;
+      }
+
+      return { group, subRank, shadeVal, name, mat, matRank: getMaterialRank(mat) };
+    }
+
     function sortFilaments(list) {
       return [...(list || [])].sort((a, b) => {
-        const matA = a.material || a.type || "";
-        const matB = b.material || b.type || "";
+        const ka = getFilamentColorKey(a);
+        const kb = getFilamentColorKey(b);
 
-        // 1. Feste Material-Reihenfolge
-        const rankA = getMaterialRank(matA);
-        const rankB = getMaterialRank(matB);
-        if (rankA !== rankB) return rankA - rankB;
-
-        if (matA.toLowerCase() !== matB.toLowerCase()) {
-          return matA.localeCompare(matB, "de");
-        }
-
-        // 2. Farbverlauf innerhalb des Materials (Weiß -> Grau -> Schwarz -> Regenbogen)
-        const hslA = hexToHsl(a.hex || a.color);
-        const hslB = hexToHsl(b.hex || b.color);
-
-        const isNeutralA = hslA.s < 8 || hslA.l > 94 || hslA.l < 9;
-        const isNeutralB = hslB.s < 8 || hslB.l > 94 || hslB.l < 9;
-
-        if (isNeutralA && !isNeutralB) return -1;
-        if (!isNeutralA && isNeutralB) return 1;
-
-        if (isNeutralA && isNeutralB) {
-          if (Math.abs(hslB.l - hslA.l) > 0.5) return hslB.l - hslA.l;
-          return String(a.name || "").localeCompare(String(b.name || ""), "de");
-        }
-
-        // Dunkel-/Weinrot (>= 348°) an den Anfang des Regenbogens (Rot) ziehen
-        const hueA = hslA.h >= 348 ? hslA.h - 360 : hslA.h;
-        const hueB = hslB.h >= 348 ? hslB.h - 360 : hslB.h;
-        const bucketA = Math.floor((hueA + 12) / 10);
-        const bucketB = Math.floor((hueB + 12) / 10);
-
-        if (bucketA !== bucketB) return bucketA - bucketB;
-        if (Math.abs(hslB.l - hslA.l) > 0.5) return hslB.l - hslA.l;
-        return String(a.name || "").localeCompare(String(b.name || ""), "de");
+        if (ka.group !== kb.group) return ka.group - kb.group;
+        if (ka.subRank !== kb.subRank) return ka.subRank - kb.subRank;
+        if (Math.abs(ka.shadeVal - kb.shadeVal) > 0.5) return ka.shadeVal - kb.shadeVal;
+        if (ka.name !== kb.name) return ka.name.localeCompare(kb.name, "de");
+        if (ka.matRank !== kb.matRank) return ka.matRank - kb.matRank;
+        return ka.mat.localeCompare(kb.mat, "de");
       });
     }
 
@@ -2830,7 +2888,7 @@
     }
 
     // --- Admin: Zentrale Filament-Rollen (Öffentlich + Geschützte interne EK-Preise) ---
-    const BAMBU_LAB_SEED_B64 = "W3siYmFtYnVDb2RlIjogIjMwMTA2IiwgIm1hdGVyaWFsIjogIlBFVEcgQmFzaWMiLCAibmFtZSI6ICJXZWnDnyIsICJoZXgiOiAiI0ZGRkZGRiIsICJwdXJjaGFzZVByaWNlIjogMTIuMzQsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMTIuMzQsICJjb3N0Tm90ZSI6ICIxw5cgU3B1bGUgKDEyLDM0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMzAxMDUiLCAibWF0ZXJpYWwiOiAiUEVURyBCYXNpYyIsICJuYW1lIjogIlNjaHdhcnoiLCAiaGV4IjogIiMwMDAwMDAiLCAicHVyY2hhc2VQcmljZSI6IDExLjIsICJyb2xsQ291bnQiOiAyLCAidG90YWxDb3N0IjogMjIuNCwgImNvc3ROb3RlIjogIjLDlyBTcHVsZTogMTIsMzQg4oKsICsgMTAsMDYg4oKsICjDmCAxMSwyMCDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjEwMTAxIiwgIm1hdGVyaWFsIjogIlBMQSBCYXNpYyIsICJuYW1lIjogIlNjaHdhcnoiLCAiaGV4IjogIiMwMDAwMDAiLCAicHVyY2hhc2VQcmljZSI6IDEyLjk5LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEyLjk5LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMiw5OSDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjMwMTA3IiwgIm1hdGVyaWFsIjogIlBFVEcgQmFzaWMiLCAibmFtZSI6ICJHcmF1IiwgImhleCI6ICIjOEU5MDg5IiwgInB1cmNoYXNlUHJpY2UiOiAxMi4zNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMi4zNCwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTIsMzQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMTYwMSIsICJtYXRlcmlhbCI6ICJQTEEgTWF0dGUiLCAibmFtZSI6ICJFaXNibGF1IiwgImhleCI6ICIjQTNEOEUxIiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTEyMDIiLCAibWF0ZXJpYWwiOiAiUExBIE1hdHRlIiwgIm5hbWUiOiAiRHVua2Vscm90IiwgImhleCI6ICIjQkIzRDQzIiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTMxMDkiLCAibWF0ZXJpYWwiOiAiUExBIFNpbGsrIiwgIm5hbWUiOiAiU2lsYmVyIiwgImhleCI6ICIjQzhDOEM4IiwgInB1cmNoYXNlUHJpY2UiOiAxMi45OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMi45OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTIsOTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMTYwMiIsICJtYXRlcmlhbCI6ICJQTEEgTWF0dGUiLCAibmFtZSI6ICJEdW5rZWxibGF1IiwgImhleCI6ICIjMDQyRjU2IiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMzUxMDAiLCAibWF0ZXJpYWwiOiAiUEVURyBNYXR0ZSIsICJuYW1lIjogIldlacOfIiwgImhleCI6ICIjRkZGRkZGIiwgInB1cmNoYXNlUHJpY2UiOiAwLjAsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMC4wLCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgwLDAwIOKCrCBHZXNjaGVuaykifSwgeyJiYW1idUNvZGUiOiAiMTAyMDEiLCAibWF0ZXJpYWwiOiAiUExBIEJhc2ljIiwgIm5hbWUiOiAiQmVpZ2UiLCAiaGV4IjogIiNGN0U2REUiLCAicHVyY2hhc2VQcmljZSI6IDkuMDEsICJyb2xsQ291bnQiOiAyLCAidG90YWxDb3N0IjogMTguMDEsICJjb3N0Tm90ZSI6ICIyw5cgUmVmaWxsOiAxOCwwMSDigqwgZ2VzYW10ICg5LDAxIOKCrC9Sb2xsZSkifSwgeyJiYW1idUNvZGUiOiAiMzAxMDgiLCAibWF0ZXJpYWwiOiAiUEVURyBCYXNpYyIsICJuYW1lIjogIk1pc3R5IEJsdWUiLCAiaGV4IjogIiM2MTdCOEIiLCAicHVyY2hhc2VQcmljZSI6IDEwLjA2LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEwLjA2LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMCwwNiDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjExMjAxIiwgIm1hdGVyaWFsIjogIlBMQSBNYXR0ZSIsICJuYW1lIjogIlNha3VyYS1Sb3NhIiwgImhleCI6ICIjRThBRkNGIiwgInB1cmNoYXNlUHJpY2UiOiA5LjAsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogOS4wLCAiY29zdE5vdGUiOiAiMcOXIFJlZmlsbCAoOSwwMCDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjExMTAxIiwgIm1hdGVyaWFsIjogIlBMQSBNYXR0ZSIsICJuYW1lIjogIkFudGhyYXppdCIsICJoZXgiOiAiIzAwMDAwMCIsICJwdXJjaGFzZVByaWNlIjogMTAuNTksICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMTAuNTksICJjb3N0Tm90ZSI6ICIxw5cgU3B1bGUgKDEwLDU5IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTMyMDUiLCAibWF0ZXJpYWwiOiAiUExBIFNpbGsrIiwgIm5hbWUiOiAiQ2FuZHktUm90IiwgImhleCI6ICIjRDAyNzI3IiwgInB1cmNoYXNlUHJpY2UiOiAxMC41OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMC41OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTAsNTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICI0NTYwMCIsICJtYXRlcmlhbCI6ICJBU0EiLCAibmFtZSI6ICJCbGF1IiwgImhleCI6ICIjMjE0MEI0IiwgInB1cmNoYXNlUHJpY2UiOiAxNC45OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxNC45OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTQsOTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMDgwMiIsICJtYXRlcmlhbCI6ICJQTEEgQmFzaWMiLCAibmFtZSI6ICJLYWthb2JyYXVuIiwgImhleCI6ICIjNkY1MDM0IiwgInB1cmNoYXNlUHJpY2UiOiAxNS4wLCAicm9sbENvdW50IjogMiwgInRvdGFsQ29zdCI6IDI5Ljk5LCAiY29zdE5vdGUiOiAiMsOXIFNwdWxlOiAyOSw5OSDigqwgZ2VzYW10ICgxNSwwMCDigqwvUm9sbGUpIn0sIHsiYmFtYnVDb2RlIjogIjM1NzAwIiwgIm1hdGVyaWFsIjogIlBFVEcgTWF0dGUiLCAibmFtZSI6ICJQaW5rIiwgImhleCI6ICIjRjVCNkNEIiwgInB1cmNoYXNlUHJpY2UiOiAxNC4yNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxNC4yNCwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTQsMjQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMDMwMCIsICJtYXRlcmlhbCI6ICJQTEEgQmFzaWMiLCAibmFtZSI6ICJPcmFuZ2UiLCAiaGV4IjogIiNGRjZBMTMiLCAicHVyY2hhc2VQcmljZSI6IDEyLjc0LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEyLjc0LCAiY29zdE5vdGUiOiAiMcOXIFJlZmlsbCAoMTIsNzQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIzMjEwMSIsICJtYXRlcmlhbCI6ICJQRVRHIFRyYW5zbHVjZW50IiwgIm5hbWUiOiAiVHJhbnNwYXJlbnQiLCAiaGV4IjogIiNEOUQ5RDkiLCAicHVyY2hhc2VQcmljZSI6IDEwLjU5LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEwLjU5LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMCw1OSDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjEwMzAwIiwgIm1hdGVyaWFsIjogIlBMQSBCYXNpYyIsICJuYW1lIjogIk9yYW5nZSIsICJoZXgiOiAiI0ZGNkExMyIsICJwdXJjaGFzZVByaWNlIjogMTIuNzQsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMTIuNzQsICJjb3N0Tm90ZSI6ICIxw5cgUmVmaWxsICgxMiw3NCDigqwpIn1d";
+    const BAMBU_LAB_SEED_B64 = "W3siYmFtYnVDb2RlIjogIjMwMTA2IiwgIm1hdGVyaWFsIjogIlBFVEcgQmFzaWMiLCAibmFtZSI6ICJXZWnDnyIsICJoZXgiOiAiI0ZGRkZGRiIsICJwdXJjaGFzZVByaWNlIjogMTIuMzQsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMTIuMzQsICJjb3N0Tm90ZSI6ICIxw5cgU3B1bGUgKDEyLDM0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMzAxMDUiLCAibWF0ZXJpYWwiOiAiUEVURyBCYXNpYyIsICJuYW1lIjogIlNjaHdhcnoiLCAiaGV4IjogIiMwMDAwMDAiLCAicHVyY2hhc2VQcmljZSI6IDExLjIsICJyb2xsQ291bnQiOiAyLCAidG90YWxDb3N0IjogMjIuNCwgImNvc3ROb3RlIjogIjLDlyBTcHVsZTogMTIsMzQg4oKsICsgMTAsMDYg4oKsICjDmCAxMSwyMCDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjEwMTAxIiwgIm1hdGVyaWFsIjogIlBMQSBCYXNpYyIsICJuYW1lIjogIlNjaHdhcnoiLCAiaGV4IjogIiMwMDAwMDAiLCAicHVyY2hhc2VQcmljZSI6IDEyLjk5LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEyLjk5LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMiw5OSDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjMwMTA3IiwgIm1hdGVyaWFsIjogIlBFVEcgQmFzaWMiLCAibmFtZSI6ICJHcmF1IiwgImhleCI6ICIjOEU5MDg5IiwgInB1cmNoYXNlUHJpY2UiOiAxMi4zNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMi4zNCwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTIsMzQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMTYwMSIsICJtYXRlcmlhbCI6ICJQTEEgTWF0dGUiLCAibmFtZSI6ICJFaXNibGF1IiwgImhleCI6ICIjQTNEOEUxIiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTEyMDIiLCAibWF0ZXJpYWwiOiAiUExBIE1hdHRlIiwgIm5hbWUiOiAiRHVua2Vscm90IiwgImhleCI6ICIjQkIzRDQzIiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTMxMDkiLCAibWF0ZXJpYWwiOiAiUExBIFNpbGsrIiwgIm5hbWUiOiAiU2lsYmVyIiwgImhleCI6ICIjQzhDOEM4IiwgInB1cmNoYXNlUHJpY2UiOiAxMi45OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMi45OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTIsOTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMTYwMiIsICJtYXRlcmlhbCI6ICJQTEEgTWF0dGUiLCAibmFtZSI6ICJEdW5rZWxibGF1IiwgImhleCI6ICIjMDQyRjU2IiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMzUxMDAiLCAibWF0ZXJpYWwiOiAiUEVURyBNYXR0ZSIsICJuYW1lIjogIldlacOfIiwgImhleCI6ICIjRkZGRkZGIiwgInB1cmNoYXNlUHJpY2UiOiAwLjAsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMC4wLCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgwLDAwIOKCrCBHZXNjaGVuaykifSwgeyJiYW1idUNvZGUiOiAiMTAyMDEiLCAibWF0ZXJpYWwiOiAiUExBIEJhc2ljIiwgIm5hbWUiOiAiQmVpZ2UiLCAiaGV4IjogIiNGN0U2REUiLCAicHVyY2hhc2VQcmljZSI6IDkuMDEsICJyb2xsQ291bnQiOiAyLCAidG90YWxDb3N0IjogMTguMDEsICJjb3N0Tm90ZSI6ICIyw5cgUmVmaWxsOiAxOCwwMSDigqwgZ2VzYW10ICg5LDAxIOKCrC9Sb2xsZSkifSwgeyJiYW1idUNvZGUiOiAiMzAxMDgiLCAibWF0ZXJpYWwiOiAiUEVURyBCYXNpYyIsICJuYW1lIjogIk1pc3R5IEJsdWUiLCAiaGV4IjogIiM2MTdCOEIiLCAicHVyY2hhc2VQcmljZSI6IDEwLjA2LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEwLjA2LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMCwwNiDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjExMjAxIiwgIm1hdGVyaWFsIjogIlBMQSBNYXR0ZSIsICJuYW1lIjogIlNha3VyYS1Sb3NhIiwgImhleCI6ICIjRThBRkNGIiwgInB1cmNoYXNlUHJpY2UiOiA5LjAsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogOS4wLCAiY29zdE5vdGUiOiAiMcOXIFJlZmlsbCAoOSwwMCDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjExMTAxIiwgIm1hdGVyaWFsIjogIlBMQSBNYXR0ZSIsICJuYW1lIjogIkFudGhyYXppdCIsICJoZXgiOiAiIzAwMDAwMCIsICJwdXJjaGFzZVByaWNlIjogMTAuNTksICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMTAuNTksICJjb3N0Tm90ZSI6ICIxw5cgU3B1bGUgKDEwLDU5IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTMyMDUiLCAibWF0ZXJpYWwiOiAiUExBIFNpbGsrIiwgIm5hbWUiOiAiQ2FuZHktUm90IiwgImhleCI6ICIjRDAyNzI3IiwgInB1cmNoYXNlUHJpY2UiOiAxMC41OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMC41OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTAsNTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICI0NTYwMCIsICJtYXRlcmlhbCI6ICJBU0EiLCAibmFtZSI6ICJCbGF1IiwgImhleCI6ICIjMjE0MEI0IiwgInB1cmNoYXNlUHJpY2UiOiAxNC45OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxNC45OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTQsOTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMDgwMiIsICJtYXRlcmlhbCI6ICJQTEEgQmFzaWMiLCAibmFtZSI6ICJLYWthb2JyYXVuIiwgImhleCI6ICIjNkY1MDM0IiwgInB1cmNoYXNlUHJpY2UiOiAxNS4wLCAicm9sbENvdW50IjogMiwgInRvdGFsQ29zdCI6IDI5Ljk5LCAiY29zdE5vdGUiOiAiMsOXIFNwdWxlOiAyOSw5OSDigqwgZ2VzYW10ICgxNSwwMCDigqwvUm9sbGUpIn0sIHsiYmFtYnVDb2RlIjogIjM1NzAwIiwgIm1hdGVyaWFsIjogIlBFVEcgTWF0dGUiLCAibmFtZSI6ICJQaW5rIiwgImhleCI6ICIjRjVCNkNEIiwgInB1cmNoYXNlUHJpY2UiOiAxNC4yNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxNC4yNCwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTQsMjQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMDMwMCIsICJtYXRlcmlhbCI6ICJQTEEgQmFzaWMiLCAibmFtZSI6ICJPcmFuZ2UiLCAiaGV4IjogIiNGRjZBMTMiLCAicHVyY2hhc2VQcmljZSI6IDEyLjc0LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEyLjc0LCAiY29zdE5vdGUiOiAiMcOXIFJlZmlsbCAoMTIsNzQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIzMjEwMSIsICJtYXRlcmlhbCI6ICJQRVRHIFRyYW5zbHVjZW50IiwgIm5hbWUiOiAiVHJhbnNwYXJlbnQiLCAiaGV4IjogIiNEOUQ5RDkiLCAicHVyY2hhc2VQcmljZSI6IDEwLjU5LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEwLjU5LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMCw1OSDigqwpIn1d";
     function getBambuInitialSeed() {
       if (!isAdminLoggedIn) return [];
       try {
