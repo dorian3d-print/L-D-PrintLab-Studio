@@ -407,18 +407,24 @@
         <div id="admin-view-filaments" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div class="lg:col-span-5 bg-white rounded-3xl p-6 border border-[#E2DFD7] space-y-4 self-start">
             <h3 class="font-display text-lg font-bold text-[#22211F]">Neue Filament-Rolle anlegen</h3>
-            <p class="text-xs text-[#6E6A63]">Wähle eine der gängigen 3D-Druck-Farben aus oder nutze den Farbwähler. Leere Rollen kannst du später mit einem Tipp ausblenden.</p>
+            <p class="text-xs text-[#6E6A63]">Wähle eine der gängigen 3D-Druck-Farben aus, nutze den Farbwähler oder gib den Hexcode direkt ein. Leere Rollen kannst du später mit einem Tipp ausblenden.</p>
             <form onsubmit="addFilament(event)" class="space-y-3.5">
               <!-- Schnellauswahl gängiger 3D-Druck-Farben -->
               <div>
-                <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Gängige 3D-Druck-Farben auswählen</label>
+                <div class="flex items-center justify-between gap-2 mb-1.5">
+                  <label class="block text-xs font-semibold text-[#22211F]">Gängige 3D-Druck-Farben auswählen</label>
+                  <div id="presetTargetToggle" class="hidden inline-flex items-center rounded-full bg-[#EFECE6] p-0.5 text-[10px] font-semibold">
+                    <button type="button" id="presetTargetBtn1" onclick="setPresetColorTarget(1)" class="px-2 py-0.5 rounded-full bg-[#22211F] text-white transition">Links</button>
+                    <button type="button" id="presetTargetBtn2" onclick="setPresetColorTarget(2)" class="px-2 py-0.5 rounded-full text-[#6E6A63] hover:text-[#22211F] transition">Rechts</button>
+                  </div>
+                </div>
                 <div id="presetFilamentSwatches" class="grid grid-cols-8 sm:grid-cols-9 gap-1.5 p-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60"></div>
               </div>
 
               <div class="grid grid-cols-3 gap-3">
                 <div class="col-span-2">
                   <label class="block text-xs font-semibold text-[#22211F] mb-1">Farbbezeichnung *</label>
-                  <input type="text" id="filName" required placeholder="z. B. Schwarz" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                  <input type="text" id="filName" required placeholder="z. B. Schwarz oder Schwarz / Gold" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
                 </div>
                 <div>
                   <label class="block text-xs font-semibold text-[#22211F] mb-1">Bambu-Code</label>
@@ -426,29 +432,51 @@
                 </div>
               </div>
 
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-xs font-semibold text-[#22211F] mb-1">Material *</label>
-                  <select id="filMaterial" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]">
-                    <option value="PLA Basic">PLA Basic</option>
-                    <option value="PLA Matte">PLA Matte</option>
-                    <option value="PLA Silk+">PLA Silk+</option>
-                    <option value="PLA Silk">PLA Silk</option>
-                    <option value="PLA+">PLA+</option>
-                    <option value="PETG Basic">PETG Basic</option>
-                    <option value="PETG Matte">PETG Matte</option>
-                    <option value="PETG Translucent">PETG Translucent</option>
-                    <option value="PETG">PETG</option>
-                    <option value="ASA">ASA</option>
-                    <option value="ABS">ABS</option>
-                    <option value="TPU">TPU</option>
-                  </select>
+              <div>
+                <label class="block text-xs font-semibold text-[#22211F] mb-1">Material *</label>
+                <select id="filMaterial" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]">
+                  <option value="PLA Basic">PLA Basic</option>
+                  <option value="PLA Matte">PLA Matte</option>
+                  <option value="PLA Silk+">PLA Silk+</option>
+                  <option value="PLA Silk">PLA Silk</option>
+                  <option value="PLA+">PLA+</option>
+                  <option value="PETG Basic">PETG Basic</option>
+                  <option value="PETG Matte">PETG Matte</option>
+                  <option value="PETG Translucent">PETG Translucent</option>
+                  <option value="PETG">PETG</option>
+                  <option value="ASA">ASA</option>
+                  <option value="ABS">ABS</option>
+                  <option value="TPU">TPU</option>
+                </select>
+              </div>
+
+              <!-- Farbcode (Hex) + Option für zweifarbiges Filament -->
+              <div class="p-3 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/40 space-y-3">
+                <div class="flex items-center justify-between gap-2">
+                  <label class="inline-flex items-center gap-2 text-xs font-semibold text-[#22211F] cursor-pointer select-none">
+                    <input type="checkbox" id="filIsDualColor" onchange="toggleDualColorFilamentForm()" class="rounded accent-[#57151E]" />
+                    <span>Zweifarbiges Filament</span>
+                  </label>
+                  <div class="flex items-center gap-1.5">
+                    <span id="filPreviewCircle" class="w-6 h-6 rounded-full border border-black/20 shadow-2xs shrink-0" style="background:#1E1E1E"></span>
+                  </div>
                 </div>
-                <div>
-                  <label class="block text-xs font-semibold text-[#22211F] mb-1">Farbcode (Hex)</label>
-                  <div class="flex items-center gap-2">
-                    <input type="color" id="filHex" value="#1E1E1E" class="w-11 h-10 rounded-xl border border-[#E2DFD7] cursor-pointer bg-white p-1" />
-                    <span id="filHexText" class="text-xs font-mono text-[#6E6A63]">#1E1E1E</span>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label id="filHexLabel1" class="block text-xs font-semibold text-[#22211F] mb-1">Farbcode (Hex)</label>
+                    <div class="flex items-center gap-2">
+                      <input type="color" id="filHex" value="#1E1E1E" class="w-11 h-10 rounded-xl border border-[#E2DFD7] cursor-pointer bg-white p-1 shrink-0" />
+                      <input type="text" id="filHexInput" value="#1E1E1E" maxlength="7" placeholder="#1E1E1E" aria-label="Hexcode Farbe 1" class="w-full min-w-0 px-3 py-2 rounded-xl border border-[#E2DFD7] bg-white text-xs font-mono uppercase text-[#22211F] focus:outline-none focus:border-[#57151E]" />
+                    </div>
+                  </div>
+
+                  <div id="filSecondColorCol" class="hidden">
+                    <label class="block text-xs font-semibold text-[#22211F] mb-1">Farbe 2 – Rechts (Hex)</label>
+                    <div class="flex items-center gap-2">
+                      <input type="color" id="filHex2" value="#D4AF37" class="w-11 h-10 rounded-xl border border-[#E2DFD7] cursor-pointer bg-white p-1 shrink-0" />
+                      <input type="text" id="filHexInput2" value="#D4AF37" maxlength="7" placeholder="#D4AF37" aria-label="Hexcode Farbe 2" class="w-full min-w-0 px-3 py-2 rounded-xl border border-[#E2DFD7] bg-white text-xs font-mono uppercase text-[#22211F] focus:outline-none focus:border-[#57151E]" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -463,6 +491,19 @@
                   <label class="block text-xs font-semibold text-[#57151E] mb-1">Einkaufspreis / Rolle (€) 🔒</label>
                   <input type="number" id="filPurchasePrice" step="0.01" min="0" placeholder="z. B. 12.34" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#57151E]/30 bg-[#57151E]/[0.03] text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
                   <p class="text-[11px] text-[#57151E]/80 mt-1">Nur für Admins gespeichert.</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-[#57151E] mb-1">Marke 🔒</label>
+                  <input type="text" id="filBrand" placeholder="z. B. Bambu Lab, eSUN" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#57151E]/30 bg-[#57151E]/[0.03] text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                  <p class="text-[11px] text-[#57151E]/80 mt-1">Nur für Admins sichtbar.</p>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-[#57151E] mb-1">Kommentar 🔒</label>
+                  <input type="text" id="filComment" placeholder="z. B. Interner Hinweis" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#57151E]/30 bg-[#57151E]/[0.03] text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                  <p class="text-[11px] text-[#57151E]/80 mt-1">Nur für Admins sichtbar.</p>
                 </div>
               </div>
 
@@ -707,7 +748,7 @@
             <tbody class="divide-y divide-[#E2DFD7] text-[#6E6A63]">
               <tr>
                 <td class="py-2.5 px-3 sm:px-4 font-semibold text-[#22211F] align-top whitespace-nowrap">Basic</td>
-                <td class="py-2.5 px-3 sm:px-4 align-top">Schöne natürliche Oberfläche mit kräftigen Farben</td>
+                <td class="py-2.5 px-3 sm:px-4 align-top">Glatte Standard-Oberfläche mit kräftigen, natürlichen Farben</td>
               </tr>
               <tr>
                 <td class="py-2.5 px-3 sm:px-4 font-semibold text-[#22211F] align-top whitespace-nowrap">Matte</td>
@@ -865,16 +906,128 @@
       { name: "Transparent / Natur", hex: "#E6EAEE" }
     ];
 
-    // Farb-Picker Live-Anzeige
-    document.getElementById("filHex").addEventListener("input", e => {
-      document.getElementById("filHexText").textContent = e.target.value.toUpperCase();
+    let presetColorTarget = 1;
+
+    function parseValidHex(raw) {
+      const cleaned = String(raw ?? "").trim().replace(/^#+/, "");
+      if (/^[0-9A-Fa-f]{6}$/.test(cleaned)) {
+        return "#" + cleaned.toUpperCase();
+      }
+      if (/^[0-9A-Fa-f]{3}$/.test(cleaned)) {
+        return "#" + cleaned.split("").map(ch => ch + ch).join("").toUpperCase();
+      }
+      return null;
+    }
+
+    function sanitizeHexColor(val, fallback = "#1E1E1E") {
+      return parseValidHex(val) || fallback;
+    }
+
+    function isDualColorFilament(f) {
+      return !!(f && f.isDualColor && parseValidHex(f.hex2));
+    }
+
+    function getFilamentSwatchStyle(f) {
+      const c1 = sanitizeHexColor(f && f.hex, "#1E1E1E");
+      if (isDualColorFilament(f)) {
+        const c2 = sanitizeHexColor(f.hex2, "#D4AF37");
+        return `background: linear-gradient(90deg, ${c1} 50%, ${c2} 50%)`;
+      }
+      return `background: ${c1}`;
+    }
+
+    function updateFilamentFormPreview() {
+      const preview = document.getElementById("filPreviewCircle");
+      if (!preview) return;
+      const isDual = !!document.getElementById("filIsDualColor")?.checked;
+      const hex1 = sanitizeHexColor(document.getElementById("filHex")?.value, "#1E1E1E");
+      const hex2 = sanitizeHexColor(document.getElementById("filHex2")?.value, "#D4AF37");
+      preview.style.background = isDual
+        ? `linear-gradient(90deg, ${hex1} 50%, ${hex2} 50%)`
+        : hex1;
+    }
+
+    window.setPresetColorTarget = function(target) {
+      presetColorTarget = target === 2 ? 2 : 1;
+      const btn1 = document.getElementById("presetTargetBtn1");
+      const btn2 = document.getElementById("presetTargetBtn2");
+      if (btn1 && btn2) {
+        if (presetColorTarget === 1) {
+          btn1.classList.add("bg-[#22211F]", "text-white");
+          btn1.classList.remove("text-[#6E6A63]");
+          btn2.classList.remove("bg-[#22211F]", "text-white");
+          btn2.classList.add("text-[#6E6A63]");
+        } else {
+          btn2.classList.add("bg-[#22211F]", "text-white");
+          btn2.classList.remove("text-[#6E6A63]");
+          btn1.classList.remove("bg-[#22211F]", "text-white");
+          btn1.classList.add("text-[#6E6A63]");
+        }
+      }
       renderPresetFilamentSwatches();
-    });
+    };
+
+    window.toggleDualColorFilamentForm = function() {
+      const isDual = !!document.getElementById("filIsDualColor")?.checked;
+      const secondCol = document.getElementById("filSecondColorCol");
+      const label1 = document.getElementById("filHexLabel1");
+      const presetToggle = document.getElementById("presetTargetToggle");
+
+      if (secondCol) secondCol.classList.toggle("hidden", !isDual);
+      if (label1) label1.textContent = isDual ? "Farbe 1 – Links (Hex)" : "Farbcode (Hex)";
+      if (presetToggle) presetToggle.classList.toggle("hidden", !isDual);
+      if (!isDual) {
+        setPresetColorTarget(1);
+      }
+      updateFilamentFormPreview();
+    };
+
+    function bindHexColorPair(colorInputId, textInputId) {
+      const colorEl = document.getElementById(colorInputId);
+      const textEl = document.getElementById(textInputId);
+      if (!colorEl || !textEl) return;
+
+      colorEl.addEventListener("input", e => {
+        textEl.value = e.target.value.toUpperCase();
+        updateFilamentFormPreview();
+        renderPresetFilamentSwatches();
+      });
+
+      textEl.addEventListener("input", e => {
+        const cleaned = String(e.target.value || "").trim().replace(/^#+/, "");
+        if (/^[0-9A-Fa-f]{6}$/.test(cleaned)) {
+          colorEl.value = "#" + cleaned.toUpperCase();
+          updateFilamentFormPreview();
+          renderPresetFilamentSwatches();
+        }
+      });
+
+      const commitManualHex = () => {
+        const parsed = parseValidHex(textEl.value);
+        if (parsed) {
+          colorEl.value = parsed;
+          textEl.value = parsed;
+        } else {
+          textEl.value = colorEl.value.toUpperCase();
+        }
+        updateFilamentFormPreview();
+        renderPresetFilamentSwatches();
+      };
+
+      textEl.addEventListener("change", commitManualHex);
+      textEl.addEventListener("blur", commitManualHex);
+    }
+
+    // Farb-Picker & manuelle Hexcode-Eingabe Live-Synchronisation
+    bindHexColorPair("filHex", "filHexInput");
+    bindHexColorPair("filHex2", "filHexInput2");
 
     function renderPresetFilamentSwatches() {
       const box = document.getElementById("presetFilamentSwatches");
       if (!box) return;
-      const currentHex = document.getElementById("filHex").value.toUpperCase();
+      const isDual = !!document.getElementById("filIsDualColor")?.checked;
+      const activeInputId = (isDual && presetColorTarget === 2) ? "filHex2" : "filHex";
+      const currentHex = document.getElementById(activeInputId).value.toUpperCase();
       box.innerHTML = PRESET_FILAMENT_COLORS.map((c, idx) => {
         const isSelected = currentHex === c.hex.toUpperCase();
         return `
@@ -891,13 +1044,20 @@
     window.selectPresetFilamentColor = function(idx) {
       const preset = PRESET_FILAMENT_COLORS[idx];
       if (!preset) return;
-      document.getElementById("filHex").value = preset.hex;
-      document.getElementById("filHexText").textContent = preset.hex.toUpperCase();
-      const nameInput = document.getElementById("filName");
-      if (!nameInput.value.trim() || nameInput.value.trim() === lastSelectedPresetName) {
-        nameInput.value = preset.name;
+      const isDual = !!document.getElementById("filIsDualColor")?.checked;
+      if (isDual && presetColorTarget === 2) {
+        document.getElementById("filHex2").value = preset.hex;
+        document.getElementById("filHexInput2").value = preset.hex.toUpperCase();
+      } else {
+        document.getElementById("filHex").value = preset.hex;
+        document.getElementById("filHexInput").value = preset.hex.toUpperCase();
+        const nameInput = document.getElementById("filName");
+        if (!nameInput.value.trim() || nameInput.value.trim() === lastSelectedPresetName) {
+          nameInput.value = preset.name;
+        }
+        lastSelectedPresetName = preset.name;
       }
-      lastSelectedPresetName = preset.name;
+      updateFilamentFormPreview();
       renderPresetFilamentSwatches();
     };
 
@@ -1520,7 +1680,10 @@
                 nextCosts[d.id] = d.data();
               });
               filamentCosts = nextCosts;
-              if (isAdminLoggedIn) renderAdminFilamentsList();
+              const adminFilListEl = document.getElementById("adminFilamentsList");
+              if (isAdminLoggedIn && (!adminFilListEl || !adminFilListEl.contains(document.activeElement))) {
+                renderAdminFilamentsList();
+              }
             }, err => {
               console.warn("Interne Kostendaten konnten nicht geladen werden:", err);
             });
@@ -1737,7 +1900,7 @@
       return `
         <div class="flex items-center justify-between gap-2.5 px-3 py-2 rounded-2xl text-xs bg-[#F7F6F2] border border-[#E2DFD7] text-[#22211F]">
           <span class="flex items-center gap-2.5 min-w-0">
-            <span class="w-[18px] h-[18px] rounded-full border border-black/20 shadow-2xs shrink-0" style="background:${f.hex}"></span>
+            <span class="w-[18px] h-[18px] rounded-full border border-black/20 shadow-2xs shrink-0" style="${getFilamentSwatchStyle(f)}"></span>
             <span class="leading-snug">${escapeHtml(f.name)} <span class="text-[#6E6A63]">(${escapeHtml(f.material)})</span></span>
           </span>
           ${extraTag ? `<span class="shrink-0 px-2 py-0.5 rounded-full bg-[#EFECE6] font-semibold text-[#57151E] text-[11px]">${escapeHtml(extraTag)}</span>` : ""}
@@ -1889,7 +2052,7 @@
                 : "border-[#E2DFD7] hover:border-[#57151E] text-[#6E6A63]"
             }">
             <span class="flex items-center gap-2.5 min-w-0">
-              <span class="w-[18px] h-[18px] rounded-full border border-black/20 shadow-2xs shrink-0" style="background:${f.hex}"></span>
+              <span class="w-[18px] h-[18px] rounded-full border border-black/20 shadow-2xs shrink-0" style="${getFilamentSwatchStyle(f)}"></span>
               <span class="leading-snug">${escapeHtml(f.name)} (${escapeHtml(f.material)})</span>
             </span>
             ${extraTag ? `<span class="shrink-0 px-2 py-0.5 rounded-full bg-[#EFECE6] text-[#57151E] text-[11px] font-semibold">${escapeHtml(extraTag)}</span>` : ""}
@@ -1968,6 +2131,7 @@
         productTitle: activeOrderProduct.title,
         filamentName: chosenFil ? `${chosenFil.name} (${chosenFil.material})` : "Standard",
         filamentHex: chosenFil ? chosenFil.hex : "#1E1E1E",
+        filamentHex2: chosenFil && isDualColorFilament(chosenFil) ? chosenFil.hex2 : null,
         qty,
         basePrice: Number(activeOrderProduct.price || 0),
         surcharge,
@@ -2035,7 +2199,7 @@
                 : "bg-[#F7F6F2] hover:bg-[#EFECE6] border-[#E2DFD7] text-[#22211F]"
             }">
             <span class="flex items-center gap-2.5 min-w-0">
-              <span class="w-[18px] h-[18px] rounded-full border border-black/20 shadow-2xs shrink-0" style="background:${f.hex}"></span>
+              <span class="w-[18px] h-[18px] rounded-full border border-black/20 shadow-2xs shrink-0" style="${getFilamentSwatchStyle(f)}"></span>
               <span class="leading-snug">${escapeHtml(f.name)} <span class="text-[#6E6A63]">(${escapeHtml(f.material)})</span></span>
             </span>
             ${extraTag ? `<span class="shrink-0 px-2 py-0.5 rounded-full bg-white/80 font-semibold text-[#57151E] text-[11px]">${escapeHtml(extraTag)}</span>` : ""}
@@ -2568,7 +2732,7 @@
           <div data-prod-fil-row="${f.id}" class="flex items-center justify-between gap-2 p-2 rounded-xl border text-xs transition ${isDefault ? "border-[#57151E]/45 bg-[#57151E]/[0.03]" : "border-[#E2DFD7] bg-white"}">
             <label class="flex items-center gap-2 min-w-0 flex-1 cursor-pointer">
               <input type="checkbox" name="prodFilCheck" value="${f.id}" ${checkedIds.includes(f.id) ? "checked" : ""} onchange="handleProductFilCheckChange('${f.id}')" class="rounded accent-[#22211F] shrink-0" />
-              <span class="w-3 h-3 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
+              <span class="w-3 h-3 rounded-full border border-black/15 shrink-0" style="${getFilamentSwatchStyle(f)}"></span>
               <span class="truncate ${f.inStock ? "text-[#22211F]" : "text-[#9A948C] line-through"}">${escapeHtml(f.name)} (${escapeHtml(f.material)})</span>
             </label>
             <div class="flex items-center gap-1.5 shrink-0">
@@ -3013,17 +3177,40 @@
       const name = document.getElementById("filName").value.trim();
       const bambuCode = document.getElementById("filBambuCode").value.trim();
       const material = document.getElementById("filMaterial").value;
-      const hex = document.getElementById("filHex").value;
+      const hex = sanitizeHexColor(document.getElementById("filHexInput")?.value || document.getElementById("filHex").value, "#1E1E1E");
+      const isDualColor = !!document.getElementById("filIsDualColor")?.checked;
+      const hex2 = isDualColor
+        ? sanitizeHexColor(document.getElementById("filHexInput2")?.value || document.getElementById("filHex2")?.value, "#D4AF37")
+        : "";
       const surchargeRaw = parseFloat(document.getElementById("filSurcharge").value);
       const surcharge = Number.isFinite(surchargeRaw) ? surchargeRaw : 0;
 
       const ekRaw = parseFloat(document.getElementById("filPurchasePrice").value);
       const hasEk = Number.isFinite(ekRaw) && ekRaw >= 0;
+      const brand = (document.getElementById("filBrand")?.value || "").trim();
+      const adminComment = (document.getElementById("filComment")?.value || "").trim();
 
-      // Öffentliches Dokument enthält NIEMALS den Einkaufspreis
-      const publicPayload = { name, material, hex, bambuCode, surcharge, inStock: true, createdAt: Date.now() };
-      const costPayload = hasEk
-        ? { purchasePrice: ekRaw, rollCount: 1, totalCost: ekRaw, costNote: "", updatedAt: Date.now() }
+      // Öffentliches Dokument enthält NIEMALS Einkaufspreis, Marke oder Kommentar
+      const publicPayload = {
+        name,
+        material,
+        hex,
+        isDualColor,
+        hex2,
+        bambuCode,
+        surcharge,
+        inStock: true,
+        createdAt: Date.now()
+      };
+      const hasAdminData = hasEk || brand !== "" || adminComment !== "";
+      const costPayload = hasAdminData
+        ? {
+            ...(hasEk ? { purchasePrice: ekRaw, rollCount: 1, totalCost: ekRaw } : {}),
+            ...(brand !== "" ? { brand } : {}),
+            ...(adminComment !== "" ? { adminComment } : {}),
+            costNote: "",
+            updatedAt: Date.now()
+          }
         : null;
 
       if (isCloudConfigured) {
@@ -3044,8 +3231,36 @@
       document.getElementById("filBambuCode").value = "";
       document.getElementById("filSurcharge").value = "0";
       document.getElementById("filPurchasePrice").value = "";
+      if (document.getElementById("filBrand")) document.getElementById("filBrand").value = "";
+      if (document.getElementById("filComment")) document.getElementById("filComment").value = "";
+      if (document.getElementById("filIsDualColor")) {
+        document.getElementById("filIsDualColor").checked = false;
+        toggleDualColorFilamentForm();
+      }
       lastSelectedPresetName = "";
       showToast(`${name} (${material}) angelegt.`);
+    };
+
+    window.updateFilamentAdminMeta = async function(filId, field, rawVal) {
+      if (!isAdminLoggedIn) return;
+      if (field !== "brand" && field !== "adminComment") return;
+      const value = String(rawVal ?? "").trim();
+      const existingCost = filamentCosts[filId] || {};
+      filamentCosts[filId] = { ...existingCost, [field]: value };
+
+      if (isCloudConfigured) {
+        await setDoc(doc(db, "filament_costs", filId), {
+          [field]: value,
+          updatedAt: Date.now()
+        }, { merge: true });
+      } else {
+        localStorage.setItem("ld_demo_filament_costs", JSON.stringify(filamentCosts));
+      }
+      const listEl = document.getElementById("adminFilamentsList");
+      if (!listEl || !listEl.contains(document.activeElement)) {
+        renderAdminFilamentsList();
+      }
+      showToast(field === "brand" ? "Marke gespeichert (nur Admin)." : "Kommentar gespeichert (nur Admin).");
     };
 
     window.updateFilamentPurchasePrice = async function(filId, rawVal) {
@@ -3145,49 +3360,69 @@
         const ekVal = typeof costInfo.purchasePrice === "number" ? costInfo.purchasePrice.toFixed(2) : "";
         const rollBadge = Number(costInfo.rollCount || 1) > 1 ? `<span class="px-1.5 py-0.5 rounded-md bg-[#EFECE6] text-[#22211F] text-[10px] font-semibold">${costInfo.rollCount}× Rollen</span>` : "";
         const codeBadge = f.bambuCode ? `<span class="font-mono text-[11px] text-[#6E6A63]">#${escapeHtml(String(f.bambuCode))}</span>` : "";
+        const brandBadge = costInfo.brand ? `<span class="px-1.5 py-0.5 rounded-md bg-[#57151E]/10 text-[#57151E] text-[10px] font-semibold">🔒 ${escapeHtml(costInfo.brand)}</span>` : "";
         const noteLine = costInfo.costNote ? `<div class="text-[11px] text-[#6E6A63] truncate">${escapeHtml(costInfo.costNote)}</div>` : "";
 
         return `
-        <div class="py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-          <div class="flex items-center gap-3 min-w-0">
-            <span class="w-6 h-6 rounded-full border border-black/15 shrink-0" style="background:${f.hex}"></span>
-            <div class="min-w-0">
-              <div class="text-sm font-semibold text-[#22211F] flex items-center gap-1.5 flex-wrap">
-                <span class="truncate">${escapeHtml(f.name)}</span>
-                <span class="text-xs font-normal text-[#6E6A63]">(${escapeHtml(f.material)})</span>
-                ${codeBadge}
-                ${rollBadge}
+        <div class="py-3.5 space-y-2.5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="w-6 h-6 rounded-full border border-black/15 shrink-0" style="${getFilamentSwatchStyle(f)}"></span>
+              <div class="min-w-0">
+                <div class="text-sm font-semibold text-[#22211F] flex items-center gap-1.5 flex-wrap">
+                  <span class="truncate">${escapeHtml(f.name)}</span>
+                  <span class="text-xs font-normal text-[#6E6A63]">(${escapeHtml(f.material)})</span>
+                  ${codeBadge}
+                  ${rollBadge}
+                  ${brandBadge}
+                </div>
+                <div class="text-[11px] ${f.inStock ? "text-emerald-700" : "text-[#8C7765]"}">
+                  ${f.inStock ? "● Vorrätig (im Shop sichtbar)" : "○ Nicht vorrätig (für Kunden unsichtbar)"}
+                </div>
+                ${noteLine}
               </div>
-              <div class="text-[11px] ${f.inStock ? "text-emerald-700" : "text-[#8C7765]"}">
-                ${f.inStock ? "● Vorrätig (im Shop sichtbar)" : "○ Nicht vorrätig (für Kunden unsichtbar)"}
-              </div>
-              ${noteLine}
+            </div>
+            <div class="flex items-center justify-end gap-2 shrink-0 flex-wrap">
+              <label class="inline-flex items-center gap-1 text-[11px] text-[#57151E] bg-[#57151E]/[0.05] border border-[#57151E]/25 rounded-xl px-2 py-1" title="Interner Einkaufspreis pro Rolle (nur für Admins)">
+                <span class="font-semibold">EK</span>
+                <input type="number" step="0.01" min="0" value="${ekVal}" placeholder="0.00"
+                  onchange="updateFilamentPurchasePrice('${f.id}', this.value)"
+                  class="w-14 bg-transparent text-xs font-semibold text-[#57151E] text-right focus:outline-none" />
+                <span>€</span>
+              </label>
+              <label class="inline-flex items-center gap-1 text-[11px] text-[#6E6A63] bg-[#F7F6F2] border border-[#E2DFD7] rounded-xl px-2 py-1" title="Öffentlicher Kunden-Aufpreis in Euro">
+                <span>+</span>
+                <input type="number" step="0.5" value="${Number(f.surcharge || 0)}"
+                  onchange="updateFilamentSurcharge('${f.id}', this.value)"
+                  class="w-12 bg-transparent text-xs font-semibold text-[#22211F] text-right focus:outline-none" />
+                <span>€</span>
+              </label>
+              <button onclick="toggleFilamentStock('${f.id}', ${!f.inStock})"
+                class="px-3 py-1.5 rounded-full text-xs font-medium border transition ${
+                  f.inStock
+                    ? "bg-[#22211F] text-white border-[#22211F]"
+                    : "bg-[#F7F6F2] text-[#6E6A63] border-[#E2DFD7]"
+                }">
+                ${f.inStock ? "Vorrätig" : "Leer"}
+              </button>
+              <button onclick="deleteFilament('${f.id}')" class="text-xs text-[#6E6A63] hover:text-red-600 px-1.5" title="Löschen">✕</button>
             </div>
           </div>
-          <div class="flex items-center justify-end gap-2 shrink-0 flex-wrap">
-            <label class="inline-flex items-center gap-1 text-[11px] text-[#57151E] bg-[#57151E]/[0.05] border border-[#57151E]/25 rounded-xl px-2 py-1" title="Interner Einkaufspreis pro Rolle (nur für Admins)">
-              <span class="font-semibold">EK</span>
-              <input type="number" step="0.01" min="0" value="${ekVal}" placeholder="0.00"
-                onchange="updateFilamentPurchasePrice('${f.id}', this.value)"
-                class="w-14 bg-transparent text-xs font-semibold text-[#57151E] text-right focus:outline-none" />
-              <span>€</span>
+
+          <!-- Admin-exklusive Felder: Marke & Kommentar -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-9">
+            <label class="flex items-center gap-1.5 text-[11px] text-[#57151E] bg-[#57151E]/[0.04] border border-[#57151E]/20 rounded-xl px-2.5 py-1.5" title="Marke (nur für Admins sichtbar)">
+              <span class="font-semibold shrink-0">🔒 Marke:</span>
+              <input type="text" value="${escapeHtml(costInfo.brand || "")}" placeholder="Marke eingeben …"
+                onchange="updateFilamentAdminMeta('${f.id}', 'brand', this.value)"
+                class="w-full min-w-0 bg-transparent text-xs text-[#22211F] placeholder:text-[#9A948C] focus:outline-none" />
             </label>
-            <label class="inline-flex items-center gap-1 text-[11px] text-[#6E6A63] bg-[#F7F6F2] border border-[#E2DFD7] rounded-xl px-2 py-1" title="Öffentlicher Kunden-Aufpreis in Euro">
-              <span>+</span>
-              <input type="number" step="0.5" value="${Number(f.surcharge || 0)}"
-                onchange="updateFilamentSurcharge('${f.id}', this.value)"
-                class="w-12 bg-transparent text-xs font-semibold text-[#22211F] text-right focus:outline-none" />
-              <span>€</span>
+            <label class="flex items-center gap-1.5 text-[11px] text-[#57151E] bg-[#57151E]/[0.04] border border-[#57151E]/20 rounded-xl px-2.5 py-1.5" title="Kommentar (nur für Admins sichtbar)">
+              <span class="font-semibold shrink-0">🔒 Kommentar:</span>
+              <input type="text" value="${escapeHtml(costInfo.adminComment || "")}" placeholder="Kommentar eingeben …"
+                onchange="updateFilamentAdminMeta('${f.id}', 'adminComment', this.value)"
+                class="w-full min-w-0 bg-transparent text-xs text-[#22211F] placeholder:text-[#9A948C] focus:outline-none" />
             </label>
-            <button onclick="toggleFilamentStock('${f.id}', ${!f.inStock})"
-              class="px-3 py-1.5 rounded-full text-xs font-medium border transition ${
-                f.inStock
-                  ? "bg-[#22211F] text-white border-[#22211F]"
-                  : "bg-[#F7F6F2] text-[#6E6A63] border-[#E2DFD7]"
-              }">
-              ${f.inStock ? "Vorrätig" : "Leer"}
-            </button>
-            <button onclick="deleteFilament('${f.id}')" class="text-xs text-[#6E6A63] hover:text-red-600 px-1.5" title="Löschen">✕</button>
           </div>
         </div>
       `;
