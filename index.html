@@ -194,16 +194,16 @@
       </div>
     </section>
 
-    <!-- TAB 2: WUNSCHMODELL PER LINK (MAKERWORLD & THINGIVERSE) -->
+    <!-- TAB 2: WUNSCHMODELL PER LINK ODER 3D-DATEI (STL / STEP) -->
     <section id="view-custom-link" class="hidden max-w-3xl mx-auto space-y-6">
       <div class="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2DFD7] shadow-sm space-y-6">
         <div class="space-y-2">
           <span class="inline-block px-3 py-1 rounded-full bg-[#EFECE6] text-[#57151E] text-[11px] font-semibold uppercase tracking-wider">
-            Auftragsdruck nach Link
+            Auftragsdruck nach Link oder 3D-Datei
           </span>
-          <h2 class="font-display text-2xl font-bold text-[#22211F]">Wunschmodell auf MakerWorld oder Thingiverse gefunden?</h2>
+          <h2 class="font-display text-2xl font-bold text-[#22211F]">Wunschmodell per Link oder eigener 3D-Datei anfragen</h2>
           <p class="text-sm text-[#6E6A63] leading-relaxed">
-            Suche dir kostenlos ein 3D-Modell aus, kopiere den Link und füge ihn hier ein. Wir prüfen die Druckbarkeit sowie die Umsetzbarkeit und melden uns mit einem konkreten Angebot.
+            Suche dir ein 3D-Modell auf MakerWorld oder Thingiverse aus und füge den Link ein – oder lade direkt deine eigene <strong class="font-semibold text-[#22211F]">.stl</strong>- bzw. <strong class="font-semibold text-[#22211F]">.step</strong>-Datei hoch. Wir prüfen die Druckbarkeit sowie die Umsetzbarkeit und melden uns mit einem konkreten Angebot.
           </p>
         </div>
 
@@ -231,56 +231,127 @@
 
         <hr class="border-[#E2DFD7]" />
 
-        <!-- Link-Anfrageformular -->
-        <form id="customLinkForm" onsubmit="submitCustomLinkRequest(event)" class="space-y-4">
-          <div>
-            <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Link zum 3D-Modell *</label>
-            <div class="relative">
-              <input type="url" id="customModelUrl" required oninput="detectPlatformBadge()" placeholder="https://makerworld.com/de/models/... oder https://www.thingiverse.com/thing:..." class="w-full px-4 py-3 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
-              <span id="platformBadge" class="hidden absolute right-3 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#EFECE6] text-[#22211F]"></span>
+        <!-- Link- & Datei-Anfrageformular -->
+        <form id="customLinkForm" onsubmit="submitCustomLinkRequest(event)" class="space-y-5">
+          <!-- 1. Modell-Link ODER 3D-Datei -->
+          <div class="space-y-4">
+            <div>
+              <label for="customModelUrl" class="block text-xs font-semibold text-[#22211F] mb-1.5">Link zum 3D-Modell <span class="font-normal text-[#6E6A63]">(falls keine Datei hochgeladen wird)</span></label>
+              <div class="relative">
+                <input type="url" id="customModelUrl" oninput="detectPlatformBadge()" placeholder="https://makerworld.com/de/models/... oder https://www.thingiverse.com/thing:..." class="w-full px-4 py-3 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                <span id="platformBadge" class="hidden absolute right-3 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#EFECE6] text-[#22211F]"></span>
+              </div>
             </div>
-          </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-2.5">
-            <div class="sm:col-span-2">
+            <!-- Trenner ODER -->
+            <div class="relative flex items-center justify-center">
+              <div class="border-t border-[#E2DFD7] w-full"></div>
+              <span class="bg-white px-3 text-[11px] font-semibold uppercase tracking-wider text-[#6E6A63]">oder / zusätzlich</span>
+              <div class="border-t border-[#E2DFD7] w-full"></div>
+            </div>
+
+            <!-- 3D-Datei-Upload (.stl / .step / .stp) -->
+            <div>
               <div class="flex items-center justify-between gap-2 mb-1.5">
-                <label for="customColorPref" class="block text-xs font-semibold text-[#22211F]">Gewünschte Farbe / Material</label>
-                <button type="button" onclick="openFilamentGuideModal()" class="inline-flex items-center gap-1 text-[11px] font-medium text-[#57151E] hover:underline shrink-0">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                <label for="customModelFileInput" class="block text-xs font-semibold text-[#22211F]">Eigene 3D-Datei hochladen <span class="font-normal text-[#6E6A63]">(.stl, .step, .stp)</span></label>
+                <span class="text-[11px] text-[#6E6A63]">Max. 50 MB</span>
+              </div>
+
+              <input type="file" id="customModelFileInput" accept=".stl,.step,.stp" class="hidden" onchange="handleCustomModelFileChange(event)" />
+
+              <!-- Dropzone -->
+              <div id="customModelDropzone"
+                role="button"
+                tabindex="0"
+                onclick="document.getElementById('customModelFileInput').click()"
+                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('customModelFileInput').click();}"
+                ondragover="event.preventDefault(); this.classList.add('border-[#57151E]', 'bg-[#EFECE6]/50');"
+                ondragleave="this.classList.remove('border-[#57151E]', 'bg-[#EFECE6]/50');"
+                ondrop="handleCustomModelDrop(event)"
+                class="cursor-pointer rounded-2xl border-2 border-dashed border-[#D5D1C8] hover:border-[#57151E] bg-[#F7F6F2]/60 hover:bg-[#EFECE6]/40 p-4 sm:p-5 text-center transition">
+                <div class="w-10 h-10 rounded-2xl bg-white border border-[#E2DFD7] text-[#57151E] flex items-center justify-center mx-auto mb-2 shadow-2xs">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                   </svg>
-                  <span>Material- &amp; Farb-Guide</span>
+                </div>
+                <p class="text-xs sm:text-sm font-semibold text-[#22211F]">3D-Modell auswählen oder hierher ziehen</p>
+                <p class="text-[11px] text-[#6E6A63] mt-1">Unterstützte Formate: <strong class="text-[#22211F]">.stl</strong>, <strong class="text-[#22211F]">.step</strong> / <strong class="text-[#22211F]">.stp</strong> • Tipp: STEP-Dateien bieten durch exakte Kurven die beste Druckqualität.</p>
+              </div>
+
+              <!-- Vorschau der ausgewählten 3D-Datei -->
+              <div id="customModelFilePreview" class="hidden mt-2.5 p-3.5 rounded-2xl bg-[#EFECE6]/70 border border-[#57151E]/30 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="w-9 h-9 rounded-xl bg-white border border-[#E2DFD7] text-[#57151E] flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                    </svg>
+                  </div>
+                  <div class="min-w-0">
+                    <div id="customModelFileNameDisplay" class="text-xs sm:text-sm font-semibold text-[#22211F] truncate">modell.step</div>
+                    <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+                      <span id="customModelFileSizeDisplay" class="text-[11px] text-[#6E6A63]">0 MB</span>
+                      <span id="customModelFileFormatBadge" class="px-2 py-0.5 rounded-full bg-white border border-[#E2DFD7] text-[10px] font-semibold text-[#57151E]">STEP</span>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" onclick="clearCustomModelFile()" class="shrink-0 px-3 py-1.5 rounded-full bg-white hover:bg-red-50 text-xs font-medium text-[#6E6A63] hover:text-red-600 border border-[#E2DFD7] transition">
+                  Entfernen
                 </button>
               </div>
-              <input type="text" id="customColorPref" oninput="renderCustomInStockChips()" placeholder="z. B. Mattschwarz PETG oder egal" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
+
+              <!-- Upload-Fortschritt -->
+              <div id="customUploadProgressWrap" class="hidden mt-2.5 space-y-1">
+                <div class="flex items-center justify-between text-[11px] font-medium text-[#57151E]">
+                  <span>3D-Datei wird sicher hochgeladen …</span>
+                  <span id="customUploadProgressText">0 %</span>
+                </div>
+                <div class="w-full h-2 rounded-full bg-[#EFECE6] overflow-hidden">
+                  <div id="customUploadProgressBar" class="h-full bg-[#57151E] transition-all duration-150" style="width: 0%"></div>
+                </div>
+              </div>
             </div>
-            <div class="order-3 sm:order-2">
-              <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Stückzahl</label>
-              <input type="number" id="customQty" min="1" max="50" value="1" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
-            </div>
-            <!-- Klickbare Auswahl nur für aktuell vorrätige Filamente (mobil einspaltig untereinander, ab sm zweispaltig) -->
-            <div id="customInStockChips" class="order-2 sm:order-3 sm:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- 2. Farbwahl ohne Freitextfeld + Stückzahl -->
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between gap-2">
+              <label class="block text-xs font-semibold text-[#22211F]">Gewünschte Farbe / Material auswählen</label>
+              <button type="button" onclick="openFilamentGuideModal()" class="inline-flex items-center gap-1 text-[11px] font-medium text-[#57151E] hover:underline shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                </svg>
+                <span>Material- &amp; Farb-Guide</span>
+              </button>
+            </div>
+
+            <!-- Klickbare Auswahl nur für aktuell vorrätige Filamente + "Nach Absprache" (ohne Freitextfeld) -->
+            <div id="customInStockChips" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+            <p class="text-[11px] text-[#6E6A63]">Sonderwünsche (z. B. Mehrfarbdruck oder Kombinationen) kannst du einfach unten im Kommentarfeld angeben.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Dein Name *</label>
+              <label for="customQty" class="block text-xs font-semibold text-[#22211F] mb-1.5">Stückzahl</label>
+              <input type="number" id="customQty" min="1" max="50" value="1" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
+            </div>
+            <div>
+              <label for="customCustomerName" class="block text-xs font-semibold text-[#22211F] mb-1.5">Dein Name *</label>
               <input type="text" id="customCustomerName" required placeholder="Vorname Nachname" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
             </div>
             <div>
-              <label class="block text-xs font-semibold text-[#22211F] mb-1.5">WhatsApp-Nummer oder E-Mail *</label>
+              <label for="customCustomerContact" class="block text-xs font-semibold text-[#22211F] mb-1.5">WhatsApp oder E-Mail *</label>
               <input type="text" id="customCustomerContact" required placeholder="Für Rückfragen &amp; dein Angebot" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
             </div>
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-[#22211F] mb-1.5">Kommentar / Sonderwunsch (optional)</label>
-            <textarea id="customNotes" rows="2" placeholder="z. B. Besondere Größe, Einsatzbereich oder Wunsch nach Versand" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]"></textarea>
+            <label for="customNotes" class="block text-xs font-semibold text-[#22211F] mb-1.5">Kommentar / Sonderwunsch (optional)</label>
+            <textarea id="customNotes" rows="2" placeholder="z. B. Besondere Größe, Farbwünsche bei Mehrfarbdruck, Einsatzbereich oder Wunsch nach Versand" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]"></textarea>
           </div>
 
-          <!-- Hinweise für Wunschmodell per Link -->
+          <!-- Hinweise für Wunschmodell -->
           <div class="p-3.5 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] space-y-1.5 text-xs text-[#6E6A63] leading-relaxed">
-            <p><strong class="text-[#22211F]">Hinweis zum Druckbild:</strong> Farbe und Aussehen des fertigen 3D-Drucks können minimal von den Vorschaubildern auf MakerWorld / Thingiverse abweichen.</p>
+            <p><strong class="text-[#22211F]">Hinweis zum Druckbild:</strong> Farbe und Aussehen des fertigen 3D-Drucks können minimal von digitalen Vorschaubildern abweichen.</p>
             <p><strong class="text-[#22211F]">Fertigung &amp; Zahlung:</strong> Das Modell wird nach deiner Freigabe schnellstmöglich frisch gedruckt. Eine Zahlung über die Website ist nicht möglich – die Bezahlung erfolgt privat per PayPal (Freunde &amp; Bekannte) oder in Bar.</p>
           </div>
 
@@ -1373,11 +1444,15 @@
       getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc,
       onSnapshot, query, orderBy
     } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+    import {
+      getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL, deleteObject
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-storage.js";
 
     const isCloudConfigured = FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey !== "DEIN_API_KEY";
 
     let db = null;
     let auth = null;
+    let storage = null;
     let isAdminLoggedIn = false;
 
     let products = [];
@@ -2206,6 +2281,7 @@
       const app = initializeApp(FIREBASE_CONFIG);
       auth = getAuth(app);
       db = getFirestore(app);
+      storage = getStorage(app);
 
       onAuthStateChanged(auth, user => {
         isAdminLoggedIn = !!user;
@@ -2738,43 +2814,157 @@
     };
 
     // =====================================================================
-    // WUNSCHMODELL PER LINK (MAKERWORLD / THINGIVERSE)
+    // WUNSCHMODELL PER LINK ODER 3D-DATEI (STL / STEP)
     // =====================================================================
-    window.renderCustomInStockChips = function() {
-      const box = document.getElementById("customInStockChips");
-      const inStockFils = sortFilaments(filaments.filter(f => f.inStock));
-      if (inStockFils.length === 0) {
-        box.innerHTML = "";
+    const ALLOWED_3D_EXTENSIONS = [".stl", ".step", ".stp"];
+    const MAX_3D_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB
+    let selectedCustomModelFile = null;
+    let selectedCustomFilamentId = "";
+
+    function getFileExtensionLower(filename) {
+      const idx = (filename || "").lastIndexOf(".");
+      return idx >= 0 ? filename.slice(idx).toLowerCase() : "";
+    }
+
+    function formatFileSizeHuman(bytes) {
+      if (!bytes || bytes <= 0) return "0 KB";
+      if (bytes < 1024 * 1024) {
+        return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+      }
+      return `${(bytes / (1024 * 1024)).toFixed(1).replace(".", ",")} MB`;
+    }
+
+    function validateCustom3DFile(file) {
+      if (!file) return { valid: false, message: "Keine Datei ausgewählt." };
+      const ext = getFileExtensionLower(file.name);
+      if (!ALLOWED_3D_EXTENSIONS.includes(ext)) {
+        return {
+          valid: false,
+          message: "Ungültiges Dateiformat. Bitte nur .stl-, .step- oder .stp-Dateien hochladen."
+        };
+      }
+      if (file.size <= 0) {
+        return {
+          valid: false,
+          message: "Die ausgewählte Datei ist leer."
+        };
+      }
+      if (file.size > MAX_3D_FILE_SIZE_BYTES) {
+        return {
+          valid: false,
+          message: "Die 3D-Datei darf maximal 50 MB groß sein."
+        };
+      }
+      return { valid: true, ext };
+    }
+
+    function renderCustomModelFilePreview() {
+      const previewBox = document.getElementById("customModelFilePreview");
+      const nameEl = document.getElementById("customModelFileNameDisplay");
+      const sizeEl = document.getElementById("customModelFileSizeDisplay");
+      const badgeEl = document.getElementById("customModelFileFormatBadge");
+      if (!previewBox) return;
+
+      if (!selectedCustomModelFile) {
+        previewBox.classList.add("hidden");
         return;
       }
-      const currentVal = (document.getElementById("customColorPref")?.value || "").trim();
-      box.innerHTML = inStockFils.map(f => {
-        const labelText = `${f.name} (${f.material})`;
-        const isSelected = currentVal === labelText;
+
+      const ext = getFileExtensionLower(selectedCustomModelFile.name);
+      const isStep = ext === ".step" || ext === ".stp";
+      nameEl.textContent = selectedCustomModelFile.name;
+      sizeEl.textContent = formatFileSizeHuman(selectedCustomModelFile.size);
+      badgeEl.textContent = isStep ? "STEP • Höchste Präzision" : "STL";
+      previewBox.classList.remove("hidden");
+    }
+
+    window.handleCustomModelFileChange = function(event) {
+      const file = event.target?.files?.[0] || null;
+      if (!file) return;
+      const check = validateCustom3DFile(file);
+      if (!check.valid) {
+        showToast(check.message);
+        event.target.value = "";
+        return;
+      }
+      selectedCustomModelFile = file;
+      renderCustomModelFilePreview();
+      showToast(`3D-Datei „${file.name}“ ausgewählt.`);
+    };
+
+    window.handleCustomModelDrop = function(event) {
+      event.preventDefault();
+      const dropzone = document.getElementById("customModelDropzone");
+      if (dropzone) {
+        dropzone.classList.remove("border-[#57151E]", "bg-[#EFECE6]/50");
+      }
+      const file = event.dataTransfer?.files?.[0] || null;
+      if (!file) return;
+      const check = validateCustom3DFile(file);
+      if (!check.valid) {
+        showToast(check.message);
+        return;
+      }
+      selectedCustomModelFile = file;
+      renderCustomModelFilePreview();
+      showToast(`3D-Datei „${file.name}“ ausgewählt.`);
+    };
+
+    window.clearCustomModelFile = function() {
+      selectedCustomModelFile = null;
+      const input = document.getElementById("customModelFileInput");
+      if (input) input.value = "";
+      renderCustomModelFilePreview();
+    };
+
+    window.renderCustomInStockChips = function() {
+      const box = document.getElementById("customInStockChips");
+      if (!box) return;
+      const inStockFils = sortFilaments(filaments.filter(f => f.inStock));
+      if (selectedCustomFilamentId && !inStockFils.some(f => f.id === selectedCustomFilamentId)) {
+        selectedCustomFilamentId = "";
+      }
+
+      const isFlexibleSelected = selectedCustomFilamentId === "";
+      const flexibleCardHtml = `
+        <button type="button" onclick="pickCustomColorById('')"
+          class="w-full flex items-center justify-between gap-2.5 px-3 py-2.5 rounded-2xl text-left text-xs border transition ${
+            isFlexibleSelected
+              ? "bg-[#EFECE6] border-[#22211F] text-[#22211F] font-semibold"
+              : "bg-[#F7F6F2] hover:bg-[#EFECE6] border-[#E2DFD7] text-[#22211F]"
+          }">
+          <span class="flex items-center gap-2.5 min-w-0">
+            <span class="w-[18px] h-[18px] rounded-full border border-dashed border-[#6E6A63] bg-white flex items-center justify-center text-[10px] text-[#6E6A63] shrink-0">?</span>
+            <span class="leading-snug">Nach Absprache <span class="text-[#6E6A63] font-normal">(oder im Kommentar)</span></span>
+          </span>
+        </button>
+      `;
+
+      const filCardsHtml = inStockFils.map(f => {
+        const isSelected = selectedCustomFilamentId === f.id;
         const extraTag = formatSurchargeTag(f.surcharge);
         return `
           <button type="button" onclick="pickCustomColorById('${f.id}')"
-            class="w-full flex items-center justify-between gap-2.5 px-3 py-2 rounded-2xl text-left text-xs border transition ${
+            class="w-full flex items-center justify-between gap-2.5 px-3 py-2.5 rounded-2xl text-left text-xs border transition ${
               isSelected
-                ? "bg-[#EFECE6] border-[#22211F] text-[#22211F] font-medium"
+                ? "bg-[#EFECE6] border-[#22211F] text-[#22211F] font-semibold"
                 : "bg-[#F7F6F2] hover:bg-[#EFECE6] border-[#E2DFD7] text-[#22211F]"
             }">
             <span class="flex items-center gap-2.5 min-w-0">
               <span class="w-[18px] h-[18px] rounded-full border border-black/20 shadow-2xs shrink-0" style="${getFilamentSwatchStyle(f)}"></span>
-              <span class="leading-snug">${escapeHtml(f.name)} <span class="text-[#6E6A63]">(${escapeHtml(f.material)})</span></span>
+              <span class="leading-snug">${escapeHtml(f.name)} <span class="text-[#6E6A63] font-normal">(${escapeHtml(f.material)})</span></span>
             </span>
             ${extraTag ? `<span class="shrink-0 px-2 py-0.5 rounded-full bg-white/80 font-semibold text-[#57151E] text-[11px]">${escapeHtml(extraTag)}</span>` : ""}
           </button>
         `;
       }).join("");
-    }
+
+      box.innerHTML = flexibleCardHtml + filCardsHtml;
+    };
 
     window.pickCustomColorById = function(filId) {
-      const f = filaments.find(x => x.id === filId);
-      if (f) {
-        document.getElementById("customColorPref").value = `${f.name} (${f.material})`;
-        renderCustomInStockChips();
-      }
+      selectedCustomFilamentId = filId || "";
+      renderCustomInStockChips();
     };
 
     window.detectPlatformBadge = function() {
@@ -2794,37 +2984,144 @@
       }
     };
 
+    function uploadCustom3DFileToStorage(file, refId) {
+      return new Promise((resolve, reject) => {
+        const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const cleanRef = refId.replace(/[^a-zA-Z0-9-]/g, "");
+        const storagePath = `custom_models/${cleanRef}_${Date.now()}_${safeName}`;
+        const fileRef = storageRef(storage, storagePath);
+
+        const progressWrap = document.getElementById("customUploadProgressWrap");
+        const progressBar = document.getElementById("customUploadProgressBar");
+        const progressText = document.getElementById("customUploadProgressText");
+        if (progressWrap) progressWrap.classList.remove("hidden");
+        if (progressBar) progressBar.style.width = "0%";
+        if (progressText) progressText.textContent = "0 %";
+
+        const uploadTask = uploadBytesResumable(fileRef, file, {
+          contentType: file.type || "application/octet-stream",
+          customMetadata: {
+            refId,
+            originalName: file.name
+          }
+        });
+
+        uploadTask.on(
+          "state_changed",
+          snapshot => {
+            const pct = snapshot.totalBytes > 0
+              ? Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+              : 0;
+            if (progressBar) progressBar.style.width = pct + "%";
+            if (progressText) progressText.textContent = pct + " %";
+          },
+          error => {
+            if (progressWrap) progressWrap.classList.add("hidden");
+            reject(error);
+          },
+          async () => {
+            try {
+              const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+              if (progressWrap) progressWrap.classList.add("hidden");
+              resolve({ downloadUrl, storagePath });
+            } catch (err) {
+              if (progressWrap) progressWrap.classList.add("hidden");
+              reject(err);
+            }
+          }
+        );
+      });
+    }
+
     window.submitCustomLinkRequest = async function(e) {
       e.preventDefault();
       const btn = document.getElementById("customSubmitBtn");
-      btn.disabled = true;
-      btn.textContent = "Wird übermittelt …";
 
       const modelUrl = document.getElementById("customModelUrl").value.trim();
-      const filamentName = document.getElementById("customColorPref").value.trim() || "Nach Absprache";
+      const hasUrl = modelUrl.length > 0;
+      const hasFile = !!selectedCustomModelFile;
+
+      if (!hasUrl && !hasFile) {
+        showToast("Bitte füge einen Modell-Link ein oder lade eine .stl- / .step-Datei hoch.");
+        return;
+      }
+
+      if (hasUrl && !/^https?:\/\//i.test(modelUrl)) {
+        showToast("Bitte gib einen gültigen Link beginnend mit https:// ein.");
+        return;
+      }
+
+      if (hasFile) {
+        const fileCheck = validateCustom3DFile(selectedCustomModelFile);
+        if (!fileCheck.valid) {
+          showToast(fileCheck.message);
+          return;
+        }
+      }
+
+      const chosenFil = filaments.find(x => x.id === selectedCustomFilamentId) || null;
+      const filamentName = chosenFil ? `${chosenFil.name} (${chosenFil.material})` : "Nach Absprache";
       const qty = Math.max(1, parseInt(document.getElementById("customQty").value || "1", 10));
       const customerName = document.getElementById("customCustomerName").value.trim();
       const customerContact = document.getElementById("customCustomerContact").value.trim();
       const comment = document.getElementById("customNotes").value.trim();
       const refId = "#LP-" + Math.floor(1000 + Math.random() * 9000);
 
-      const orderPayload = {
-        refId,
-        type: "link",
-        productTitle: "Wunschmodell per Link",
-        modelUrl,
-        filamentName,
-        qty,
-        customerName,
-        customerContact,
-        comment,
-        status: "Neu eingegangen",
-        quotedPrice: null,
-        adminNote: "",
-        createdAt: Date.now()
-      };
+      btn.disabled = true;
+      btn.textContent = hasFile ? "3D-Datei wird hochgeladen …" : "Wird übermittelt …";
+
+      let modelFileUrl = "";
+      let modelFileName = "";
+      let modelFileSize = 0;
+      let modelFileExt = "";
+      let modelStoragePath = "";
 
       try {
+        if (hasFile) {
+          modelFileName = selectedCustomModelFile.name;
+          modelFileSize = selectedCustomModelFile.size;
+          modelFileExt = getFileExtensionLower(selectedCustomModelFile.name).replace(".", "").toUpperCase();
+
+          if (isCloudConfigured && storage) {
+            const uploaded = await uploadCustom3DFileToStorage(selectedCustomModelFile, refId);
+            modelFileUrl = uploaded.downloadUrl;
+            modelStoragePath = uploaded.storagePath;
+          } else {
+            modelFileUrl = URL.createObjectURL(selectedCustomModelFile);
+          }
+        }
+
+        const requestSubtype = hasUrl && hasFile ? "link_and_file" : (hasFile ? "file" : "link");
+        const productTitle = hasUrl && hasFile
+          ? "Wunschmodell (Link & 3D-Datei)"
+          : (hasFile ? "Wunschmodell (3D-Datei)" : "Wunschmodell per Link");
+
+        const orderPayload = {
+          refId,
+          type: "link",
+          requestSubtype,
+          productTitle,
+          modelUrl,
+          modelFileUrl,
+          modelFileName,
+          modelFileSize,
+          modelFileExt,
+          modelStoragePath,
+          filamentName,
+          filamentHex: chosenFil ? chosenFil.hex : null,
+          filamentHex2: chosenFil && isDualColorFilament(chosenFil) ? chosenFil.hex2 : null,
+          qty,
+          customerName,
+          customerContact,
+          comment,
+          status: "Neu eingegangen",
+          quotedPrice: null,
+          adminNote: "",
+          createdAt: Date.now()
+        };
+
+        btn.textContent = "Anfrage wird gespeichert …";
+
         if (isCloudConfigured) {
           await addDoc(collection(db, "orders"), orderPayload);
         } else {
@@ -2834,21 +3131,26 @@
 
         rememberOrderRef(refId);
         e.target.reset();
+        selectedCustomFilamentId = "";
+        clearCustomModelFile();
         renderCustomInStockChips();
         detectPlatformBadge();
 
         const summaryText = [
-          `Hallo Dorian, neue Link-Anfrage über ${STUDIO_CONFIG.shopName} (${refId}):`,
-          `• Modell-Link: ${modelUrl}`,
+          `Hallo Dorian, neue Wunschmodell-Anfrage über ${STUDIO_CONFIG.shopName} (${refId}):`,
+          hasUrl ? `• Modell-Link: ${modelUrl}` : null,
+          hasFile ? `• 3D-Datei: ${modelFileName} (${formatFileSizeHuman(modelFileSize)})` : null,
           `• Wunschfarbe / Material: ${filamentName}`,
           `• Stückzahl: ${qty}x`,
           `• Name: ${customerName} (${customerContact})`,
           comment ? `• Kommentar: ${comment}` : null
-        ].filter(Boolean).join("\n");
+        ].filter(Boolean).join("
+");
 
-        openConfirmationModal(refId, summaryText, `Link-Anfrage ${refId} – Wunschmodell`);
+        openConfirmationModal(refId, summaryText, `Anfrage ${refId} – Wunschmodell`);
       } catch (err) {
-        showToast("Fehler beim Senden: " + err.message);
+        console.error("Fehler beim Übermitteln der Wunschmodell-Anfrage:", err);
+        showToast("Fehler beim Senden: " + (err?.message || "Unbekannter Fehler"));
       } finally {
         btn.disabled = false;
         btn.textContent = "Unverbindliches Angebot anfragen";
@@ -2958,8 +3260,18 @@
               </span>
             </div>
 
-            <div class="text-sm font-semibold text-[#22211F]">
-              ${o.type === "link" ? `<a href="${safeHttpUrl(o.modelUrl)}" target="_blank" rel="noopener noreferrer" class="underline break-all">${escapeHtml(o.modelUrl)}</a>` : `${o.qty}x ${escapeHtml(o.productTitle)}`}
+            <div class="text-sm font-semibold text-[#22211F] space-y-1.5">
+              ${o.type === "link" ? `
+                ${o.modelUrl ? `<div><a href="${safeHttpUrl(o.modelUrl)}" target="_blank" rel="noopener noreferrer" class="underline break-all">${escapeHtml(o.modelUrl)}</a></div>` : ""}
+                ${o.modelFileName ? `
+                  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-[#E2DFD7] text-xs font-medium text-[#22211F]">
+                    <span class="px-1.5 py-0.5 rounded bg-[#EFECE6] text-[#57151E] text-[10px] font-bold">${escapeHtml(o.modelFileExt || "3D")}</span>
+                    <span class="truncate max-w-[220px] sm:max-w-sm">${escapeHtml(o.modelFileName)}</span>
+                    ${o.modelFileSize ? `<span class="text-[#6E6A63] font-normal">(${formatFileSizeHuman(o.modelFileSize)})</span>` : ""}
+                  </div>
+                ` : ""}
+                ${!o.modelUrl && !o.modelFileName ? `<div>${escapeHtml(o.productTitle || "Wunschmodell")}</div>` : ""}
+              ` : `${o.qty}x ${escapeHtml(o.productTitle)}`}
             </div>
 
             <div class="text-xs text-[#6E6A63]">
@@ -3106,14 +3418,45 @@
           <div class="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2DFD7] space-y-4">
             <div class="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
                   <span class="font-mono text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#22211F] text-white">${o.refId}</span>
-                  <span class="text-xs font-semibold text-[#57151E]">${isLink ? "MakerWorld / Thingiverse Link" : "Katalog-Bestellung"}</span>
+                  <span class="text-xs font-semibold text-[#57151E]">${
+                    !isLink
+                      ? "Katalog-Bestellung"
+                      : (o.modelUrl && o.modelFileName)
+                        ? `Link &amp; 3D-Datei (${escapeHtml(o.modelFileExt || "3D")})`
+                        : o.modelFileName
+                          ? `3D-Datei Upload (${escapeHtml(o.modelFileExt || "3D")})`
+                          : "MakerWorld / Thingiverse Link"
+                  }</span>
                   <span class="text-xs text-[#6E6A63]">• ${dateStr}</span>
                 </div>
-                <h4 class="font-display font-bold text-base text-[#22211F] mt-1.5">
-                  ${isLink ? `<a href="${safeHttpUrl(o.modelUrl)}" target="_blank" rel="noopener noreferrer" class="underline break-all text-[#22211F]">${escapeHtml(o.modelUrl)} ↗</a>` : `${o.qty}x ${escapeHtml(o.productTitle)}`}
-                </h4>
+                <div class="mt-1.5 space-y-2">
+                  ${isLink ? `
+                    ${o.modelUrl ? `
+                      <h4 class="font-display font-bold text-base text-[#22211F]">
+                        <a href="${safeHttpUrl(o.modelUrl)}" target="_blank" rel="noopener noreferrer" class="underline break-all text-[#22211F]">${escapeHtml(o.modelUrl)} ↗</a>
+                      </h4>
+                    ` : ""}
+                    ${o.modelFileName ? `
+                      <div class="flex flex-wrap items-center gap-2">
+                        <span class="font-display font-bold text-sm sm:text-base text-[#22211F] break-all">${escapeHtml(o.modelFileName)}</span>
+                        ${o.modelFileSize ? `<span class="text-xs text-[#6E6A63]">(${formatFileSizeHuman(o.modelFileSize)})</span>` : ""}
+                        ${o.modelFileUrl ? `
+                          <a href="${safeHttpUrl(o.modelFileUrl)}" target="_blank" rel="noopener noreferrer" download="${escapeHtml(o.modelFileName)}"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#57151E] hover:bg-[#3F0E15] text-white text-xs font-semibold transition">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                            </svg>
+                            <span>3D-Datei herunterladen</span>
+                          </a>
+                        ` : ""}
+                      </div>
+                    ` : ""}
+                  ` : `
+                    <h4 class="font-display font-bold text-base text-[#22211F]">${o.qty}x ${escapeHtml(o.productTitle)}</h4>
+                  `}
+                </div>
                 <p class="text-xs text-[#6E6A63] mt-1">
                   Kunde: <strong class="text-[#22211F]">${escapeHtml(o.customerName)}</strong> (${escapeHtml(o.customerContact)}) • Farbe: <strong class="text-[#22211F]">${escapeHtml(o.filamentName)}</strong>
                   ${!isLink ? ` • Summe: <strong class="text-[#22211F]">${formatPrice(o.totalPrice)}</strong>` : ""}
@@ -3216,7 +3559,15 @@
 
     window.deleteOrder = async function(orderId) {
       if (!confirm("Anfrage wirklich löschen?")) return;
+      const targetOrder = allOrders.find(o => o.id === orderId);
       if (isCloudConfigured) {
+        if (targetOrder && targetOrder.modelStoragePath && storage) {
+          try {
+            await deleteObject(storageRef(storage, targetOrder.modelStoragePath));
+          } catch (storageErr) {
+            console.warn("3D-Datei konnte nicht aus Storage entfernt werden:", storageErr);
+          }
+        }
         await deleteDoc(doc(db, "orders", orderId));
       } else {
         allOrders = allOrders.filter(o => o.id !== orderId);
