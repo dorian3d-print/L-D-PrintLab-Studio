@@ -344,6 +344,9 @@
             <button onclick="switchAdminSubTab('orders')" id="admin-tab-orders" class="admin-sub-btn px-4 py-2 rounded-full text-xs font-semibold bg-[#22211F] text-white transition whitespace-nowrap">
               Bestellungen &amp; Links <span id="openOrdersCounter" class="ml-1 px-1.5 py-0.5 rounded-full bg-[#57151E] text-white text-[10px]">0</span>
             </button>
+            <button onclick="switchAdminSubTab('calculator')" id="admin-tab-calculator" class="admin-sub-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-[#6E6A63] hover:bg-[#EFECE6] transition whitespace-nowrap">
+              <span>Preisrechner</span>
+            </button>
             <button onclick="switchAdminSubTab('products')" id="admin-tab-products" class="admin-sub-btn px-4 py-2 rounded-full text-xs font-semibold text-[#6E6A63] hover:bg-[#EFECE6] transition whitespace-nowrap">
               3D-Modelle
             </button>
@@ -352,9 +355,6 @@
             </button>
             <button onclick="switchAdminSubTab('categories')" id="admin-tab-categories" class="admin-sub-btn px-4 py-2 rounded-full text-xs font-semibold text-[#6E6A63] hover:bg-[#EFECE6] transition whitespace-nowrap">
               Kategorien
-            </button>
-            <button onclick="switchAdminSubTab('calculator')" id="admin-tab-calculator" class="admin-sub-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-[#6E6A63] hover:bg-[#EFECE6] transition whitespace-nowrap">
-              <span>Preisrechner</span>
             </button>
           </div>
           <button onclick="handleAdminLogout()" class="px-3.5 py-1.5 rounded-full border border-[#E2DFD7] text-xs font-medium text-[#6E6A63] hover:text-[#22211F] transition">
@@ -583,39 +583,6 @@
 
         <!-- SUB-TAB E: INTERNER 3D-DRUCK PREISRECHNER & VORLAGEN (NUR ADMIN) -->
         <div id="admin-view-calculator" class="hidden space-y-6">
-          <!-- Kopfbereich Preisrechner -->
-          <div class="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2DFD7] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div class="flex items-center gap-3.5">
-              <div class="w-11 h-11 rounded-2xl bg-[#EFECE6] border border-[#E2DFD7] text-[#57151E] flex items-center justify-center shrink-0">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-                </svg>
-              </div>
-              <div>
-                <div class="flex items-center gap-2 flex-wrap">
-                  <h3 class="font-display text-lg font-bold text-[#22211F]">3D-Druck Preisrechner</h3>
-                  <span class="px-2.5 py-0.5 rounded-full bg-[#EFECE6] text-[#57151E] text-[10px] font-semibold uppercase tracking-wider">Nur Admin</span>
-                </div>
-                <p class="text-xs text-[#6E6A63] mt-0.5">Kalkulation, Gewinn, Konto-Aufteilung &amp; gespeicherte Berechnungsvorlagen</p>
-              </div>
-            </div>
-
-            <div class="flex items-center gap-2 flex-wrap">
-              <button type="button" id="calcNussknackerTestBtn" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#EFECE6] hover:bg-[#E2DFD7] text-[#57151E] text-xs font-semibold border border-[#E2DFD7] transition">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                <span>Nussknacker-Test</span>
-              </button>
-              <button type="button" id="calcResetBtn" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[#F7F6F2] text-[#22211F] text-xs font-medium border border-[#E2DFD7] transition">
-                <svg class="w-3.5 h-3.5 text-[#6E6A63]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                <span>Neu / Zurücksetzen</span>
-              </button>
-            </div>
-          </div>
-
           <!-- Banner wenn eine gespeicherte Vorlage geladen ist -->
           <div id="calcActiveTemplateBanner" class="hidden bg-[#EFECE6] rounded-3xl p-4 sm:px-6 border border-[#57151E]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div class="min-w-0">
@@ -644,12 +611,17 @@
             <!-- LINKE SPALTE: RECHNER -->
             <div class="lg:col-span-7 space-y-5">
               <!-- Unter-Tabs des Rechners -->
-              <div class="bg-white rounded-3xl p-2 border border-[#E2DFD7] grid grid-cols-2 gap-1.5">
-                <button type="button" id="calcTabCalcBtn" onclick="calcSwitchSubTab('calc')" class="py-2.5 px-3 rounded-2xl text-xs sm:text-sm font-semibold bg-[#22211F] text-white transition">
+              <div class="bg-white rounded-3xl p-2 border border-[#E2DFD7] flex items-center gap-1.5">
+                <button type="button" id="calcTabCalcBtn" onclick="calcSwitchSubTab('calc')" class="flex-1 min-w-0 py-2.5 px-2.5 sm:px-3 rounded-2xl text-xs sm:text-sm font-semibold bg-[#22211F] text-white transition truncate">
                   1. Preisberechnung
                 </button>
-                <button type="button" id="calcTabProfitBtn" onclick="calcSwitchSubTab('profit')" class="py-2.5 px-3 rounded-2xl text-xs sm:text-sm font-semibold text-[#6E6A63] hover:bg-[#EFECE6] hover:text-[#22211F] transition">
+                <button type="button" id="calcTabProfitBtn" onclick="calcSwitchSubTab('profit')" class="flex-1 min-w-0 py-2.5 px-2.5 sm:px-3 rounded-2xl text-xs sm:text-sm font-semibold text-[#6E6A63] hover:bg-[#EFECE6] hover:text-[#22211F] transition truncate">
                   2. Gewinn &amp; Konto
+                </button>
+                <button type="button" id="calcResetBtn" title="Neu / Zurücksetzen" aria-label="Neu / Zurücksetzen" class="shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-[#F7F6F2] hover:bg-[#EFECE6] text-[#6E6A63] hover:text-[#57151E] border border-[#E2DFD7] flex items-center justify-center transition">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
                 </button>
               </div>
 
@@ -919,16 +891,6 @@
                         <input type="text" id="calcActualFilamentKg" inputmode="decimal" autocomplete="off" placeholder="z. B. 13,00" class="w-full px-3.5 pr-12 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm font-semibold text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]" />
                         <span class="absolute right-3.5 text-xs font-semibold text-[#6E6A63] pointer-events-none">€/kg</span>
                       </div>
-                      <div class="p-3 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] space-y-1 text-xs">
-                        <div class="flex items-center justify-between gap-2">
-                          <span class="text-[#6E6A63]">Reale Filamentkosten:</span>
-                          <strong id="calcRealFilamentCostDisplay" class="text-[#22211F]">–</strong>
-                        </div>
-                        <div class="flex items-center justify-between gap-2">
-                          <span class="text-[#6E6A63]">Einkaufsvorteil (vs. <span id="calcKgRefText">20,00 €/kg</span>):</span>
-                          <strong id="calcPurchaseAdvantageDisplay" class="text-[#6E6A63]">–</strong>
-                        </div>
-                      </div>
                     </div>
 
                     <!-- Tatsächlich gezahlter Betrag (€) -->
@@ -940,16 +902,6 @@
                       <div class="relative flex items-center">
                         <input type="text" id="calcPaidAmountInput" inputmode="decimal" autocomplete="off" placeholder="0,00" class="w-full px-3.5 pr-9 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm font-bold text-[#57151E] focus:bg-white focus:outline-none focus:border-[#57151E]" />
                         <span class="absolute right-3.5 text-xs font-semibold text-[#6E6A63] pointer-events-none">€</span>
-                      </div>
-                      <div class="p-3 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] space-y-1 text-xs">
-                        <div class="flex items-center justify-between gap-2">
-                          <span class="text-[#6E6A63]">Empfohlener Preis (aufgerundet):</span>
-                          <strong id="calcTab2RecommendedRef" class="text-[#22211F]">0,00 €</strong>
-                        </div>
-                        <div class="flex items-center justify-between gap-2">
-                          <span class="text-[#6E6A63]">Status:</span>
-                          <strong id="calcPaidSyncStatusText" class="text-emerald-700">Automatisch übernommen</strong>
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -4405,21 +4357,14 @@
       // Tab 2 Werte
       document.getElementById("calcTab2SummaryBadge").textContent =
         `${grams} g • ${Math.floor(hours)} Std ${Math.round(minutes)} Min`;
-      document.getElementById("calcTab2RecommendedRef").textContent = calcFormatEur(recommendedPrice);
-      document.getElementById("calcKgRefText").textContent = `${calcFormatEur(calcKgPrice)}/kg`;
 
       const paidInput = document.getElementById("calcPaidAmountInput");
-      const paidStatusEl = document.getElementById("calcPaidSyncStatusText");
       const syncBtn = document.getElementById("calcSyncRecommendedBtn");
 
       if (!calcIsPaidManuallyOverridden) {
         paidInput.value = hasPrintData ? calcFormatDeNumber(recommendedPrice) : "";
-        paidStatusEl.textContent = "Automatisch übernommen";
-        paidStatusEl.className = "text-emerald-700";
         syncBtn.classList.add("hidden");
       } else {
-        paidStatusEl.textContent = "Manuell angepasst";
-        paidStatusEl.className = "text-[#57151E]";
         syncBtn.classList.toggle("hidden", !hasPrintData);
       }
 
@@ -4441,11 +4386,6 @@
       let marginAndLaborPart = null;
 
       if (!hasActualKgPrice || !hasPrintData) {
-        document.getElementById("calcRealFilamentCostDisplay").textContent = "–";
-        const advEl = document.getElementById("calcPurchaseAdvantageDisplay");
-        advEl.textContent = "–";
-        advEl.className = "text-[#6E6A63]";
-
         missingNotice.classList.remove("hidden");
         underpayNotice.classList.add("hidden");
         twoAccountsGrid.classList.add("hidden");
@@ -4458,11 +4398,6 @@
         const actualKgPrice = Math.max(0, parsedActualKg);
         realFilCost = (grams / 1000) * actualKgPrice;
         filSavings = calcFilCost - realFilCost;
-
-        document.getElementById("calcRealFilamentCostDisplay").textContent = calcFormatEur(realFilCost);
-        const advEl = document.getElementById("calcPurchaseAdvantageDisplay");
-        advEl.textContent = filSavings >= 0 ? "+" + calcFormatEur(filSavings) : calcFormatEur(filSavings);
-        advEl.className = filSavings >= 0 ? "text-emerald-700" : "text-red-600";
 
         const normalAccountRaw = realFilCost + elecCost + wearCost;
         const normalAccountDisplay = Math.round(normalAccountRaw * 100) / 100;
@@ -5011,24 +4946,6 @@
       document.getElementById("calcSetNowBtn").addEventListener("click", () => {
         document.getElementById("calcEntryDateTimeInput").value = calcGetLocalDateTimeIso(new Date());
         calcUpdateAll();
-      });
-
-      document.getElementById("calcNussknackerTestBtn").addEventListener("click", () => {
-        activeCalcTemplateId = null;
-        calcIsPaidManuallyOverridden = false;
-        document.getElementById("calcModelNameTop").value = "Nussknacker (Test)";
-        document.getElementById("calcModelNameInput").value = "Nussknacker (Test)";
-        document.getElementById("calcTemplateNotes").value = "";
-        document.getElementById("calcFilamentWeight").value = "360";
-        document.getElementById("calcPrintTimeHours").value = "12";
-        document.getElementById("calcPrintTimeMinutes").value = "0";
-        document.getElementById("calcLaborMinutes").value = "15";
-        document.getElementById("calcMarginSlider").value = "2.0";
-        document.getElementById("calcEntryDateTimeInput").value = calcGetLocalDateTimeIso(new Date());
-        calcUpdateAll();
-        calcUpdateSaveButtonsUI();
-        renderSavedCalculationsList();
-        showToast("Nussknacker-Testwerte geladen.");
       });
 
       document.getElementById("calcResetBtn").addEventListener("click", () => {
