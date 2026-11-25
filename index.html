@@ -195,20 +195,50 @@
     </section>
 
     <!-- TAB 2: WUNSCHMODELL PER LINK ODER EIGENER 3D-DATEI (PER E-MAIL) -->
-    <section id="view-custom-link" class="hidden max-w-3xl mx-auto space-y-6">
+    <section id="view-custom-link" class="hidden max-w-3xl mx-auto space-y-5">
+      <!-- Auswahlfelder: Per Modell-Link oder Eigene 3D-Datei (unabhängig voneinander) -->
+      <div class="bg-white rounded-3xl p-2 border border-[#E2DFD7] shadow-sm grid grid-cols-2 gap-1.5" role="tablist" aria-label="Anfrageart für Wunschmodell">
+        <button type="button" id="customModeBtnLink" role="tab" aria-selected="true" onclick="setCustomRequestMode('link')"
+          class="w-full py-3 px-2.5 sm:px-4 rounded-2xl text-xs sm:text-sm font-semibold bg-[#22211F] text-white transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer whitespace-nowrap">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+          </svg>
+          <span>Per Modell-Link</span>
+        </button>
+        <button type="button" id="customModeBtnFile" role="tab" aria-selected="false" onclick="setCustomRequestMode('file')"
+          class="w-full py-3 px-2.5 sm:px-4 rounded-2xl text-xs sm:text-sm font-semibold text-[#6E6A63] hover:bg-[#EFECE6] hover:text-[#22211F] transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer whitespace-nowrap">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+          </svg>
+          <span>Eigene 3D-Datei</span>
+        </button>
+      </div>
+
       <div class="bg-white rounded-3xl p-6 sm:p-8 border border-[#E2DFD7] shadow-sm space-y-6">
-        <div class="space-y-2">
+        <!-- Kopfbereich: Modus 1 (Per Link) -->
+        <div id="customHeaderLink" class="space-y-2">
           <span class="inline-block px-3 py-1 rounded-full bg-[#EFECE6] text-[#57151E] text-[11px] font-semibold uppercase tracking-wider">
-            Auftragsdruck nach Link oder 3D-Datei
+            Auftragsdruck nach Link
           </span>
-          <h2 class="font-display text-2xl font-bold text-[#22211F]">Wunschmodell per Link oder eigener 3D-Datei anfragen</h2>
+          <h2 class="font-display text-2xl font-bold text-[#22211F]">Wunschmodell per Link anfragen</h2>
           <p class="text-sm text-[#6E6A63] leading-relaxed">
-            Suche dir ein 3D-Modell auf MakerWorld oder Thingiverse aus und füge den Link ein – oder sende uns deine eigene <strong class="font-semibold text-[#22211F]">.stl</strong>- bzw. <strong class="font-semibold text-[#22211F]">.step</strong>-Datei direkt per E-Mail an <a href="mailto:dorian3d-print@web.de" class="font-semibold text-[#57151E] underline">dorian3d-print@web.de</a>. Wir prüfen die Druckbarkeit sowie die Umsetzbarkeit und melden uns mit einem konkreten Angebot.
+            Suche dir ein 3D-Modell auf MakerWorld oder Thingiverse aus und füge den Link unten ein. Wir prüfen die Druckbarkeit sowie die Umsetzbarkeit und melden uns mit einem konkreten Angebot.
           </p>
         </div>
 
-        <!-- Direktlinks zu MakerWorld & Thingiverse (öffnen immer im neuen Tab) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        <!-- Kopfbereich: Modus 2 (Eigene 3D-Datei per E-Mail) -->
+        <div id="customHeaderFile" class="hidden space-y-2">
+          <span class="inline-block px-3 py-1 rounded-full bg-[#EFECE6] text-[#57151E] text-[11px] font-semibold uppercase tracking-wider">
+            Auftragsdruck nach eigener 3D-Datei
+          </span>
+          <h2 class="font-display text-2xl font-bold text-[#22211F]">Eigene 3D-Datei (.stl / .step) per E-Mail anfragen</h2>
+          <p class="text-sm text-[#6E6A63] leading-relaxed">
+            Du hast bereits eine eigene <strong class="font-semibold text-[#22211F]">.stl</strong>- oder <strong class="font-semibold text-[#22211F]">.step</strong>-Datei? Wähle von oben nach unten deine Wunschfarbe, Stückzahl und Kontaktdaten aus – ganz unten wird daraus automatisch deine fertige E-Mail-Vorlage erstellt, mit der du uns deine Datei direkt an <a href="mailto:dorian3d-print@web.de" class="font-semibold text-[#57151E] underline">dorian3d-print@web.de</a> senden kannst.
+          </p>
+        </div>
+
+        <!-- Direktlinks zu MakerWorld & Thingiverse (nur im Link-Modus sichtbar) -->
+        <div id="customPlatformLinks" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <a href="https://makerworld.com" target="_blank" rel="noopener noreferrer" onclick="window.open('https://makerworld.com', '_blank', 'noopener,noreferrer'); return false;" class="flex items-center justify-between p-4 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/70 hover:bg-[#EFECE6]/70 hover:border-[#57151E] transition group">
             <div>
               <div class="font-display font-semibold text-sm text-[#22211F] flex items-center gap-2">
@@ -231,65 +261,18 @@
 
         <hr class="border-[#E2DFD7]" />
 
-        <!-- Link- & E-Mail-Anfrageformular -->
+        <!-- Anfrageformular von oben nach unten -->
         <form id="customLinkForm" onsubmit="submitCustomLinkRequest(event)" class="space-y-5">
-          <!-- 1. Modell-Link ODER eigene 3D-Datei per E-Mail -->
-          <div class="space-y-4">
-            <div>
-              <label for="customModelUrl" class="block text-xs font-semibold text-[#22211F] mb-1.5">Link zum 3D-Modell *</label>
-              <div class="relative">
-                <input type="url" id="customModelUrl" required oninput="detectPlatformBadge()" placeholder="https://makerworld.com/de/models/... oder https://www.thingiverse.com/thing:..." class="w-full px-4 py-3 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
-                <span id="platformBadge" class="hidden absolute right-3 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#EFECE6] text-[#22211F]"></span>
-              </div>
-            </div>
-
-            <!-- Trenner ODER -->
-            <div class="relative flex items-center justify-center">
-              <div class="border-t border-[#E2DFD7] w-full"></div>
-              <span class="bg-white px-3 text-[11px] font-semibold uppercase tracking-wider text-[#6E6A63]">oder eigene 3D-Datei per E-Mail</span>
-              <div class="border-t border-[#E2DFD7] w-full"></div>
-            </div>
-
-            <!-- Hinweis & Textvorlage für eigene 3D-Datei (.stl / .step / .stp) per E-Mail -->
-            <div class="rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/80 p-4 sm:p-5 space-y-3.5">
-              <div class="flex items-start gap-3">
-                <div class="w-9 h-9 rounded-xl bg-white border border-[#E2DFD7] text-[#57151E] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                  </svg>
-                </div>
-                <div class="space-y-1">
-                  <h3 class="font-display text-xs sm:text-sm font-bold text-[#22211F]">Eigene 3D-Datei (.stl / .step) per E-Mail senden</h3>
-                  <p class="text-xs text-[#6E6A63] leading-relaxed">
-                    Du hast bereits eine eigene <strong class="text-[#22211F]">.stl</strong>- oder <strong class="text-[#22211F]">.step</strong>-Datei? Bitte schicke sie uns einfach per E-Mail an <a href="mailto:dorian3d-print@web.de" class="font-semibold text-[#57151E] underline">dorian3d-print@web.de</a> und hänge die Datei direkt an. Über den Button unten wirst du inklusive passender Textvorlage direkt weitergeleitet.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Live-Textvorlage (übernimmt automatisch unten gewählte Farbe, Stückzahl & Kontaktdaten) -->
-              <div class="space-y-1.5">
-                <div class="flex items-center justify-between gap-2">
-                  <span class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6A63]">Textvorlage für deine E-Mail</span>
-                  <span class="text-[11px] text-[#6E6A63]">Empfänger: <strong class="text-[#22211F]">dorian3d-print@web.de</strong></span>
-                </div>
-                <pre id="customEmailTemplatePreview" class="p-3.5 rounded-2xl bg-white border border-[#E2DFD7] text-[#22211F] text-xs whitespace-pre-wrap font-mono leading-relaxed select-all"></pre>
-              </div>
-
-              <div class="flex flex-wrap items-center gap-2.5">
-                <a id="customDirectEmailBtn" href="mailto:dorian3d-print@web.de" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#57151E] hover:bg-[#3F0E15] text-white font-medium text-xs transition shadow-2xs">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                  </svg>
-                  <span>Per E-Mail senden</span>
-                </a>
-                <button type="button" onclick="copyCustomEmailTemplate()" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-white hover:bg-[#EFECE6] text-[#22211F] font-medium text-xs border border-[#E2DFD7] transition">
-                  <span>Textvorlage kopieren</span>
-                </button>
-              </div>
+          <!-- 1. Modell-Link (nur im Link-Modus sichtbar) -->
+          <div id="customUrlFieldBlock">
+            <label for="customModelUrl" class="block text-xs font-semibold text-[#22211F] mb-1.5">Link zum 3D-Modell *</label>
+            <div class="relative">
+              <input type="url" id="customModelUrl" required oninput="detectPlatformBadge()" placeholder="https://makerworld.com/de/models/... oder https://www.thingiverse.com/thing:..." class="w-full px-4 py-3 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]" />
+              <span id="platformBadge" class="hidden absolute right-3 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#EFECE6] text-[#22211F]"></span>
             </div>
           </div>
 
-          <!-- 2. Farbwahl ohne Freitextfeld + Stückzahl -->
+          <!-- 2. Farbwahl ohne Freitextfeld -->
           <div class="space-y-2.5">
             <div class="flex items-center justify-between gap-2">
               <label class="block text-xs font-semibold text-[#22211F]">Gewünschte Farbe / Material auswählen</label>
@@ -306,6 +289,7 @@
             <p class="text-[11px] text-[#6E6A63]">Sonderwünsche (z. B. Mehrfarbdruck oder Kombinationen) kannst du einfach unten im Kommentarfeld angeben.</p>
           </div>
 
+          <!-- 3. Stückzahl & Kontaktdaten -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label for="customQty" class="block text-xs font-semibold text-[#22211F] mb-1.5">Stückzahl</label>
@@ -321,20 +305,61 @@
             </div>
           </div>
 
+          <!-- 4. Kommentar / Sonderwunsch -->
           <div>
             <label for="customNotes" class="block text-xs font-semibold text-[#22211F] mb-1.5">Kommentar / Sonderwunsch (optional)</label>
             <textarea id="customNotes" rows="2" oninput="updateCustomEmailTemplate()" placeholder="z. B. Besondere Größe, Farbwünsche bei Mehrfarbdruck, Einsatzbereich oder Wunsch nach Versand" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]"></textarea>
           </div>
 
-          <!-- Hinweise für Wunschmodell -->
+          <!-- 5. Hinweise für Wunschmodell -->
           <div class="p-3.5 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] space-y-1.5 text-xs text-[#6E6A63] leading-relaxed">
             <p><strong class="text-[#22211F]">Hinweis zum Druckbild:</strong> Farbe und Aussehen des fertigen 3D-Drucks können minimal von digitalen Vorschaubildern abweichen.</p>
             <p><strong class="text-[#22211F]">Fertigung &amp; Zahlung:</strong> Das Modell wird nach deiner Freigabe schnellstmöglich frisch gedruckt. Eine Zahlung über die Website ist nicht möglich – die Bezahlung erfolgt privat per PayPal (Freunde &amp; Bekannte) oder in Bar.</p>
           </div>
 
-          <button type="submit" id="customSubmitBtn" class="w-full sm:w-auto px-6 py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
-            Unverbindliches Angebot anfragen
-          </button>
+          <!-- 6A. Absende-Button für Link-Anfrage (nur im Link-Modus sichtbar) -->
+          <div id="customLinkSubmitWrap">
+            <button type="submit" id="customSubmitBtn" class="w-full sm:w-auto px-6 py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
+              Unverbindliches Angebot anfragen
+            </button>
+          </div>
+
+          <!-- 6B. Fertige E-Mail-Textvorlage für eigene 3D-Datei ganz unten auf der Seite (nur im 3D-Datei-Modus sichtbar) -->
+          <div id="customEmailTemplateSection" class="hidden rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/80 p-4 sm:p-5 space-y-3.5">
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-xl bg-white border border-[#E2DFD7] text-[#57151E] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+              </div>
+              <div class="space-y-1">
+                <h3 class="font-display text-xs sm:text-sm font-bold text-[#22211F]">Fertige E-Mail-Vorlage zum Versenden deiner 3D-Datei</h3>
+                <p class="text-xs text-[#6E6A63] leading-relaxed">
+                  Deine Angaben oben wurden automatisch übernommen. Klicke auf <strong class="text-[#22211F]">„Per E-Mail senden“</strong> und hänge deine <strong class="text-[#22211F]">.stl</strong>- oder <strong class="text-[#22211F]">.step</strong>-Datei im E-Mail-Programm einfach an.
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6A63]">Textvorlage für deine E-Mail</span>
+                <span class="text-[11px] text-[#6E6A63]">Empfänger: <strong class="text-[#22211F]">dorian3d-print@web.de</strong></span>
+              </div>
+              <pre id="customEmailTemplatePreview" class="p-3.5 rounded-2xl bg-white border border-[#E2DFD7] text-[#22211F] text-xs whitespace-pre-wrap font-mono leading-relaxed select-all"></pre>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2.5">
+              <a id="customDirectEmailBtn" href="mailto:dorian3d-print@web.de" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#57151E] hover:bg-[#3F0E15] text-white font-medium text-xs transition shadow-2xs">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+                <span>Per E-Mail senden</span>
+              </a>
+              <button type="button" onclick="copyCustomEmailTemplate()" class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full bg-white hover:bg-[#EFECE6] text-[#22211F] font-medium text-xs border border-[#E2DFD7] transition">
+                <span>Textvorlage kopieren</span>
+              </button>
+            </div>
+          </div>
         </form>
       </div>
     </section>
@@ -2789,6 +2814,54 @@
     // WUNSCHMODELL PER LINK ODER EIGENER 3D-DATEI (PER E-MAIL)
     // =====================================================================
     let selectedCustomFilamentId = "";
+    let customRequestMode = "link";
+
+    window.setCustomRequestMode = function(mode) {
+      customRequestMode = mode === "file" ? "file" : "link";
+      const isFileMode = customRequestMode === "file";
+
+      const btnLink = document.getElementById("customModeBtnLink");
+      const btnFile = document.getElementById("customModeBtnFile");
+      if (btnLink && btnFile) {
+        if (isFileMode) {
+          btnFile.classList.add("bg-[#22211F]", "text-white");
+          btnFile.classList.remove("text-[#6E6A63]", "hover:bg-[#EFECE6]", "hover:text-[#22211F]");
+          btnFile.setAttribute("aria-selected", "true");
+
+          btnLink.classList.remove("bg-[#22211F]", "text-white");
+          btnLink.classList.add("text-[#6E6A63]", "hover:bg-[#EFECE6]", "hover:text-[#22211F]");
+          btnLink.setAttribute("aria-selected", "false");
+        } else {
+          btnLink.classList.add("bg-[#22211F]", "text-white");
+          btnLink.classList.remove("text-[#6E6A63]", "hover:bg-[#EFECE6]", "hover:text-[#22211F]");
+          btnLink.setAttribute("aria-selected", "true");
+
+          btnFile.classList.remove("bg-[#22211F]", "text-white");
+          btnFile.classList.add("text-[#6E6A63]", "hover:bg-[#EFECE6]", "hover:text-[#22211F]");
+          btnFile.setAttribute("aria-selected", "false");
+        }
+      }
+
+      const headerLink = document.getElementById("customHeaderLink");
+      const headerFile = document.getElementById("customHeaderFile");
+      const platformLinks = document.getElementById("customPlatformLinks");
+      const urlBlock = document.getElementById("customUrlFieldBlock");
+      const urlInput = document.getElementById("customModelUrl");
+      const linkSubmitWrap = document.getElementById("customLinkSubmitWrap");
+      const emailSection = document.getElementById("customEmailTemplateSection");
+
+      if (headerLink) headerLink.classList.toggle("hidden", isFileMode);
+      if (headerFile) headerFile.classList.toggle("hidden", !isFileMode);
+      if (platformLinks) platformLinks.classList.toggle("hidden", isFileMode);
+      if (urlBlock) urlBlock.classList.toggle("hidden", isFileMode);
+      if (urlInput) urlInput.required = !isFileMode;
+      if (linkSubmitWrap) linkSubmitWrap.classList.toggle("hidden", isFileMode);
+      if (emailSection) emailSection.classList.toggle("hidden", !isFileMode);
+
+      if (isFileMode) {
+        updateCustomEmailTemplate();
+      }
+    };
 
     function buildCustomEmailTemplateData() {
       const chosenFil = filaments.find(x => x.id === selectedCustomFilamentId) || null;
@@ -2907,6 +2980,15 @@
 
     window.submitCustomLinkRequest = async function(e) {
       e.preventDefault();
+      if (customRequestMode === "file") {
+        const emailSection = document.getElementById("customEmailTemplateSection");
+        if (emailSection) {
+          emailSection.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        showToast("Deine E-Mail-Vorlage unten ist bereit – bitte per E-Mail senden und 3D-Datei anhängen.");
+        return;
+      }
+
       const btn = document.getElementById("customSubmitBtn");
 
       const modelUrl = document.getElementById("customModelUrl").value.trim();
