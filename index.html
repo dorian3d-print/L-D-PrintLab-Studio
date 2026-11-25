@@ -55,6 +55,45 @@
     }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    input[type="range"].studio-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 28px;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"].studio-slider::-webkit-slider-runnable-track {
+      height: 7px;
+      border-radius: 999px;
+      background: #EFECE6;
+      border: 1px solid #E2DFD7;
+    }
+    input[type="range"].studio-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      margin-top: -8.5px;
+      border-radius: 50%;
+      background: #57151E;
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(87, 21, 30, 0.35);
+    }
+    input[type="range"].studio-slider::-moz-range-track {
+      height: 7px;
+      border-radius: 999px;
+      background: #EFECE6;
+      border: 1px solid #E2DFD7;
+    }
+    input[type="range"].studio-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #57151E;
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(87, 21, 30, 0.35);
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-[#8C7765]/20">
@@ -314,6 +353,9 @@
             <button onclick="switchAdminSubTab('categories')" id="admin-tab-categories" class="admin-sub-btn px-4 py-2 rounded-full text-xs font-semibold text-[#6E6A63] hover:bg-[#EFECE6] transition whitespace-nowrap">
               Kategorien
             </button>
+            <button onclick="switchAdminSubTab('calculator')" id="admin-tab-calculator" class="admin-sub-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-[#6E6A63] hover:bg-[#EFECE6] transition whitespace-nowrap">
+              <span>Preisrechner</span>
+            </button>
           </div>
           <button onclick="handleAdminLogout()" class="px-3.5 py-1.5 rounded-full border border-[#E2DFD7] text-xs font-medium text-[#6E6A63] hover:text-[#22211F] transition">
             Abmelden
@@ -537,6 +579,531 @@
             </button>
           </form>
           <div id="adminCategoriesList" class="divide-y divide-[#E2DFD7]"></div>
+        </div>
+
+        <!-- SUB-TAB E: INTERNER 3D-DRUCK PREISRECHNER & VORLAGEN (NUR ADMIN) -->
+        <div id="admin-view-calculator" class="hidden space-y-6">
+          <!-- Kopfbereich Preisrechner -->
+          <div class="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2DFD7] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-2xl bg-[#EFECE6] border border-[#E2DFD7] text-[#57151E] flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h3 class="font-display text-lg font-bold text-[#22211F]">3D-Druck Preisrechner</h3>
+                  <span class="px-2.5 py-0.5 rounded-full bg-[#EFECE6] text-[#57151E] text-[10px] font-semibold uppercase tracking-wider">Nur Admin</span>
+                </div>
+                <p class="text-xs text-[#6E6A63] mt-0.5">Kalkulation, Gewinn, Konto-Aufteilung &amp; gespeicherte Berechnungsvorlagen</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 flex-wrap">
+              <button type="button" id="calcNussknackerTestBtn" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#EFECE6] hover:bg-[#E2DFD7] text-[#57151E] text-xs font-semibold border border-[#E2DFD7] transition">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span>Nussknacker-Test</span>
+              </button>
+              <button type="button" id="calcResetBtn" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[#F7F6F2] text-[#22211F] text-xs font-medium border border-[#E2DFD7] transition">
+                <svg class="w-3.5 h-3.5 text-[#6E6A63]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span>Neu / Zurücksetzen</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Banner wenn eine gespeicherte Vorlage geladen ist -->
+          <div id="calcActiveTemplateBanner" class="hidden bg-[#EFECE6] rounded-3xl p-4 sm:px-6 border border-[#57151E]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2.5 py-0.5 rounded-full bg-[#57151E] text-white text-[10px] font-semibold uppercase tracking-wider">Aktive Vorlage</span>
+                <strong id="calcActiveTemplateTitle" class="font-display text-sm font-bold text-[#22211F] truncate">Vorlage</strong>
+              </div>
+              <p id="calcActiveTemplateMeta" class="text-[11px] text-[#6E6A63] mt-0.5">Werte wurden geladen – Änderungen können direkt gespeichert werden.</p>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap shrink-0">
+              <button type="button" onclick="calcUpdateActiveTemplate()" class="px-3.5 py-2 rounded-full bg-[#57151E] hover:bg-[#6E1B26] text-white text-xs font-semibold transition">
+                Vorlage aktualisieren
+              </button>
+              <button type="button" onclick="calcSaveAsNewTemplate()" class="px-3.5 py-2 rounded-full bg-white hover:bg-[#F7F6F2] text-[#22211F] text-xs font-medium border border-[#E2DFD7] transition">
+                Als neu speichern
+              </button>
+              <button type="button" onclick="calcUnloadActiveTemplate()" class="px-3 py-2 rounded-full text-xs text-[#6E6A63] hover:text-[#22211F] underline">
+                Schließen
+              </button>
+            </div>
+          </div>
+
+          <!-- Hauptgrid: Links Rechner (7 Spalten), Rechts Gespeicherte Vorlagen (5 Spalten) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+            <!-- LINKE SPALTE: RECHNER -->
+            <div class="lg:col-span-7 space-y-5">
+              <!-- Unter-Tabs des Rechners -->
+              <div class="bg-white rounded-3xl p-2 border border-[#E2DFD7] grid grid-cols-2 gap-1.5">
+                <button type="button" id="calcTabCalcBtn" onclick="calcSwitchSubTab('calc')" class="py-2.5 px-3 rounded-2xl text-xs sm:text-sm font-semibold bg-[#22211F] text-white transition">
+                  1. Preisberechnung
+                </button>
+                <button type="button" id="calcTabProfitBtn" onclick="calcSwitchSubTab('profit')" class="py-2.5 px-3 rounded-2xl text-xs sm:text-sm font-semibold text-[#6E6A63] hover:bg-[#EFECE6] hover:text-[#22211F] transition">
+                  2. Gewinn &amp; Konto
+                </button>
+              </div>
+
+              <!-- RECHNER-ANSICHT 1: PREISBERECHNUNG -->
+              <div id="calcViewCalc" class="space-y-5">
+                <!-- Schritt 1: Bezeichnung, Slicer-Daten & Arbeitszeit -->
+                <div class="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2DFD7] space-y-4">
+                  <div class="flex items-center justify-between gap-2">
+                    <h4 class="font-display text-base font-bold text-[#22211F] flex items-center gap-2.5">
+                      <span class="w-6 h-6 rounded-full bg-[#EFECE6] text-[#57151E] text-xs font-bold inline-flex items-center justify-center">1</span>
+                      <span>Modell, Slicer-Daten &amp; Arbeitszeit</span>
+                    </h4>
+                  </div>
+
+                  <!-- Modell-/Vorlagenname & Notiz -->
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label for="calcModelNameTop" class="block text-xs font-semibold text-[#22211F] mb-1">Modell- / Vorlagenname</label>
+                      <input type="text" id="calcModelNameTop" autocomplete="off" placeholder="z. B. Kabelhalter Untertisch" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                    </div>
+                    <div>
+                      <label for="calcTemplateNotes" class="block text-xs font-semibold text-[#22211F] mb-1">Notiz / Filament / Info (optional)</label>
+                      <input type="text" id="calcTemplateNotes" autocomplete="off" placeholder="z. B. PETG Schwarz, 2 Stück" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-12 gap-3.5">
+                    <!-- Filamentgewicht (g) -->
+                    <div class="sm:col-span-4">
+                      <label for="calcFilamentWeight" class="block text-xs font-semibold text-[#22211F] mb-1">Filamentgewicht (g)</label>
+                      <div class="relative flex items-center">
+                        <input type="text" id="calcFilamentWeight" inputmode="decimal" autocomplete="off" placeholder="0" class="w-full px-3.5 pr-9 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm font-semibold text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                        <span class="absolute right-3.5 text-xs font-semibold text-[#6E6A63] pointer-events-none">g</span>
+                      </div>
+                    </div>
+
+                    <!-- Druckzeit: Stunden & Minuten -->
+                    <div class="sm:col-span-5">
+                      <label for="calcPrintTimeHours" class="block text-xs font-semibold text-[#22211F] mb-1">Druckzeit</label>
+                      <div class="grid grid-cols-2 gap-2">
+                        <div class="relative flex items-center">
+                          <input type="text" id="calcPrintTimeHours" inputmode="numeric" autocomplete="off" placeholder="0" aria-label="Druckzeit Stunden" class="w-full px-3.5 pr-10 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm font-semibold text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                          <span class="absolute right-3 text-xs font-semibold text-[#6E6A63] pointer-events-none">Std</span>
+                        </div>
+                        <div class="relative flex items-center">
+                          <input type="text" id="calcPrintTimeMinutes" inputmode="numeric" autocomplete="off" placeholder="0" aria-label="Druckzeit Minuten" class="w-full px-3.5 pr-10 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm font-semibold text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                          <span class="absolute right-3 text-xs font-semibold text-[#6E6A63] pointer-events-none">Min</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Arbeitszeit (Minuten) -->
+                    <div class="sm:col-span-3">
+                      <label for="calcLaborMinutes" class="block text-xs font-semibold text-[#22211F] mb-1">Arbeitszeit</label>
+                      <div class="relative flex items-center">
+                        <input type="text" id="calcLaborMinutes" inputmode="numeric" autocomplete="off" placeholder="0" class="w-full px-3.5 pr-10 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm font-semibold text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                        <span class="absolute right-3 text-xs font-semibold text-[#6E6A63] pointer-events-none">Min</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Schritt 2: Preisstufe & Marge -->
+                <div class="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2DFD7] space-y-4">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <h4 class="font-display text-base font-bold text-[#22211F] flex items-center gap-2.5">
+                      <span class="w-6 h-6 rounded-full bg-[#EFECE6] text-[#57151E] text-xs font-bold inline-flex items-center justify-center">2</span>
+                      <span>Preisstufe &amp; Marge</span>
+                    </h4>
+                    <span id="calcStageCurrentReadout" class="px-3 py-1 rounded-full bg-[#EFECE6] text-[#57151E] text-xs font-semibold">2,0x Freundschaftspreis</span>
+                  </div>
+
+                  <!-- 4 Auswahl-Buttons -->
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    <button type="button" data-calc-factor="1.5" class="calc-stage-btn p-3 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60 hover:border-[#57151E] text-left transition">
+                      <span class="block text-xs font-bold text-[#22211F]">1,5x Enge Freunde</span>
+                      <span class="block text-[11px] text-[#6E6A63] mt-0.5">Kleiner Aufschlag</span>
+                    </button>
+
+                    <button type="button" data-calc-factor="2.0" class="calc-stage-btn p-3 rounded-2xl border-2 border-[#57151E] bg-[#EFECE6]/70 text-left transition">
+                      <span class="block text-xs font-bold text-[#57151E]">2,0x Freundschaft</span>
+                      <span class="block text-[11px] text-[#6E6A63] mt-0.5">Standard aktiv</span>
+                    </button>
+
+                    <button type="button" data-calc-factor="2.5" class="calc-stage-btn p-3 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60 hover:border-[#57151E] text-left transition">
+                      <span class="block text-xs font-bold text-[#22211F]">2,5x Bekannte</span>
+                      <span class="block text-[11px] text-[#6E6A63] mt-0.5">Moderater Aufschlag</span>
+                    </button>
+
+                    <button type="button" data-calc-factor="3.0" class="calc-stage-btn p-3 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60 hover:border-[#57151E] text-left transition">
+                      <span class="block text-xs font-bold text-[#22211F]">3,0x Extern</span>
+                      <span class="block text-[11px] text-[#6E6A63] mt-0.5">Regulärer Verkauf</span>
+                    </button>
+                  </div>
+
+                  <!-- Schieberegler 1,5 bis 3,5 in 0,1er-Schritten -->
+                  <div class="space-y-1 pt-1">
+                    <div class="flex items-center justify-between text-xs text-[#6E6A63]">
+                      <span>Faktor fein anpassen</span>
+                      <strong id="calcSliderValueLabel" class="text-[#57151E] font-semibold">2,0x Freundschaftspreis</strong>
+                    </div>
+                    <input type="range" id="calcMarginSlider" min="1.5" max="3.5" step="0.1" value="2.0" aria-label="Multiplikator Schieberegler" class="studio-slider" />
+                    <div class="flex justify-between text-[11px] font-semibold text-[#9A948C]">
+                      <span>1,5x</span>
+                      <span>2,0x</span>
+                      <span>2,5x</span>
+                      <span>3,0x</span>
+                      <span>3,5x</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Hinweis-Kasten vor der ersten Eingabe -->
+                <div id="calcEmptyStateCard" class="bg-white rounded-3xl p-7 border border-dashed border-[#D6D1C7] text-center space-y-2">
+                  <div class="w-10 h-10 rounded-2xl bg-[#EFECE6] text-[#57151E] flex items-center justify-center mx-auto">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <p class="text-sm text-[#6E6A63]">Gib oben deine Slicer-Daten ein, um den Preis zu berechnen.</p>
+                </div>
+
+                <!-- Ergebniskarte Tab 1 (erscheint ab Wert > 0) -->
+                <div id="calcResultCard" class="hidden bg-white rounded-3xl p-5 sm:p-6 border-2 border-[#57151E]/30 shadow-sm space-y-5">
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EFECE6] text-[#57151E] text-xs font-semibold mb-2">
+                        <span class="w-2 h-2 rounded-full bg-[#57151E]"></span>
+                        <span>Empfohlener Verkaufspreis</span>
+                      </span>
+                      <div id="calcRecommendedPriceDisplay" class="font-display text-4xl sm:text-5xl font-bold text-[#22211F] tracking-tight">0,00 €</div>
+                      <div id="calcRoundingNoteDisplay" class="text-xs font-medium text-[#8C7765] mt-1">Rechnerisch exakt: 0,00 €</div>
+                    </div>
+
+                    <div class="flex flex-col gap-2 shrink-0">
+                      <button type="button" onclick="calcSaveTemplateAction()" id="calcPrimarySaveBtn" class="px-5 py-3 rounded-full bg-[#57151E] hover:bg-[#6E1B26] text-white text-xs font-semibold transition text-center shadow-sm">
+                        Berechnung als Vorlage speichern
+                      </button>
+                      <button type="button" id="calcGoToTab2Btn" class="px-5 py-2.5 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white text-xs font-medium transition text-center">
+                        Weiter zu Gewinn &amp; Konto →
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="pt-4 border-t border-[#E2DFD7] space-y-2.5">
+                    <h5 class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6A63]">Kostenaufschlüsselung</h5>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                      <div class="p-3 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7]">
+                        <span class="block text-[11px] text-[#6E6A63]">Filament kalkuliert</span>
+                        <strong id="calcBreakdownFilament" class="block text-sm font-bold text-[#22211F] mt-0.5">0,00 €</strong>
+                      </div>
+                      <div class="p-3 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7]">
+                        <span class="block text-[11px] text-[#6E6A63]">Stromkosten</span>
+                        <strong id="calcBreakdownElectricity" class="block text-sm font-bold text-[#22211F] mt-0.5">0,00 €</strong>
+                      </div>
+                      <div class="p-3 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7]">
+                        <span class="block text-[11px] text-[#6E6A63]">Verschleiß</span>
+                        <strong id="calcBreakdownWear" class="block text-sm font-bold text-[#22211F] mt-0.5">0,00 €</strong>
+                      </div>
+                      <div class="p-3 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7]">
+                        <span class="block text-[11px] text-[#6E6A63]">Selbstkosten Basis</span>
+                        <strong id="calcBreakdownSelfCost" class="block text-sm font-bold text-[#22211F] mt-0.5">0,00 €</strong>
+                      </div>
+                      <div class="p-3 rounded-2xl bg-[#EFECE6]/70 border border-[#57151E]/25">
+                        <span id="calcBreakdownBasisFactorLabel" class="block text-[11px] text-[#57151E]">Basis × 2,0</span>
+                        <strong id="calcBreakdownBasisFactor" class="block text-sm font-bold text-[#57151E] mt-0.5">0,00 €</strong>
+                      </div>
+                      <div class="p-3 rounded-2xl bg-[#F7F6F2] border border-[#8C7765]/35">
+                        <span class="block text-[11px] text-[#8C7765]">Arbeitszeit</span>
+                        <strong id="calcBreakdownLabor" class="block text-sm font-bold text-[#22211F] mt-0.5">0,00 €</strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Aufklappbarer Bereich: Erweiterte Parameter -->
+                <div class="bg-white rounded-3xl border border-[#E2DFD7] overflow-hidden">
+                  <button type="button" id="calcToggleAdvancedBtn" aria-expanded="false" class="w-full flex items-center justify-between gap-3 p-4 sm:p-5 text-left hover:bg-[#F7F6F2]/60 transition">
+                    <div class="flex items-center gap-3 min-w-0">
+                      <div class="w-9 h-9 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] text-[#22211F] flex items-center justify-center shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                      </div>
+                      <div class="min-w-0">
+                        <span class="block text-sm font-bold text-[#22211F]">Erweiterte Parameter</span>
+                        <span id="calcAdvancedSummaryLine" class="block text-xs text-[#6E6A63] truncate">20,00 €/kg • 110 W • 0,35 €/kWh • Verschleiß 0,20 €/Std • Arbeit 15,00 €/Std</span>
+                      </div>
+                    </div>
+                    <svg id="calcAdvancedChevron" class="w-4 h-4 text-[#6E6A63] transition-transform duration-200 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  <div id="calcAdvancedPanel" class="hidden border-t border-[#E2DFD7] bg-[#F7F6F2]/50 p-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                      <div>
+                        <label for="calcFilamentPriceKg" class="block text-xs font-semibold text-[#22211F] mb-1">Kalkulierter Filamentpreis (€/kg)</label>
+                        <div class="relative flex items-center">
+                          <input type="text" id="calcFilamentPriceKg" inputmode="decimal" autocomplete="off" value="20,00" class="w-full px-3.5 pr-12 py-2.5 rounded-2xl border border-[#E2DFD7] bg-white text-sm font-semibold text-[#22211F] focus:outline-none focus:border-[#57151E]" />
+                          <span class="absolute right-3.5 text-xs font-semibold text-[#6E6A63] pointer-events-none">€/kg</span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label for="calcAverageWatts" class="block text-xs font-semibold text-[#22211F] mb-1">Drucker-Leistung (Watt)</label>
+                        <div class="relative flex items-center">
+                          <input type="text" id="calcAverageWatts" inputmode="decimal" autocomplete="off" value="110" class="w-full px-3.5 pr-10 py-2.5 rounded-2xl border border-[#E2DFD7] bg-white text-sm font-semibold text-[#22211F] focus:outline-none focus:border-[#57151E]" />
+                          <span class="absolute right-3.5 text-xs font-semibold text-[#6E6A63] pointer-events-none">W</span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label for="calcElectricityPriceKwh" class="block text-xs font-semibold text-[#22211F] mb-1">Strompreis (€/kWh)</label>
+                        <div class="relative flex items-center">
+                          <input type="text" id="calcElectricityPriceKwh" inputmode="decimal" autocomplete="off" value="0,35" class="w-full px-3.5 pr-14 py-2.5 rounded-2xl border border-[#E2DFD7] bg-white text-sm font-semibold text-[#22211F] focus:outline-none focus:border-[#57151E]" />
+                          <span class="absolute right-3.5 text-xs font-semibold text-[#6E6A63] pointer-events-none">€/kWh</span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label for="calcWearCostPerHour" class="block text-xs font-semibold text-[#22211F] mb-1">Verschleiß (€/Std)</label>
+                        <div class="relative flex items-center">
+                          <input type="text" id="calcWearCostPerHour" inputmode="decimal" autocomplete="off" value="0,20" class="w-full px-3.5 pr-14 py-2.5 rounded-2xl border border-[#E2DFD7] bg-white text-sm font-semibold text-[#22211F] focus:outline-none focus:border-[#57151E]" />
+                          <span class="absolute right-3.5 text-xs font-semibold text-[#6E6A63] pointer-events-none">€/Std</span>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label for="calcLaborRatePerHour" class="block text-xs font-semibold text-[#22211F] mb-1">Stundensatz Arbeitszeit (€/Std)</label>
+                        <div class="relative flex items-center">
+                          <input type="text" id="calcLaborRatePerHour" inputmode="decimal" autocomplete="off" value="15,00" class="w-full px-3.5 pr-14 py-2.5 rounded-2xl border border-[#E2DFD7] bg-white text-sm font-semibold text-[#22211F] focus:outline-none focus:border-[#57151E]" />
+                          <span class="absolute right-3.5 text-xs font-semibold text-[#6E6A63] pointer-events-none">€/Std</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- RECHNER-ANSICHT 2: GEWINN & KONTO -->
+              <div id="calcViewProfit" class="hidden space-y-5">
+                <!-- Schritt 1: Einkaufspreis & Zahlungseingang -->
+                <div class="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2DFD7] space-y-4">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <h4 class="font-display text-base font-bold text-[#22211F] flex items-center gap-2.5">
+                      <span class="w-6 h-6 rounded-full bg-[#EFECE6] text-[#57151E] text-xs font-bold inline-flex items-center justify-center">1</span>
+                      <span>Einkaufspreis &amp; Zahlungseingang</span>
+                    </h4>
+                    <span id="calcTab2SummaryBadge" class="text-xs text-[#6E6A63]">0 g • 0 Std 0 Min</span>
+                  </div>
+
+                  <!-- Optional: Rolle direkt aus dem Studio-Filamentlager übernehmen -->
+                  <div id="calcInventoryPickerWrap" class="hidden">
+                    <label for="calcInventoryFilamentSelect" class="block text-[11px] font-semibold text-[#57151E] mb-1">Optional: EK aus eurem Filament-Lager übernehmen</label>
+                    <select id="calcInventoryFilamentSelect" onchange="calcApplyInventoryFilament(this.value)" class="w-full px-3.5 py-2 rounded-2xl border border-[#57151E]/25 bg-[#57151E]/[0.03] text-xs text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]">
+                      <option value="">— Filamentrolle auswählen oder unten manuell eingeben —</option>
+                    </select>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Tatsächlicher Filamentpreis (€/kg) -->
+                    <div class="space-y-2">
+                      <label for="calcActualFilamentKg" class="block text-xs font-semibold text-[#22211F]">Tatsächlicher Filamentpreis (€/kg)</label>
+                      <div class="relative flex items-center">
+                        <input type="text" id="calcActualFilamentKg" inputmode="decimal" autocomplete="off" placeholder="z. B. 13,00" class="w-full px-3.5 pr-12 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm font-semibold text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                        <span class="absolute right-3.5 text-xs font-semibold text-[#6E6A63] pointer-events-none">€/kg</span>
+                      </div>
+                      <div class="p-3 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] space-y-1 text-xs">
+                        <div class="flex items-center justify-between gap-2">
+                          <span class="text-[#6E6A63]">Reale Filamentkosten:</span>
+                          <strong id="calcRealFilamentCostDisplay" class="text-[#22211F]">–</strong>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                          <span class="text-[#6E6A63]">Einkaufsvorteil (vs. <span id="calcKgRefText">20,00 €/kg</span>):</span>
+                          <strong id="calcPurchaseAdvantageDisplay" class="text-[#6E6A63]">–</strong>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Tatsächlich gezahlter Betrag (€) -->
+                    <div class="space-y-2">
+                      <div class="flex items-center justify-between gap-2">
+                        <label for="calcPaidAmountInput" class="block text-xs font-semibold text-[#22211F]">Tatsächlich gezahlter Betrag (€)</label>
+                        <button type="button" id="calcSyncRecommendedBtn" class="hidden text-[11px] font-semibold text-[#57151E] underline">Empf. Preis übernehmen</button>
+                      </div>
+                      <div class="relative flex items-center">
+                        <input type="text" id="calcPaidAmountInput" inputmode="decimal" autocomplete="off" placeholder="0,00" class="w-full px-3.5 pr-9 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm font-bold text-[#57151E] focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                        <span class="absolute right-3.5 text-xs font-semibold text-[#6E6A63] pointer-events-none">€</span>
+                      </div>
+                      <div class="p-3 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] space-y-1 text-xs">
+                        <div class="flex items-center justify-between gap-2">
+                          <span class="text-[#6E6A63]">Empfohlener Preis (aufgerundet):</span>
+                          <strong id="calcTab2RecommendedRef" class="text-[#22211F]">0,00 €</strong>
+                        </div>
+                        <div class="flex items-center justify-between gap-2">
+                          <span class="text-[#6E6A63]">Status:</span>
+                          <strong id="calcPaidSyncStatusText" class="text-emerald-700">Automatisch übernommen</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Schritt 2: Konto-Aufteilung -->
+                <div class="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2DFD7] space-y-4">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <h4 class="font-display text-base font-bold text-[#22211F] flex items-center gap-2.5">
+                      <span class="w-6 h-6 rounded-full bg-[#EFECE6] text-[#57151E] text-xs font-bold inline-flex items-center justify-center">2</span>
+                      <span>Konto-Aufteilung</span>
+                    </h4>
+                    <span class="text-xs text-[#6E6A63]">Gezahlt: <strong id="calcPaidSummaryHeader" class="text-[#22211F]">0,00 €</strong></span>
+                  </div>
+
+                  <!-- Hinweis solange tatsächlicher Filamentpreis oder Druckdaten fehlen -->
+                  <div id="calcMissingDataNotice" class="p-4 rounded-2xl bg-[#F7F6F2] border border-dashed border-[#D6D1C7] text-xs text-[#6E6A63] flex items-start gap-2.5 leading-relaxed">
+                    <svg class="w-4 h-4 text-[#57151E] shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Bitte gib oben deinen tatsächlichen Filamentpreis pro kg und in „1. Preisberechnung“ die Druckdaten ein, um die Aufteilung zu berechnen.</span>
+                  </div>
+
+                  <!-- Warnhinweis bei Unterdeckung -->
+                  <div id="calcUnderpaymentNotice" class="hidden p-4 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-800 flex items-start gap-2.5 leading-relaxed">
+                    <svg class="w-4 h-4 text-red-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <div>
+                      <strong class="block font-semibold text-red-950">Gezahlter Betrag liegt unter den realen Selbstkosten</strong>
+                      <span>Für die volle Kostendeckung (<strong id="calcTargetNormalCostText">0,00 €</strong>) fehlen noch <strong id="calcShortfallText" class="font-bold">0,00 €</strong>.</span>
+                    </div>
+                  </div>
+
+                  <!-- Zwei Ergebniskarten -->
+                  <div id="calcTwoAccountsGrid" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Karte 1: Normales Konto (Kostendeckung) -->
+                    <div class="p-4 sm:p-5 rounded-2xl bg-[#F7F6F2] border-2 border-[#8C7765]/40 flex flex-col justify-between gap-3">
+                      <div>
+                        <div class="flex items-center justify-between gap-2 mb-1.5">
+                          <span class="text-[11px] font-bold uppercase tracking-wider text-[#8C7765]">Normales Konto</span>
+                          <span class="px-2 py-0.5 rounded-full bg-white border border-[#E2DFD7] text-[10px] font-semibold text-[#6E6A63]">Kostendeckung</span>
+                        </div>
+                        <div id="calcNormalAccountDisplay" class="font-display text-2xl sm:text-3xl font-bold text-[#22211F]">0,00 €</div>
+                      </div>
+                      <div class="pt-2.5 border-t border-[#E2DFD7] space-y-1 text-xs">
+                        <div class="flex justify-between gap-2">
+                          <span class="text-[#6E6A63]">Reales Filament:</span>
+                          <strong id="calcNormalListFilament" class="text-[#22211F]">0,00 €</strong>
+                        </div>
+                        <div class="flex justify-between gap-2">
+                          <span class="text-[#6E6A63]">Strom:</span>
+                          <strong id="calcNormalListElectricity" class="text-[#22211F]">0,00 €</strong>
+                        </div>
+                        <div class="flex justify-between gap-2">
+                          <span class="text-[#6E6A63]">Verschleiß:</span>
+                          <strong id="calcNormalListWear" class="text-[#22211F]">0,00 €</strong>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Karte 2: Beiseite legen (Reingewinn) -->
+                    <div class="p-4 sm:p-5 rounded-2xl bg-[#EFECE6]/70 border-2 border-[#57151E]/40 flex flex-col justify-between gap-3">
+                      <div>
+                        <div class="flex items-center justify-between gap-2 mb-1.5">
+                          <span class="text-[11px] font-bold uppercase tracking-wider text-[#57151E]">Beiseite legen</span>
+                          <span class="px-2 py-0.5 rounded-full bg-[#57151E] text-white text-[10px] font-semibold">Reingewinn</span>
+                        </div>
+                        <div id="calcProfitAccountDisplay" class="font-display text-2xl sm:text-3xl font-bold text-[#57151E]">0,00 €</div>
+                      </div>
+                      <div class="pt-2.5 border-t border-[#57151E]/15 space-y-1 text-xs">
+                        <div class="flex justify-between gap-2">
+                          <span class="text-[#6E6A63]">Marge &amp; Arbeitszeit:</span>
+                          <strong id="calcProfitListMarginLabor" class="text-[#22211F]">0,00 €</strong>
+                        </div>
+                        <div class="flex justify-between gap-2">
+                          <span class="text-[#6E6A63]">Einkaufsvorteil Filament:</span>
+                          <strong id="calcProfitListAdvantage" class="text-emerald-700">+0,00 €</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Schritt 3: Eintrag kopieren & Vorlage speichern -->
+                <div class="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2DFD7] space-y-4">
+                  <h4 class="font-display text-base font-bold text-[#22211F] flex items-center gap-2.5">
+                    <span class="w-6 h-6 rounded-full bg-[#EFECE6] text-[#57151E] text-xs font-bold inline-flex items-center justify-center">3</span>
+                    <span>Eintrag kopieren &amp; als Vorlage speichern</span>
+                  </h4>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                      <label for="calcModelNameInput" class="block text-xs font-semibold text-[#22211F] mb-1">Name des 3D-Modells</label>
+                      <input type="text" id="calcModelNameInput" autocomplete="off" placeholder="z. B. Großer Nussknacker" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                    </div>
+                    <div>
+                      <label for="calcCustomerNameInput" class="block text-xs font-semibold text-[#22211F] mb-1">Name Besteller/in / Empfänger/in</label>
+                      <input type="text" id="calcCustomerNameInput" autocomplete="off" placeholder="z. B. Lisa Müller" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="calcEntryDateTimeInput" class="block text-xs font-semibold text-[#22211F] mb-1">Datum &amp; Uhrzeit</label>
+                    <div class="flex items-stretch gap-2">
+                      <input type="datetime-local" id="calcEntryDateTimeInput" class="flex-1 min-w-0 px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]" />
+                      <button type="button" id="calcSetNowBtn" class="px-4 py-2.5 rounded-2xl bg-[#EFECE6] hover:bg-[#E2DFD7] text-[#22211F] text-xs font-semibold transition shrink-0">
+                        Jetzt
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="space-y-1.5">
+                    <span class="block text-[11px] font-semibold uppercase tracking-wider text-[#6E6A63]">Live-Vorschau</span>
+                    <pre id="calcExportPreviewBox" class="p-3.5 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] text-[#22211F] text-xs whitespace-pre-wrap font-mono leading-relaxed select-all"></pre>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                    <button type="button" id="calcCopyEntryBtn" class="w-full py-3 px-4 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white text-xs font-semibold transition inline-flex items-center justify-center gap-2">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      <span id="calcCopyBtnLabel">Text kopieren</span>
+                    </button>
+
+                    <button type="button" onclick="calcSaveTemplateAction()" id="calcTab2SaveBtn" class="w-full py-3 px-4 rounded-full bg-[#57151E] hover:bg-[#6E1B26] text-white text-xs font-semibold transition inline-flex items-center justify-center gap-2">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V7l-4-4zM12 19a3 3 0 110-6 3 3 0 010 6zm3-10H6V5h9v4z" />
+                      </svg>
+                      <span id="calcTab2SaveBtnLabel">Berechnung als Vorlage speichern</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- RECHTE SPALTE: GESPEICHERTE BERECHNUNGEN & VORLAGEN -->
+            <div class="lg:col-span-5 bg-white rounded-3xl p-5 sm:p-6 border border-[#E2DFD7] space-y-4">
+              <div class="flex items-center justify-between gap-2">
+                <div>
+                  <h4 class="font-display text-base font-bold text-[#22211F]">Gespeicherte Berechnungen (<span id="savedCalcCount">0</span>)</h4>
+                  <p class="text-[11px] text-[#6E6A63] mt-0.5">Jederzeit wieder aufrufen, nachvollziehen &amp; neu berechnen</p>
+                </div>
+              </div>
+
+              <!-- Suchfeld für Vorlagen -->
+              <div class="relative">
+                <input type="text" id="calcTemplateSearchInput" oninput="renderSavedCalculationsList()" placeholder="Vorlage nach Modell, Besteller oder Notiz suchen …" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60 text-xs text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]" />
+              </div>
+
+              <div id="savedCalculationsList" class="space-y-3 max-h-[780px] overflow-y-auto pr-0.5"></div>
+            </div>
+
+          </div>
         </div>
       </div>
     </section>
@@ -865,6 +1432,10 @@
     let filaments = [];
     let filamentCosts = {}; // Ausschließlich im eingeloggten Admin-Status aus geschützter Sammlung 'filament_costs' geladen
     let unsubscribeFilamentCosts = null;
+    let priceCalculations = []; // Ausschließlich im eingeloggten Admin-Status aus geschützter Sammlung 'price_calculations' geladen
+    let unsubscribePriceCalculations = null;
+    let activeCalcTemplateId = null;
+    const expandedCalcTemplateIds = new Set();
     let categories = [];
     let allOrders = [];
     let localSavedRefs = JSON.parse(localStorage.getItem("ld_printlab_refs") || "[]");
@@ -1701,8 +2272,21 @@
               if (isAdminLoggedIn && (!adminFilListEl || !adminFilListEl.contains(document.activeElement))) {
                 renderAdminFilamentsList();
               }
+              if (isAdminLoggedIn && typeof window.refreshCalculatorInventoryPicker === "function") {
+                window.refreshCalculatorInventoryPicker();
+              }
             }, err => {
               console.warn("Interne Kostendaten konnten nicht geladen werden:", err);
+            });
+          }
+          if (!unsubscribePriceCalculations) {
+            unsubscribePriceCalculations = onSnapshot(query(collection(db, "price_calculations"), orderBy("updatedAt", "desc")), snap => {
+              priceCalculations = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+              if (isAdminLoggedIn && typeof window.renderSavedCalculationsList === "function") {
+                window.renderSavedCalculationsList();
+              }
+            }, err => {
+              console.warn("Gespeicherte Preisberechnungen konnten nicht geladen werden:", err);
             });
           }
           renderAdminAll();
@@ -1711,7 +2295,13 @@
             unsubscribeFilamentCosts();
             unsubscribeFilamentCosts = null;
           }
+          if (unsubscribePriceCalculations) {
+            unsubscribePriceCalculations();
+            unsubscribePriceCalculations = null;
+          }
           filamentCosts = {};
+          priceCalculations = [];
+          activeCalcTemplateId = null;
         }
       });
 
@@ -1762,6 +2352,7 @@
         { id: "fil-3", name: "Grau", material: "PETG Basic", hex: "#8E9089", bambuCode: "30107", surcharge: 0, inStock: true }
       ]);
       filamentCosts = JSON.parse(localStorage.getItem("ld_demo_filament_costs") || "{}");
+      priceCalculations = JSON.parse(localStorage.getItem("ld_demo_price_calculations") || "[]");
       categories = JSON.parse(localStorage.getItem("ld_demo_categories") || "null") ||
         DEFAULT_CATEGORIES.map((name, i) => ({ id: "cat-" + i, name, order: i }));
       products = JSON.parse(localStorage.getItem("ld_demo_products") || "[]");
@@ -1775,6 +2366,7 @@
       filaments = sortFilaments(filaments);
       localStorage.setItem("ld_demo_filaments", JSON.stringify(filaments));
       localStorage.setItem("ld_demo_filament_costs", JSON.stringify(filamentCosts));
+      localStorage.setItem("ld_demo_price_calculations", JSON.stringify(priceCalculations));
       localStorage.setItem("ld_demo_categories", JSON.stringify(categories));
       localStorage.setItem("ld_demo_products", JSON.stringify(products));
       localStorage.setItem("ld_demo_orders", JSON.stringify(allOrders));
@@ -2476,7 +3068,13 @@
         unsubscribeFilamentCosts();
         unsubscribeFilamentCosts = null;
       }
+      if (unsubscribePriceCalculations) {
+        unsubscribePriceCalculations();
+        unsubscribePriceCalculations = null;
+      }
       filamentCosts = {};
+      priceCalculations = [];
+      activeCalcTemplateId = null;
       if (isCloudConfigured && auth) {
         await signOut(auth);
       } else {
@@ -2490,16 +3088,26 @@
     };
 
     window.switchAdminSubTab = function(sub) {
-      ["orders", "products", "filaments", "categories"].forEach(id => {
-        document.getElementById("admin-view-" + id).classList.add("hidden");
+      ["orders", "products", "filaments", "categories", "calculator"].forEach(id => {
+        const viewEl = document.getElementById("admin-view-" + id);
+        if (viewEl) viewEl.classList.add("hidden");
         const btn = document.getElementById("admin-tab-" + id);
-        btn.classList.remove("bg-[#22211F]", "text-white");
-        btn.classList.add("text-[#6E6A63]");
+        if (btn) {
+          btn.classList.remove("bg-[#22211F]", "text-white");
+          btn.classList.add("text-[#6E6A63]");
+        }
       });
-      document.getElementById("admin-view-" + sub).classList.remove("hidden");
+      const targetView = document.getElementById("admin-view-" + sub);
+      if (targetView) targetView.classList.remove("hidden");
       const activeBtn = document.getElementById("admin-tab-" + sub);
-      activeBtn.classList.add("bg-[#22211F]", "text-white");
-      activeBtn.classList.remove("text-[#6E6A63]");
+      if (activeBtn) {
+        activeBtn.classList.add("bg-[#22211F]", "text-white");
+        activeBtn.classList.remove("text-[#6E6A63]");
+      }
+      if (sub === "calculator" && isAdminLoggedIn) {
+        refreshCalculatorInventoryPicker();
+        renderSavedCalculationsList();
+      }
     };
 
     function renderAdminAll() {
@@ -2508,6 +3116,8 @@
       renderAdminProductsList();
       renderAdminFilamentsList();
       renderAdminCategoriesList();
+      refreshCalculatorInventoryPicker();
+      renderSavedCalculationsList();
     }
 
     // --- Admin: Bestellungen & Link-Anfragen ---
@@ -3547,6 +4157,933 @@
       }
       showToast("Beispieldaten angelegt!");
     };
+
+    // =====================================================================
+    // INTERNER 3D-DRUCK PREISRECHNER & VORLAGEN-VERWALTUNG (NUR ADMIN)
+    // =====================================================================
+    function calcParseLocaleNumber(val) {
+      if (val === null || val === undefined) return NaN;
+      const cleaned = String(val).trim().replace(/\s+/g, "").replace(",", ".");
+      if (cleaned === "" || cleaned === "." || cleaned === "-") return NaN;
+      const num = Number(cleaned);
+      return Number.isFinite(num) ? num : NaN;
+    }
+
+    function calcGetPositiveOrZero(val) {
+      const n = calcParseLocaleNumber(val);
+      return Number.isFinite(n) && n > 0 ? n : 0;
+    }
+
+    function calcFormatDeNumber(num) {
+      let safe = Number.isFinite(num) ? num : 0;
+      if (Math.abs(safe) < 0.005) safe = 0;
+      return safe.toFixed(2).replace(".", ",");
+    }
+
+    function calcFormatEur(num) {
+      return calcFormatDeNumber(num) + " €";
+    }
+
+    function calcFormatFactor(num) {
+      return (Number.isFinite(num) ? num : 2.0).toFixed(1).replace(".", ",") + "x";
+    }
+
+    function calcGetStageName(factor) {
+      const f = Math.round(factor * 10) / 10;
+      if (f === 1.5) return "Enge Freunde";
+      if (f === 2.0) return "Freundschaftspreis";
+      if (f === 2.5) return "Bekannte";
+      if (f === 3.0) return "Extern";
+      if (f < 2.0) return "Enge Freunde +";
+      if (f < 2.5) return "Freundschaftspreis +";
+      if (f < 3.0) return "Bekannte +";
+      return "Extern +";
+    }
+
+    function calcGetLocalDateTimeIso(dateObj) {
+      const d = dateObj || new Date();
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      const hours = String(d.getHours()).padStart(2, "0");
+      const mins = String(d.getMinutes()).padStart(2, "0");
+      return `${year}-${month}-${day}T${hours}:${mins}`;
+    }
+
+    function calcFormatGermanDateTime(isoVal) {
+      if (!isoVal || typeof isoVal !== "string" || isoVal.indexOf("T") === -1) {
+        return calcFormatGermanDateTime(calcGetLocalDateTimeIso(new Date()));
+      }
+      const parts = isoVal.split("T");
+      const dateParts = parts[0].split("-");
+      const timePart = parts[1].slice(0, 5);
+      if (dateParts.length !== 3) return isoVal;
+      return `${dateParts[2]}.${dateParts[1]}.${dateParts[0]}, ${timePart} Uhr`;
+    }
+
+    let calcIsPaidManuallyOverridden = false;
+    let calcCurrentExportText = "";
+    let calcLatestSnapshot = null;
+
+    window.calcSwitchSubTab = function(target) {
+      const viewCalc = document.getElementById("calcViewCalc");
+      const viewProfit = document.getElementById("calcViewProfit");
+      const btnCalc = document.getElementById("calcTabCalcBtn");
+      const btnProfit = document.getElementById("calcTabProfitBtn");
+      if (!viewCalc || !viewProfit) return;
+
+      if (target === "profit") {
+        viewCalc.classList.add("hidden");
+        viewProfit.classList.remove("hidden");
+        btnCalc.classList.remove("bg-[#22211F]", "text-white");
+        btnCalc.classList.add("text-[#6E6A63]");
+        btnProfit.classList.add("bg-[#22211F]", "text-white");
+        btnProfit.classList.remove("text-[#6E6A63]");
+      } else {
+        viewProfit.classList.add("hidden");
+        viewCalc.classList.remove("hidden");
+        btnProfit.classList.remove("bg-[#22211F]", "text-white");
+        btnProfit.classList.add("text-[#6E6A63]");
+        btnCalc.classList.add("bg-[#22211F]", "text-white");
+        btnCalc.classList.remove("text-[#6E6A63]");
+      }
+    };
+
+    function calcSyncStageUI(factor) {
+      const f = Math.round(factor * 10) / 10;
+      const labelText = `${calcFormatFactor(f)} ${calcGetStageName(f)}`;
+      const readoutEl = document.getElementById("calcStageCurrentReadout");
+      const sliderLabelEl = document.getElementById("calcSliderValueLabel");
+      if (readoutEl) readoutEl.textContent = labelText;
+      if (sliderLabelEl) sliderLabelEl.textContent = labelText;
+
+      document.querySelectorAll(".calc-stage-btn").forEach(btn => {
+        const btnFactor = parseFloat(btn.getAttribute("data-calc-factor"));
+        const titleEl = btn.querySelector("span:first-child");
+        if (Math.abs(btnFactor - f) < 0.01) {
+          btn.classList.remove("border", "border-[#E2DFD7]", "bg-[#F7F6F2]/60");
+          btn.classList.add("border-2", "border-[#57151E]", "bg-[#EFECE6]/70");
+          if (titleEl) {
+            titleEl.classList.remove("text-[#22211F]");
+            titleEl.classList.add("text-[#57151E]");
+          }
+        } else {
+          btn.classList.remove("border-2", "border-[#57151E]", "bg-[#EFECE6]/70");
+          btn.classList.add("border", "border-[#E2DFD7]", "bg-[#F7F6F2]/60");
+          if (titleEl) {
+            titleEl.classList.remove("text-[#57151E]");
+            titleEl.classList.add("text-[#22211F]");
+          }
+        }
+      });
+    }
+
+    function calcUpdateSaveButtonsUI() {
+      const banner = document.getElementById("calcActiveTemplateBanner");
+      const primaryBtn = document.getElementById("calcPrimarySaveBtn");
+      const tab2BtnLabel = document.getElementById("calcTab2SaveBtnLabel");
+
+      const activeTpl = activeCalcTemplateId
+        ? priceCalculations.find(item => item.id === activeCalcTemplateId)
+        : null;
+
+      if (activeTpl) {
+        if (banner) {
+          banner.classList.remove("hidden");
+          const titleEl = document.getElementById("calcActiveTemplateTitle");
+          const metaEl = document.getElementById("calcActiveTemplateMeta");
+          if (titleEl) titleEl.textContent = activeTpl.title || "Unbenannte Vorlage";
+          const updStr = activeTpl.updatedAt
+            ? new Date(activeTpl.updatedAt).toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" })
+            : "";
+          if (metaEl) {
+            metaEl.textContent = updStr
+              ? `Zuletzt gespeichert: ${updStr} • Änderungen lassen sich direkt in diese Vorlage übernehmen.`
+              : "Werte wurden geladen – Änderungen können direkt gespeichert werden.";
+          }
+        }
+        if (primaryBtn) primaryBtn.textContent = "Änderungen an Vorlage speichern";
+        if (tab2BtnLabel) tab2BtnLabel.textContent = "Änderungen an Vorlage speichern";
+      } else {
+        if (banner) banner.classList.add("hidden");
+        if (primaryBtn) primaryBtn.textContent = "Berechnung als Vorlage speichern";
+        if (tab2BtnLabel) tab2BtnLabel.textContent = "Berechnung als Vorlage speichern";
+      }
+    }
+
+    function calcUpdateExportPreview(paidAmount, normalAccountAmount, profitAmount, isComplete) {
+      const dtInput = document.getElementById("calcEntryDateTimeInput");
+      const modelInput = document.getElementById("calcModelNameInput");
+      const custInput = document.getElementById("calcCustomerNameInput");
+      const previewBox = document.getElementById("calcExportPreviewBox");
+      if (!dtInput || !previewBox) return;
+
+      const formattedDate = calcFormatGermanDateTime(dtInput.value);
+      const modelName = (modelInput?.value || "").trim();
+      const customerName = (custInput?.value || "").trim();
+
+      const lines = [formattedDate];
+      if (modelName !== "") lines.push("Modell: " + modelName);
+      if (customerName !== "") lines.push("Besteller/in: " + customerName);
+      lines.push("-------------------------");
+      lines.push("Gezahlt: " + calcFormatDeNumber(paidAmount) + " €");
+      if (isComplete) {
+        lines.push("Normales Konto: " + calcFormatDeNumber(normalAccountAmount) + " €");
+        lines.push("Gewinn (Beiseite): " + calcFormatDeNumber(profitAmount) + " €");
+      } else {
+        lines.push("Normales Konto: –");
+        lines.push("Gewinn (Beiseite): –");
+      }
+
+      calcCurrentExportText = lines.join("\n");
+      previewBox.textContent = calcCurrentExportText;
+    }
+
+    function calcUpdateAll() {
+      const weightEl = document.getElementById("calcFilamentWeight");
+      if (!weightEl) return;
+
+      const rawWeightStr = weightEl.value;
+      const rawHoursStr = document.getElementById("calcPrintTimeHours").value;
+      const rawMinutesStr = document.getElementById("calcPrintTimeMinutes").value;
+      const rawLaborStr = document.getElementById("calcLaborMinutes").value;
+
+      const grams = calcGetPositiveOrZero(rawWeightStr);
+      const hours = calcGetPositiveOrZero(rawHoursStr);
+      const minutes = calcGetPositiveOrZero(rawMinutesStr);
+      const workMinutes = calcGetPositiveOrZero(rawLaborStr);
+
+      const hasPrintData = grams > 0 || hours > 0 || minutes > 0 || workMinutes > 0;
+
+      const sliderEl = document.getElementById("calcMarginSlider");
+      let factor = parseFloat(sliderEl.value);
+      if (!Number.isFinite(factor)) factor = 2.0;
+      calcSyncStageUI(factor);
+
+      const calcKgRaw = document.getElementById("calcFilamentPriceKg").value;
+      const wattsRaw = document.getElementById("calcAverageWatts").value;
+      const kwhRaw = document.getElementById("calcElectricityPriceKwh").value;
+      const wearRaw = document.getElementById("calcWearCostPerHour").value;
+      const rateRaw = document.getElementById("calcLaborRatePerHour").value;
+
+      const calcKgPrice = calcGetPositiveOrZero(calcKgRaw);
+      const powerW = calcGetPositiveOrZero(wattsRaw);
+      const kwhPrice = calcGetPositiveOrZero(kwhRaw);
+      const wearPerHour = calcGetPositiveOrZero(wearRaw);
+      const hourlyRate = calcGetPositiveOrZero(rateRaw);
+
+      document.getElementById("calcAdvancedSummaryLine").textContent =
+        `${calcFormatEur(calcKgPrice)}/kg • ${Math.round(powerW)} W • ${calcFormatEur(kwhPrice)}/kWh • Verschleiß ${calcFormatEur(wearPerHour)}/Std • Arbeit ${calcFormatEur(hourlyRate)}/Std`;
+
+      const totalHours = hours + (minutes / 60);
+      const calcFilCost = (grams / 1000) * calcKgPrice;
+      const elecCost = totalHours * (powerW / 1000) * kwhPrice;
+      const wearCost = totalHours * wearPerHour;
+      const baseCost = calcFilCost + elecCost + wearCost;
+      const workCost = (workMinutes / 60) * hourlyRate;
+      const rawSellPrice = (baseCost * factor) + workCost;
+
+      const recommendedPrice = rawSellPrice > 0
+        ? Math.ceil((rawSellPrice - 1e-9) * 2) / 2
+        : 0;
+
+      document.getElementById("calcEmptyStateCard").classList.toggle("hidden", hasPrintData);
+      document.getElementById("calcResultCard").classList.toggle("hidden", !hasPrintData);
+
+      document.getElementById("calcRecommendedPriceDisplay").textContent = calcFormatEur(recommendedPrice);
+      document.getElementById("calcRoundingNoteDisplay").textContent =
+        `Rechnerisch exakt: ${calcFormatEur(rawSellPrice)} · auf 0,50 € aufgerundet`;
+
+      document.getElementById("calcBreakdownFilament").textContent = calcFormatEur(calcFilCost);
+      document.getElementById("calcBreakdownElectricity").textContent = calcFormatEur(elecCost);
+      document.getElementById("calcBreakdownWear").textContent = calcFormatEur(wearCost);
+      document.getElementById("calcBreakdownSelfCost").textContent = calcFormatEur(baseCost);
+      document.getElementById("calcBreakdownBasisFactorLabel").textContent = `Basis × ${factor.toFixed(1).replace(".", ",")}`;
+      document.getElementById("calcBreakdownBasisFactor").textContent = calcFormatEur(baseCost * factor);
+      document.getElementById("calcBreakdownLabor").textContent = calcFormatEur(workCost);
+
+      // Tab 2 Werte
+      document.getElementById("calcTab2SummaryBadge").textContent =
+        `${grams} g • ${Math.floor(hours)} Std ${Math.round(minutes)} Min`;
+      document.getElementById("calcTab2RecommendedRef").textContent = calcFormatEur(recommendedPrice);
+      document.getElementById("calcKgRefText").textContent = `${calcFormatEur(calcKgPrice)}/kg`;
+
+      const paidInput = document.getElementById("calcPaidAmountInput");
+      const paidStatusEl = document.getElementById("calcPaidSyncStatusText");
+      const syncBtn = document.getElementById("calcSyncRecommendedBtn");
+
+      if (!calcIsPaidManuallyOverridden) {
+        paidInput.value = hasPrintData ? calcFormatDeNumber(recommendedPrice) : "";
+        paidStatusEl.textContent = "Automatisch übernommen";
+        paidStatusEl.className = "text-emerald-700";
+        syncBtn.classList.add("hidden");
+      } else {
+        paidStatusEl.textContent = "Manuell angepasst";
+        paidStatusEl.className = "text-[#57151E]";
+        syncBtn.classList.toggle("hidden", !hasPrintData);
+      }
+
+      const paidAmount = calcGetPositiveOrZero(paidInput.value);
+      document.getElementById("calcPaidSummaryHeader").textContent = calcFormatEur(paidAmount);
+
+      const actualKgInputEl = document.getElementById("calcActualFilamentKg");
+      const parsedActualKg = calcParseLocaleNumber(actualKgInputEl.value);
+      const hasActualKgPrice = Number.isFinite(parsedActualKg) && parsedActualKg >= 0;
+
+      const missingNotice = document.getElementById("calcMissingDataNotice");
+      const underpayNotice = document.getElementById("calcUnderpaymentNotice");
+      const twoAccountsGrid = document.getElementById("calcTwoAccountsGrid");
+
+      let realFilCost = null;
+      let filSavings = null;
+      let shownNormalAccount = null;
+      let shownNetProfit = null;
+      let marginAndLaborPart = null;
+
+      if (!hasActualKgPrice || !hasPrintData) {
+        document.getElementById("calcRealFilamentCostDisplay").textContent = "–";
+        const advEl = document.getElementById("calcPurchaseAdvantageDisplay");
+        advEl.textContent = "–";
+        advEl.className = "text-[#6E6A63]";
+
+        missingNotice.classList.remove("hidden");
+        underpayNotice.classList.add("hidden");
+        twoAccountsGrid.classList.add("hidden");
+
+        calcUpdateExportPreview(paidAmount, 0, 0, false);
+      } else {
+        missingNotice.classList.add("hidden");
+        twoAccountsGrid.classList.remove("hidden");
+
+        const actualKgPrice = Math.max(0, parsedActualKg);
+        realFilCost = (grams / 1000) * actualKgPrice;
+        filSavings = calcFilCost - realFilCost;
+
+        document.getElementById("calcRealFilamentCostDisplay").textContent = calcFormatEur(realFilCost);
+        const advEl = document.getElementById("calcPurchaseAdvantageDisplay");
+        advEl.textContent = filSavings >= 0 ? "+" + calcFormatEur(filSavings) : calcFormatEur(filSavings);
+        advEl.className = filSavings >= 0 ? "text-emerald-700" : "text-red-600";
+
+        const normalAccountRaw = realFilCost + elecCost + wearCost;
+        const normalAccountDisplay = Math.round(normalAccountRaw * 100) / 100;
+        const netProfitDisplay = Math.round((paidAmount - normalAccountDisplay) * 100) / 100;
+
+        document.getElementById("calcNormalListFilament").textContent = calcFormatEur(realFilCost);
+        document.getElementById("calcNormalListElectricity").textContent = calcFormatEur(elecCost);
+        document.getElementById("calcNormalListWear").textContent = calcFormatEur(wearCost);
+
+        shownNormalAccount = normalAccountDisplay;
+        shownNetProfit = netProfitDisplay;
+
+        if (paidAmount > 0 && netProfitDisplay < 0) {
+          underpayNotice.classList.remove("hidden");
+          document.getElementById("calcTargetNormalCostText").textContent = calcFormatEur(normalAccountDisplay);
+          document.getElementById("calcShortfallText").textContent = calcFormatEur(Math.abs(netProfitDisplay));
+          shownNormalAccount = Math.round(paidAmount * 100) / 100;
+          shownNetProfit = 0;
+        } else if (paidAmount === 0) {
+          underpayNotice.classList.add("hidden");
+          shownNormalAccount = normalAccountDisplay;
+          shownNetProfit = 0;
+        } else {
+          underpayNotice.classList.add("hidden");
+          shownNormalAccount = normalAccountDisplay;
+          shownNetProfit = netProfitDisplay;
+        }
+
+        marginAndLaborPart = paidAmount > 0 ? (paidAmount - baseCost) : 0;
+
+        document.getElementById("calcNormalAccountDisplay").textContent = calcFormatEur(shownNormalAccount);
+        document.getElementById("calcProfitAccountDisplay").textContent = calcFormatEur(shownNetProfit);
+        document.getElementById("calcProfitListMarginLabor").textContent = calcFormatEur(marginAndLaborPart);
+        const profitAdvEl = document.getElementById("calcProfitListAdvantage");
+        profitAdvEl.textContent = filSavings >= 0 ? "+" + calcFormatEur(filSavings) : calcFormatEur(filSavings);
+        profitAdvEl.className = filSavings >= 0 ? "text-emerald-700" : "text-red-600";
+
+        calcUpdateExportPreview(paidAmount, shownNormalAccount, shownNetProfit, true);
+      }
+
+      const modelName = (document.getElementById("calcModelNameTop").value || document.getElementById("calcModelNameInput").value || "").trim();
+      const notes = (document.getElementById("calcTemplateNotes").value || "").trim();
+      const customerName = (document.getElementById("calcCustomerNameInput").value || "").trim();
+      const entryDateTime = document.getElementById("calcEntryDateTimeInput").value || calcGetLocalDateTimeIso(new Date());
+
+      calcLatestSnapshot = {
+        modelName,
+        notes,
+        customerName,
+        entryDateTime,
+        inputs: {
+          filamentWeight: rawWeightStr,
+          printTimeHours: rawHoursStr,
+          printTimeMinutes: rawMinutesStr,
+          laborMinutes: rawLaborStr,
+          marginFactor: Number(factor.toFixed(1)),
+          calcFilamentPriceKg: calcKgRaw,
+          averageWatts: wattsRaw,
+          electricityPriceKwh: kwhRaw,
+          wearCostPerHour: wearRaw,
+          laborRatePerHour: rateRaw,
+          actualFilamentKg: actualKgInputEl.value,
+          paidAmount: paidInput.value,
+          isPaidManuallyOverridden: calcIsPaidManuallyOverridden
+        },
+        results: {
+          grams,
+          hours,
+          minutes,
+          workMinutes,
+          factor: Number(factor.toFixed(1)),
+          stageName: calcGetStageName(factor),
+          calcKgPrice,
+          powerW,
+          kwhPrice,
+          wearPerHour,
+          hourlyRate,
+          calcFilCost: Number(calcFilCost.toFixed(2)),
+          elecCost: Number(elecCost.toFixed(2)),
+          wearCost: Number(wearCost.toFixed(2)),
+          baseCost: Number(baseCost.toFixed(2)),
+          basisWithFactor: Number((baseCost * factor).toFixed(2)),
+          workCost: Number(workCost.toFixed(2)),
+          rawSellPrice: Number(rawSellPrice.toFixed(2)),
+          recommendedPrice: Number(recommendedPrice.toFixed(2)),
+          hasProfitSplit: !!(hasActualKgPrice && hasPrintData),
+          actualKgPrice: hasActualKgPrice ? Math.max(0, parsedActualKg) : null,
+          realFilCost: realFilCost !== null ? Number(realFilCost.toFixed(2)) : null,
+          filSavings: filSavings !== null ? Number(filSavings.toFixed(2)) : null,
+          paidAmount: Number(paidAmount.toFixed(2)),
+          normalAccount: shownNormalAccount,
+          netProfit: shownNetProfit,
+          marginAndLaborPart: marginAndLaborPart !== null ? Number(marginAndLaborPart.toFixed(2)) : null
+        }
+      };
+    }
+
+    window.refreshCalculatorInventoryPicker = function() {
+      const wrap = document.getElementById("calcInventoryPickerWrap");
+      const sel = document.getElementById("calcInventoryFilamentSelect");
+      if (!wrap || !sel || !isAdminLoggedIn) return;
+
+      const withCosts = sortFilaments(filaments).filter(f => {
+        const c = filamentCosts[f.id];
+        return c && typeof c.purchasePrice === "number" && c.purchasePrice >= 0;
+      });
+
+      if (withCosts.length === 0) {
+        wrap.classList.add("hidden");
+        return;
+      }
+
+      wrap.classList.remove("hidden");
+      const prevVal = sel.value;
+      sel.innerHTML = `<option value="">— Filamentrolle auswählen oder unten manuell eingeben —</option>` +
+        withCosts.map(f => {
+          const c = filamentCosts[f.id];
+          const brandStr = c.brand ? ` [${escapeHtml(c.brand)}]` : "";
+          const ekStr = calcFormatDeNumber(c.purchasePrice);
+          return `<option value="${f.id}">${escapeHtml(f.name)} (${escapeHtml(f.material)})${brandStr} – ${ekStr} €/kg</option>`;
+        }).join("");
+      if ([...sel.options].some(o => o.value === prevVal)) {
+        sel.value = prevVal;
+      }
+    };
+
+    window.calcApplyInventoryFilament = function(filId) {
+      if (!isAdminLoggedIn || !filId) return;
+      const c = filamentCosts[filId];
+      if (!c || typeof c.purchasePrice !== "number") return;
+      const inputEl = document.getElementById("calcActualFilamentKg");
+      if (inputEl) {
+        inputEl.value = calcFormatDeNumber(c.purchasePrice);
+        calcUpdateAll();
+        const f = filaments.find(x => x.id === filId);
+        if (f) {
+          showToast(`EK ${calcFormatDeNumber(c.purchasePrice)} €/kg (${f.name}) übernommen.`);
+        }
+      }
+    };
+
+    function buildTemplateRecordFromSnapshot(existingRecord = null, customTitle = null) {
+      calcUpdateAll();
+      const snap = calcLatestSnapshot;
+      const now = Date.now();
+      const fallbackTitle = `Kalkulation (${calcFormatGermanDateTime(snap.entryDateTime)})`;
+      const resolvedTitle = (customTitle !== null ? customTitle : snap.modelName).trim() || fallbackTitle;
+
+      return {
+        title: resolvedTitle,
+        modelName: snap.modelName || resolvedTitle,
+        notes: snap.notes || "",
+        customerName: snap.customerName || "",
+        entryDateTime: snap.entryDateTime || calcGetLocalDateTimeIso(new Date()),
+        inputs: { ...snap.inputs },
+        results: { ...snap.results },
+        createdAt: existingRecord && existingRecord.createdAt ? existingRecord.createdAt : now,
+        updatedAt: now
+      };
+    }
+
+    window.calcSaveTemplateAction = async function() {
+      if (!isAdminLoggedIn) return;
+      if (activeCalcTemplateId) {
+        await window.calcUpdateActiveTemplate();
+      } else {
+        await window.calcSaveAsNewTemplate();
+      }
+    };
+
+    window.calcSaveAsNewTemplate = async function() {
+      if (!isAdminLoggedIn) return;
+      const record = buildTemplateRecordFromSnapshot(null, null);
+
+      try {
+        if (isCloudConfigured) {
+          const docRef = await addDoc(collection(db, "price_calculations"), record);
+          activeCalcTemplateId = docRef.id;
+        } else {
+          const newId = "calc-" + Date.now();
+          priceCalculations.unshift({ id: newId, ...record });
+          activeCalcTemplateId = newId;
+          syncDemoStorage();
+        }
+        calcUpdateSaveButtonsUI();
+        renderSavedCalculationsList();
+        showToast(`Vorlage „${record.title}“ gespeichert!`);
+      } catch (err) {
+        console.error("Fehler beim Speichern der Berechnung:", err);
+        showToast("Fehler beim Speichern: " + (err?.message || "Bitte Firestore-Regeln prüfen."));
+      }
+    };
+
+    window.calcUpdateActiveTemplate = async function() {
+      if (!isAdminLoggedIn || !activeCalcTemplateId) return;
+      const existing = priceCalculations.find(item => item.id === activeCalcTemplateId);
+      if (!existing) {
+        await window.calcSaveAsNewTemplate();
+        return;
+      }
+
+      const record = buildTemplateRecordFromSnapshot(existing, null);
+      try {
+        if (isCloudConfigured) {
+          await setDoc(doc(db, "price_calculations", activeCalcTemplateId), record);
+        } else {
+          const idx = priceCalculations.findIndex(item => item.id === activeCalcTemplateId);
+          if (idx > -1) {
+            priceCalculations[idx] = { id: activeCalcTemplateId, ...record };
+          }
+          syncDemoStorage();
+        }
+        calcUpdateSaveButtonsUI();
+        renderSavedCalculationsList();
+        showToast(`Vorlage „${record.title}“ aktualisiert!`);
+      } catch (err) {
+        console.error("Fehler beim Aktualisieren der Vorlage:", err);
+        showToast("Fehler beim Aktualisieren: " + (err?.message || "Zugriff nicht möglich"));
+      }
+    };
+
+    window.calcUnloadActiveTemplate = function() {
+      activeCalcTemplateId = null;
+      calcUpdateSaveButtonsUI();
+      renderSavedCalculationsList();
+    };
+
+    window.calcLoadTemplate = function(templateId) {
+      if (!isAdminLoggedIn) return;
+      const tpl = priceCalculations.find(item => item.id === templateId);
+      if (!tpl) return;
+
+      const inp = tpl.inputs || {};
+      const res = tpl.results || {};
+
+      activeCalcTemplateId = tpl.id;
+      calcIsPaidManuallyOverridden = !!inp.isPaidManuallyOverridden;
+
+      const resolvedModelName = tpl.modelName || tpl.title || "";
+      document.getElementById("calcModelNameTop").value = resolvedModelName;
+      document.getElementById("calcModelNameInput").value = resolvedModelName;
+      document.getElementById("calcTemplateNotes").value = tpl.notes || "";
+      document.getElementById("calcCustomerNameInput").value = tpl.customerName || "";
+      document.getElementById("calcEntryDateTimeInput").value = tpl.entryDateTime || calcGetLocalDateTimeIso(new Date());
+
+      document.getElementById("calcFilamentWeight").value = inp.filamentWeight ?? (res.grams ? String(res.grams) : "");
+      document.getElementById("calcPrintTimeHours").value = inp.printTimeHours ?? (res.hours ? String(res.hours) : "");
+      document.getElementById("calcPrintTimeMinutes").value = inp.printTimeMinutes ?? (res.minutes ? String(res.minutes) : "");
+      document.getElementById("calcLaborMinutes").value = inp.laborMinutes ?? (res.workMinutes ? String(res.workMinutes) : "");
+      document.getElementById("calcMarginSlider").value = String(inp.marginFactor ?? res.factor ?? 2.0);
+
+      document.getElementById("calcFilamentPriceKg").value = inp.calcFilamentPriceKg ?? "20,00";
+      document.getElementById("calcAverageWatts").value = inp.averageWatts ?? "110";
+      document.getElementById("calcElectricityPriceKwh").value = inp.electricityPriceKwh ?? "0,35";
+      document.getElementById("calcWearCostPerHour").value = inp.wearCostPerHour ?? "0,20";
+      document.getElementById("calcLaborRatePerHour").value = inp.laborRatePerHour ?? "15,00";
+
+      document.getElementById("calcActualFilamentKg").value = inp.actualFilamentKg ?? "";
+      if (calcIsPaidManuallyOverridden) {
+        document.getElementById("calcPaidAmountInput").value = inp.paidAmount ?? "";
+      }
+
+      const invPicker = document.getElementById("calcInventoryFilamentSelect");
+      if (invPicker) invPicker.value = "";
+
+      calcUpdateAll();
+      calcUpdateSaveButtonsUI();
+      renderSavedCalculationsList();
+
+      const calcTopEl = document.getElementById("admin-view-calculator");
+      if (calcTopEl) {
+        calcTopEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      showToast(`Vorlage „${tpl.title || resolvedModelName}“ geladen.`);
+    };
+
+    window.calcDuplicateTemplate = async function(templateId) {
+      if (!isAdminLoggedIn) return;
+      const tpl = priceCalculations.find(item => item.id === templateId);
+      if (!tpl) return;
+
+      const now = Date.now();
+      const copyTitle = `${tpl.title || tpl.modelName || "Kalkulation"} (Kopie)`;
+      const copyRecord = {
+        title: copyTitle,
+        modelName: copyTitle,
+        notes: tpl.notes || "",
+        customerName: tpl.customerName || "",
+        entryDateTime: calcGetLocalDateTimeIso(new Date()),
+        inputs: { ...(tpl.inputs || {}) },
+        results: { ...(tpl.results || {}) },
+        createdAt: now,
+        updatedAt: now
+      };
+
+      try {
+        let newId = null;
+        if (isCloudConfigured) {
+          const docRef = await addDoc(collection(db, "price_calculations"), copyRecord);
+          newId = docRef.id;
+        } else {
+          newId = "calc-" + now;
+          priceCalculations.unshift({ id: newId, ...copyRecord });
+          syncDemoStorage();
+        }
+        if (newId) {
+          window.calcLoadTemplate(newId);
+        }
+        showToast(`Kopie „${copyTitle}“ erstellt und geladen.`);
+      } catch (err) {
+        showToast("Fehler beim Duplizieren: " + (err?.message || ""));
+      }
+    };
+
+    window.calcDeleteTemplate = async function(templateId) {
+      if (!isAdminLoggedIn) return;
+      const tpl = priceCalculations.find(item => item.id === templateId);
+      if (!confirm(`Gespeicherte Berechnung „${tpl?.title || "Vorlage"}“ wirklich löschen?`)) return;
+
+      try {
+        if (isCloudConfigured) {
+          await deleteDoc(doc(db, "price_calculations", templateId));
+        } else {
+          priceCalculations = priceCalculations.filter(item => item.id !== templateId);
+          syncDemoStorage();
+        }
+        if (activeCalcTemplateId === templateId) {
+          activeCalcTemplateId = null;
+          calcUpdateSaveButtonsUI();
+        }
+        expandedCalcTemplateIds.delete(templateId);
+        renderSavedCalculationsList();
+        showToast("Vorlage gelöscht.");
+      } catch (err) {
+        showToast("Fehler beim Löschen: " + (err?.message || ""));
+      }
+    };
+
+    window.calcToggleTemplateDetails = function(templateId) {
+      if (expandedCalcTemplateIds.has(templateId)) {
+        expandedCalcTemplateIds.delete(templateId);
+      } else {
+        expandedCalcTemplateIds.add(templateId);
+      }
+      renderSavedCalculationsList();
+    };
+
+    window.renderSavedCalculationsList = function() {
+      const countEl = document.getElementById("savedCalcCount");
+      const listEl = document.getElementById("savedCalculationsList");
+      if (!listEl || !isAdminLoggedIn) return;
+
+      if (countEl) countEl.textContent = priceCalculations.length;
+
+      const searchTerm = (document.getElementById("calcTemplateSearchInput")?.value || "").trim().toLowerCase();
+      const sorted = [...priceCalculations].sort((a, b) => (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0));
+      const filtered = searchTerm
+        ? sorted.filter(item => {
+            const hay = [item.title, item.modelName, item.customerName, item.notes]
+              .filter(Boolean)
+              .join(" ")
+              .toLowerCase();
+            return hay.includes(searchTerm);
+          })
+        : sorted;
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = priceCalculations.length === 0
+          ? `<div class="p-6 rounded-2xl bg-[#F7F6F2] border border-dashed border-[#D6D1C7] text-center text-xs text-[#6E6A63] leading-relaxed">
+               Noch keine Berechnungen gespeichert.<br/>Berechne links einen Preis und klicke auf <strong class="text-[#22211F]">„Berechnung als Vorlage speichern“</strong>.
+             </div>`
+          : `<p class="py-4 text-center text-xs text-[#6E6A63]">Keine passenden Vorlagen für „${escapeHtml(searchTerm)}“ gefunden.</p>`;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map(item => {
+        const res = item.results || {};
+        const inp = item.inputs || {};
+        const isActive = item.id === activeCalcTemplateId;
+        const isExpanded = expandedCalcTemplateIds.has(item.id);
+        const safeId = escapeHtml(String(item.id).replace(/\\/g, "\\\\").replace(/'/g, "\\'"));
+
+        const dateLabel = item.entryDateTime
+          ? calcFormatGermanDateTime(item.entryDateTime)
+          : (item.updatedAt ? new Date(item.updatedAt).toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" }) : "");
+
+        const recPriceStr = calcFormatEur(res.recommendedPrice || 0);
+        const factorVal = Number(res.factor || inp.marginFactor || 2.0);
+        const stageLabel = res.stageName || calcGetStageName(factorVal);
+
+        const profitBadge = (res.hasProfitSplit && typeof res.netProfit === "number")
+          ? `<span class="px-2 py-0.5 rounded-full bg-[#EFECE6] text-[#57151E] text-[10px] font-semibold">Gewinn: ${calcFormatEur(res.netProfit)}</span>`
+          : "";
+
+        return `
+          <div class="p-4 rounded-2xl border transition space-y-3 ${
+            isActive
+              ? "border-2 border-[#57151E] bg-[#EFECE6]/45"
+              : "border-[#E2DFD7] bg-[#F7F6F2]/60 hover:bg-[#F7F6F2]"
+          }">
+            <div class="flex items-start justify-between gap-2.5">
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  ${isActive ? `<span class="px-2 py-0.5 rounded-full bg-[#57151E] text-white text-[9px] font-bold uppercase tracking-wider">Aktiv</span>` : ""}
+                  <h5 class="font-display text-sm font-bold text-[#22211F] truncate">${escapeHtml(item.title || item.modelName || "Unbenannte Berechnung")}</h5>
+                </div>
+                <div class="text-[11px] text-[#6E6A63] mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                  ${dateLabel ? `<span>${escapeHtml(dateLabel)}</span>` : ""}
+                  ${item.customerName ? `<span>• Besteller/in: <strong class="text-[#22211F]">${escapeHtml(item.customerName)}</strong></span>` : ""}
+                </div>
+              </div>
+              <div class="text-right shrink-0 space-y-1">
+                <div class="px-2.5 py-1 rounded-full bg-[#22211F] text-white font-display text-xs font-bold">${recPriceStr}</div>
+                ${profitBadge ? `<div>${profitBadge}</div>` : ""}
+              </div>
+            </div>
+
+            <!-- Kompakte Werte-Übersicht -->
+            <div class="flex flex-wrap items-center gap-1.5 text-[11px] text-[#22211F]">
+              <span class="px-2 py-0.5 rounded-lg bg-white border border-[#E2DFD7]">${res.grams || 0} g</span>
+              <span class="px-2 py-0.5 rounded-lg bg-white border border-[#E2DFD7]">${Math.floor(res.hours || 0)} Std ${Math.round(res.minutes || 0)} Min</span>
+              <span class="px-2 py-0.5 rounded-lg bg-white border border-[#E2DFD7]">${res.workMinutes || 0} Min Arbeit</span>
+              <span class="px-2 py-0.5 rounded-lg bg-white border border-[#E2DFD7] font-semibold text-[#57151E]">${calcFormatFactor(factorVal)} (${escapeHtml(stageLabel)})</span>
+            </div>
+
+            ${item.notes ? `<p class="text-[11px] text-[#6E6A63] bg-white px-2.5 py-1.5 rounded-xl border border-[#E2DFD7]">Notiz: ${escapeHtml(item.notes)}</p>` : ""}
+
+            <!-- Aufklappbarer vollständiger Rechenweg -->
+            <div>
+              <button type="button" onclick="calcToggleTemplateDetails('${safeId}')" class="text-[11px] font-semibold text-[#57151E] hover:underline inline-flex items-center gap-1">
+                <span>${isExpanded ? "Rechenweg & Werte ausblenden ▲" : "Rechenweg & Werte nachvollziehen ▼"}</span>
+              </button>
+
+              ${isExpanded ? `
+                <div class="mt-2 p-3 rounded-xl bg-white border border-[#E2DFD7] space-y-1.5 text-[11px] text-[#6E6A63]">
+                  <div class="font-semibold text-[#22211F]">Kalkulationsgrundlage:</div>
+                  <div class="flex justify-between"><span>Filament (${res.grams || 0} g @ ${calcFormatEur(res.calcKgPrice || 20)}/kg):</span><strong class="text-[#22211F]">${calcFormatEur(res.calcFilCost || 0)}</strong></div>
+                  <div class="flex justify-between"><span>Strom (${Math.round(res.powerW || 110)} W @ ${calcFormatEur(res.kwhPrice || 0.35)}/kWh):</span><strong class="text-[#22211F]">${calcFormatEur(res.elecCost || 0)}</strong></div>
+                  <div class="flex justify-between"><span>Verschleiß (${calcFormatEur(res.wearPerHour || 0.2)}/Std):</span><strong class="text-[#22211F]">${calcFormatEur(res.wearCost || 0)}</strong></div>
+                  <div class="flex justify-between border-t border-[#F0EEE9] pt-1"><span>Selbstkosten Basis:</span><strong class="text-[#22211F]">${calcFormatEur(res.baseCost || 0)}</strong></div>
+                  <div class="flex justify-between"><span>Basis × ${calcFormatFactor(factorVal)}:</span><strong class="text-[#57151E]">${calcFormatEur(res.basisWithFactor || 0)}</strong></div>
+                  <div class="flex justify-between"><span>Arbeitszeit (${res.workMinutes || 0} Min @ ${calcFormatEur(res.hourlyRate || 15)}/Std):</span><strong class="text-[#22211F]">${calcFormatEur(res.workCost || 0)}</strong></div>
+                  <div class="flex justify-between border-t border-[#F0EEE9] pt-1"><span>Exakt → Empfohlen (auf 0,50 €):</span><strong class="text-[#22211F]">${calcFormatEur(res.rawSellPrice || 0)} → ${recPriceStr}</strong></div>
+                  ${res.hasProfitSplit ? `
+                    <div class="font-semibold text-[#22211F] pt-1.5 border-t border-[#E2DFD7]">Gewinn &amp; Konto-Aufteilung:</div>
+                    <div class="flex justify-between"><span>Tatsächlicher EK (${calcFormatEur(res.actualKgPrice || 0)}/kg):</span><strong class="text-[#22211F]">Reales Fil.: ${calcFormatEur(res.realFilCost || 0)}</strong></div>
+                    <div class="flex justify-between"><span>Gezahlter Betrag:</span><strong class="text-[#22211F]">${calcFormatEur(res.paidAmount || 0)}</strong></div>
+                    <div class="flex justify-between"><span>Normales Konto (Kosten):</span><strong class="text-[#22211F]">${calcFormatEur(res.normalAccount || 0)}</strong></div>
+                    <div class="flex justify-between"><span>Beiseite legen (Reingewinn):</span><strong class="text-[#57151E]">${calcFormatEur(res.netProfit || 0)}</strong></div>
+                  ` : ""}
+                </div>
+              ` : ""}
+            </div>
+
+            <!-- Aktions-Buttons -->
+            <div class="flex items-center justify-between gap-2 pt-1 border-t border-[#E2DFD7]/80">
+              <button type="button" onclick="calcLoadTemplate('${safeId}')" class="px-3.5 py-1.5 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white text-[11px] font-semibold transition">
+                Laden &amp; bearbeiten
+              </button>
+              <div class="flex items-center gap-1.5">
+                <button type="button" onclick="calcDuplicateTemplate('${safeId}')" class="px-2.5 py-1.5 rounded-full bg-white hover:bg-[#EFECE6] text-[#22211F] border border-[#E2DFD7] text-[11px] font-medium transition" title="Als Kopie duplizieren">
+                  Duplizieren
+                </button>
+                <button type="button" onclick="calcDeleteTemplate('${safeId}')" class="px-2.5 py-1.5 rounded-full text-[11px] text-red-600 hover:bg-red-50 transition" title="Vorlage löschen">
+                  Löschen
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    };
+
+    // Event-Listener für den Preisrechner initialisieren
+    (function initStudioPriceCalculator() {
+      const weightEl = document.getElementById("calcFilamentWeight");
+      if (!weightEl) return;
+
+      const dtInput = document.getElementById("calcEntryDateTimeInput");
+      if (dtInput && !dtInput.value) {
+        dtInput.value = calcGetLocalDateTimeIso(new Date());
+      }
+
+      // Bidirektionale Synchronisation des Modellnamens zwischen Ansicht 1 & Ansicht 2
+      const modelTop = document.getElementById("calcModelNameTop");
+      const modelTab2 = document.getElementById("calcModelNameInput");
+      if (modelTop && modelTab2) {
+        modelTop.addEventListener("input", () => {
+          modelTab2.value = modelTop.value;
+          calcUpdateAll();
+        });
+        modelTab2.addEventListener("input", () => {
+          modelTop.value = modelTab2.value;
+          calcUpdateAll();
+        });
+      }
+
+      document.querySelectorAll(".calc-stage-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.getElementById("calcMarginSlider").value = btn.getAttribute("data-calc-factor");
+          calcUpdateAll();
+        });
+      });
+
+      document.getElementById("calcMarginSlider").addEventListener("input", calcUpdateAll);
+
+      document.getElementById("calcGoToTab2Btn").addEventListener("click", () => {
+        window.calcSwitchSubTab("profit");
+        document.getElementById("admin-view-calculator").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      document.getElementById("calcToggleAdvancedBtn").addEventListener("click", () => {
+        const panel = document.getElementById("calcAdvancedPanel");
+        const chevron = document.getElementById("calcAdvancedChevron");
+        const btn = document.getElementById("calcToggleAdvancedBtn");
+        const isHidden = panel.classList.contains("hidden");
+        panel.classList.toggle("hidden", !isHidden);
+        chevron.classList.toggle("rotate-180", isHidden);
+        btn.setAttribute("aria-expanded", String(isHidden));
+      });
+
+      const liveIds = [
+        "calcFilamentWeight", "calcPrintTimeHours", "calcPrintTimeMinutes", "calcLaborMinutes",
+        "calcFilamentPriceKg", "calcAverageWatts", "calcElectricityPriceKwh",
+        "calcWearCostPerHour", "calcLaborRatePerHour", "calcActualFilamentKg",
+        "calcTemplateNotes", "calcCustomerNameInput", "calcEntryDateTimeInput"
+      ];
+      liveIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener("input", calcUpdateAll);
+          el.addEventListener("change", calcUpdateAll);
+        }
+      });
+
+      document.getElementById("calcPaidAmountInput").addEventListener("input", () => {
+        calcIsPaidManuallyOverridden = true;
+        calcUpdateAll();
+      });
+
+      document.getElementById("calcSyncRecommendedBtn").addEventListener("click", () => {
+        calcIsPaidManuallyOverridden = false;
+        calcUpdateAll();
+      });
+
+      document.getElementById("calcSetNowBtn").addEventListener("click", () => {
+        document.getElementById("calcEntryDateTimeInput").value = calcGetLocalDateTimeIso(new Date());
+        calcUpdateAll();
+      });
+
+      document.getElementById("calcNussknackerTestBtn").addEventListener("click", () => {
+        activeCalcTemplateId = null;
+        calcIsPaidManuallyOverridden = false;
+        document.getElementById("calcModelNameTop").value = "Nussknacker (Test)";
+        document.getElementById("calcModelNameInput").value = "Nussknacker (Test)";
+        document.getElementById("calcTemplateNotes").value = "";
+        document.getElementById("calcFilamentWeight").value = "360";
+        document.getElementById("calcPrintTimeHours").value = "12";
+        document.getElementById("calcPrintTimeMinutes").value = "0";
+        document.getElementById("calcLaborMinutes").value = "15";
+        document.getElementById("calcMarginSlider").value = "2.0";
+        document.getElementById("calcEntryDateTimeInput").value = calcGetLocalDateTimeIso(new Date());
+        calcUpdateAll();
+        calcUpdateSaveButtonsUI();
+        renderSavedCalculationsList();
+        showToast("Nussknacker-Testwerte geladen.");
+      });
+
+      document.getElementById("calcResetBtn").addEventListener("click", () => {
+        activeCalcTemplateId = null;
+        calcIsPaidManuallyOverridden = false;
+        document.getElementById("calcModelNameTop").value = "";
+        document.getElementById("calcModelNameInput").value = "";
+        document.getElementById("calcTemplateNotes").value = "";
+        document.getElementById("calcFilamentWeight").value = "";
+        document.getElementById("calcPrintTimeHours").value = "";
+        document.getElementById("calcPrintTimeMinutes").value = "";
+        document.getElementById("calcLaborMinutes").value = "";
+        document.getElementById("calcMarginSlider").value = "2.0";
+        document.getElementById("calcActualFilamentKg").value = "";
+        document.getElementById("calcPaidAmountInput").value = "";
+        document.getElementById("calcCustomerNameInput").value = "";
+        const invPicker = document.getElementById("calcInventoryFilamentSelect");
+        if (invPicker) invPicker.value = "";
+        document.getElementById("calcEntryDateTimeInput").value = calcGetLocalDateTimeIso(new Date());
+        calcUpdateAll();
+        calcUpdateSaveButtonsUI();
+        renderSavedCalculationsList();
+        showToast("Preisrechner zurückgesetzt.");
+      });
+
+      document.getElementById("calcCopyEntryBtn").addEventListener("click", () => {
+        const textToCopy = calcCurrentExportText || document.getElementById("calcExportPreviewBox").textContent;
+        const labelEl = document.getElementById("calcCopyBtnLabel");
+        const onSuccess = () => {
+          if (labelEl) labelEl.textContent = "✓ Text kopiert!";
+          showToast("Eintrag in Zwischenablage kopiert!");
+          clearTimeout(window._calcCopyTimer);
+          window._calcCopyTimer = setTimeout(() => {
+            if (labelEl) labelEl.textContent = "Text kopieren";
+          }, 2200);
+        };
+
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+          navigator.clipboard.writeText(textToCopy).then(onSuccess).catch(() => {
+            const ta = document.createElement("textarea");
+            ta.value = textToCopy;
+            ta.setAttribute("readonly", "");
+            ta.style.position = "fixed";
+            ta.style.left = "-9999px";
+            document.body.appendChild(ta);
+            ta.select();
+            if (document.execCommand("copy")) onSuccess();
+            document.body.removeChild(ta);
+          });
+        }
+      });
+
+      calcUpdateAll();
+      calcUpdateSaveButtonsUI();
+    })();
   </script>
 </body>
 </html>
