@@ -2,8 +2,9 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#F7F6F2" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="L&D PrintLab" />
@@ -126,23 +127,26 @@
        ===================================================================== -->
   <header class="sticky top-0 z-30 bg-[#F7F6F2]/95 backdrop-blur-md border-b border-[#E2DFD7]">
     <div class="max-w-6xl mx-auto px-3 sm:px-6 pt-1.5 pb-2.5">
-      <div class="relative flex flex-col items-center justify-center h-[68px] sm:h-[84px]">
+      <div class="relative flex flex-col items-center justify-center min-h-[68px] sm:min-h-[84px] py-1">
         <!-- Zentriertes L&D PrintLab Studio Marken-Logo -->
         <button onclick="switchTab('catalog')" class="flex flex-col items-center text-center group focus:outline-none">
-          <img src="logo.png" alt="L&D PrintLab Studio Logo" class="site-logo transition-transform duration-200 group-hover:scale-[1.02]" />
+          <img src="logo.png" alt="L&D PrintLab Studio Logo"
+            onerror="this.style.display='none'; const fb=document.getElementById('logoTextFallback'); if(fb) fb.classList.remove('hidden');"
+            class="site-logo transition-transform duration-200 group-hover:scale-[1.02]" />
+          <span id="logoTextFallback" class="hidden font-brand font-semibold text-lg sm:text-xl tracking-wide text-[#57151E] py-2">L&amp;D PrintLab Studio</span>
         </button>
       </div>
 
       <!-- Navigations-Tabs (passen auf Mobilgeräten nebeneinander ohne Scrollen in voller Buttongröße) -->
-      <nav class="flex items-center justify-center gap-1.5 sm:gap-2 mt-1.5 w-full">
-        <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-[#22211F] text-white transition whitespace-nowrap">
+      <nav class="flex items-center justify-center gap-1 sm:gap-2 mt-1.5 w-full">
+        <button onclick="switchTab('catalog')" id="nav-catalog" class="nav-btn px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium bg-[#22211F] text-white transition whitespace-nowrap">
           Katalog
         </button>
-        <button onclick="switchTab('custom-link')" id="nav-custom-link" class="nav-btn px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
+        <button onclick="switchTab('custom-link')" id="nav-custom-link" class="nav-btn px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
           Wunschmodell
         </button>
-        <button onclick="switchTab('my-orders')" id="nav-my-orders" class="nav-btn inline-flex items-center justify-center px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
-          <span>Anfragestatus</span><span id="myOrdersBadge" class="hidden inline-flex items-center justify-center ml-1.5 px-1.5 py-0.5 text-[10px] sm:text-[11px] leading-none rounded-full bg-[#57151E] text-white">0</span>
+        <button onclick="switchTab('my-orders')" id="nav-my-orders" class="nav-btn inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium text-[#6E6A63] hover:text-[#22211F] hover:bg-[#EFECE6] transition whitespace-nowrap">
+          <span>Anfragestatus</span><span id="myOrdersBadge" class="hidden inline-flex items-center justify-center ml-1 sm:ml-1.5 px-1.5 py-0.5 text-[10px] sm:text-[11px] leading-none rounded-full bg-[#57151E] text-white">0</span>
         </button>
       </nav>
     </div>
@@ -166,7 +170,7 @@
       <!-- Filterleiste -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div id="categoryPills" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1"></div>
-        <button type="button" onclick="openFilamentGuideModal()" class="self-start sm:self-auto shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[#EFECE6] text-[#22211F] text-xs font-medium border border-[#E2DFD7] shadow-2xs transition">
+        <button type="button" onclick="openFilamentGuideModal()" class="self-start sm:self-auto shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[#EFECE6] text-[#22211F] text-xs font-medium border border-[#E2DFD7] shadow-sm transition">
           <svg class="w-3.5 h-3.5 text-[#57151E]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
           </svg>
@@ -322,7 +326,7 @@
           <div id="customEmailTemplateSection" class="hidden rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/80 p-4 sm:p-5 space-y-3.5">
             <div class="space-y-2.5">
               <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-white border border-[#E2DFD7] text-[#57151E] flex items-center justify-center shrink-0 shadow-2xs">
+                <div class="w-9 h-9 rounded-xl bg-white border border-[#E2DFD7] text-[#57151E] flex items-center justify-center shrink-0 shadow-sm">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                   </svg>
@@ -343,7 +347,7 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-2.5">
-              <a id="customDirectEmailBtn" href="mailto:dorian3d-print@web.de" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#57151E] hover:bg-[#3F0E15] text-white font-medium text-xs transition shadow-2xs">
+              <a id="customDirectEmailBtn" href="mailto:dorian3d-print@web.de" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#57151E] hover:bg-[#3F0E15] text-white font-medium text-xs transition shadow-sm">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                 </svg>
@@ -358,7 +362,7 @@
               <p class="text-xs text-[#6E6A63] leading-relaxed">
                 <strong class="text-[#22211F]">E-Mail abgeschickt?</strong> Bestätige hier deine E-Mail-Anfrage, damit wir sie direkt im Studio-System sehen und ein <strong class="text-[#22211F]">Anfragestatus</strong> zur Nachverfolgung für dich erstellt wird:
               </p>
-              <button type="button" id="customFileConfirmBtn" onclick="submitCustomFileRequest()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-xs sm:text-sm transition shadow-2xs">
+              <button type="submit" id="customFileConfirmBtn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-xs sm:text-sm transition shadow-sm cursor-pointer touch-manipulation">
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -585,7 +589,7 @@
                     <span>Zweifarbiges Filament</span>
                   </label>
                   <div class="flex items-center gap-1.5">
-                    <span id="filPreviewCircle" class="w-6 h-6 rounded-full border border-black/20 shadow-2xs shrink-0" style="background:#1E1E1E"></span>
+                    <span id="filPreviewCircle" class="w-6 h-6 rounded-full border border-black/20 shadow-sm shrink-0" style="background:#1E1E1E"></span>
                   </div>
                 </div>
 
@@ -646,9 +650,15 @@
                 <h3 class="font-display text-lg font-bold text-[#22211F]">Euer Filament-Lager (<span id="adminFilCount">0</span>)</h3>
                 <p id="adminFilInventorySummary" class="text-[11px] text-[#6E6A63] mt-0.5"></p>
               </div>
-              <button type="button" id="importBambuBtn" onclick="importBambuInventory()" class="px-3.5 py-2 rounded-full bg-[#57151E] hover:bg-[#6E1B26] text-white text-xs font-medium transition shadow-sm">
-                Bambu-Bestand importieren (19)
-              </button>
+              <div class="flex items-center gap-2">
+                <input type="file" id="bambuJsonFileInput" accept=".json,application/json" onchange="handleBambuJsonFileImport(event)" class="hidden" />
+                <button type="button" id="importBambuBtn" onclick="document.getElementById('bambuJsonFileInput').click()" class="px-3.5 py-2 rounded-full bg-[#57151E] hover:bg-[#6E1B26] text-white text-xs font-medium transition shadow-sm">
+                  Bestand per JSON importieren
+                </button>
+              </div>
+            </div>
+            <div>
+              <input type="text" id="adminFilamentSearchInput" oninput="renderAdminFilamentsList()" placeholder="Filament nach Farbe, Material, Bambu-Code, Marke oder Kommentar suchen …" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60 text-xs text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]" />
             </div>
             <div id="adminFilamentsList" class="divide-y divide-[#E2DFD7]"></div>
           </div>
@@ -1153,7 +1163,7 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-5 pb-6 space-y-4 text-[11px] text-[#6E6A63] leading-relaxed">
       <!-- Studio-Link teilen am Seitenende über dem Hinweis -->
       <div class="flex items-center justify-start">
-        <button type="button" onclick="shareCatalogLink()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[#EFECE6] text-[#22211F] text-xs font-medium border border-[#E2DFD7] shadow-2xs transition">
+        <button type="button" onclick="shareCatalogLink()" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white hover:bg-[#EFECE6] text-[#22211F] text-xs font-medium border border-[#E2DFD7] shadow-sm transition">
           <svg class="w-3.5 h-3.5 text-[#57151E]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
           </svg>
@@ -1183,7 +1193,7 @@
   <!-- =====================================================================
        5. BESTELL-MODAL ("MÖCHTE ICH HABEN")
        ===================================================================== -->
-  <div id="orderModal" class="fixed inset-0 z-40 hidden bg-[#22211F]/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
+  <div id="orderModal" onclick="if (event.target === this) closeOrderModal()" class="fixed inset-0 z-40 hidden bg-[#22211F]/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-[#E2DFD7] space-y-4 max-h-[92vh] overflow-y-auto">
       <div class="flex items-start justify-between gap-3">
         <div>
@@ -1261,7 +1271,7 @@
   <!-- =====================================================================
        6. BESTÄTIGUNGS-MODAL MIT WHATSAPP & E-MAIL BUTTON
        ===================================================================== -->
-  <div id="confirmationModal" class="fixed inset-0 z-50 hidden bg-[#22211F]/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <div id="confirmationModal" onclick="if (event.target === this) closeConfirmationModal()" class="fixed inset-0 z-50 hidden bg-[#22211F]/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-[#E2DFD7] space-y-4">
       <div class="flex items-center justify-between">
         <span class="px-3 py-1 rounded-full bg-[#EFECE6] text-[#22211F] text-xs font-semibold">Gespeichert • <span id="confRefId">#LP-0000</span></span>
@@ -1281,6 +1291,9 @@
         <a id="confEmailBtn" href="#" target="_blank" rel="noopener noreferrer" class="py-3 px-4 rounded-full bg-[#EFECE6] hover:bg-[#E2DFD7] text-[#22211F] font-medium text-xs text-center transition">
           Per E-Mail senden
         </a>
+        <button type="button" id="confStatusBtn" onclick="closeConfirmationModal(); switchTab('my-orders');" class="hidden py-3 px-4 rounded-full bg-[#EFECE6] hover:bg-[#E2DFD7] text-[#22211F] font-medium text-xs text-center transition">
+          Zum Anfragestatus
+        </button>
       </div>
     </div>
   </div>
@@ -1371,9 +1384,12 @@
                 <td class="py-2.5 px-3 sm:px-4 align-top">
                   <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3.5">
                     <span class="leading-relaxed">Nahtloser zweifarbiger Farbverlauf: 360° dynamischer Farbwechsel &rarr; Unterschiedliche Blickwinkel zeigen verschiedene Farben</span>
-                    <button type="button" onclick="openImageLightbox('dual-color-guide', 0)" title="Beispielbild vergrößern"
-                      class="group relative w-24 sm:w-28 aspect-[3/2] rounded-xl overflow-hidden border border-[#E2DFD7] bg-[#EFECE6] shrink-0 cursor-zoom-in shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#57151E]/40">
-                      <img src="dual_color_beispiel.jpg" alt="Dual-Color Beispieloberfläche" class="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105" />
+                    <button type="button" id="dualColorGuideBtn" onclick="openImageLightbox('dual-color-guide', 0)" title="Beispielbild vergrößern"
+                      class="group relative w-24 sm:w-28 aspect-[3/2] rounded-xl overflow-hidden border border-[#E2DFD7] bg-[#EFECE6] shrink-0 cursor-zoom-in shadow-sm focus:outline-none focus:ring-2 focus:ring-[#57151E]/40">
+                      <img src="dual_color_beispiel.jpg" alt="Dual-Color Beispieloberfläche"
+                        onerror="this.style.display='none'; const b=document.getElementById('dualColorGuideBtn'); if(b){ b.disabled=true; b.classList.remove('cursor-zoom-in'); b.classList.add('cursor-default'); } const fb=document.getElementById('dualColorFallback'); if(fb) fb.classList.remove('hidden');"
+                        class="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105" />
+                      <span id="dualColorFallback" class="hidden w-full h-full flex items-center justify-center px-2 text-center text-[10px] font-medium text-[#6E6A63] leading-tight">Dual-Color Vorschau</span>
                     </button>
                   </div>
                 </td>
@@ -1714,6 +1730,39 @@
       window._toastTimer = setTimeout(() => t.classList.add("hidden"), 3200);
     }
 
+    function copyTextSafe(text, successMsg, onSuccessCallback = null) {
+      const fallbackCopy = () => {
+        try {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.setAttribute("readonly", "");
+          ta.style.position = "fixed";
+          ta.style.left = "-9999px";
+          document.body.appendChild(ta);
+          ta.select();
+          const ok = document.execCommand("copy");
+          document.body.removeChild(ta);
+          if (ok) {
+            if (successMsg) showToast(successMsg);
+            if (typeof onSuccessCallback === "function") onSuccessCallback();
+          } else {
+            showToast("Bitte Text manuell markieren und kopieren.");
+          }
+        } catch (_) {
+          showToast("Bitte Text manuell markieren und kopieren.");
+        }
+      };
+
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+        navigator.clipboard.writeText(text).then(() => {
+          if (successMsg) showToast(successMsg);
+          if (typeof onSuccessCallback === "function") onSuccessCallback();
+        }).catch(fallbackCopy);
+      } else {
+        fallbackCopy();
+      }
+    }
+
     // =====================================================================
     // FILAMENT-SORTIERUNG (PRIMÄR NACH FARBE, SEKUNDÄR NACH MATERIAL)
     // =====================================================================
@@ -1933,6 +1982,7 @@
       return `
         <div class="relative aspect-[4/3] bg-[#EFECE6] overflow-hidden group ${extraClass}">
           <div id="carousel-${galleryId}" onscroll="updateCarouselDots('${galleryId}', ${images.length})"
+            onpointerdown="delete this.dataset.targetIndex" ontouchstart="delete this.dataset.targetIndex"
             class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar"
             style="touch-action: pan-x pan-y;">
             ${images.map((src, idx) => `
@@ -2000,14 +2050,22 @@
     window.goToCarouselSlide = function(galleryId, idx) {
       const el = document.getElementById("carousel-" + galleryId);
       if (!el) return;
+      el.dataset.targetIndex = String(idx);
+      clearTimeout(el._targetIndexTimer);
+      el._targetIndexTimer = setTimeout(() => { delete el.dataset.targetIndex; }, 450);
       el.scrollTo({ left: idx * el.clientWidth, behavior: "smooth" });
     };
 
     window.stepCarouselSlide = function(galleryId, delta, total) {
       const el = document.getElementById("carousel-" + galleryId);
       if (!el || !el.clientWidth) return;
-      const currentIdx = Math.round(el.scrollLeft / el.clientWidth);
+      const currentIdx = el.dataset.targetIndex !== undefined
+        ? Number(el.dataset.targetIndex)
+        : Math.round(el.scrollLeft / el.clientWidth);
       const nextIdx = (currentIdx + delta + total) % total;
+      el.dataset.targetIndex = String(nextIdx);
+      clearTimeout(el._targetIndexTimer);
+      el._targetIndexTimer = setTimeout(() => { delete el.dataset.targetIndex; }, 450);
       el.scrollTo({ left: nextIdx * el.clientWidth, behavior: "smooth" });
     };
 
@@ -2084,6 +2142,15 @@
       applyLightboxTransform(false);
     }
 
+    function syncBodyScrollLock() {
+      const modalIds = ["orderModal", "confirmationModal", "filamentGuideModal", "imageLightboxModal"];
+      const anyOpen = modalIds.some(id => {
+        const el = document.getElementById(id);
+        return el && !el.classList.contains("hidden");
+      });
+      document.body.classList.toggle("overflow-hidden", anyOpen);
+    }
+
     window.openImageLightbox = function(galleryId, startIndex = 0) {
       const entry = window._galleryRegistry[galleryId];
       if (!entry || !entry.images || entry.images.length === 0) return;
@@ -2094,12 +2161,12 @@
 
       renderLightboxSlide();
       document.getElementById("imageLightboxModal").classList.remove("hidden");
-      document.body.classList.add("overflow-hidden");
+      syncBodyScrollLock();
     };
 
     window.closeImageLightbox = function() {
       document.getElementById("imageLightboxModal").classList.add("hidden");
-      document.body.classList.remove("overflow-hidden");
+      syncBodyScrollLock();
       lbScale = 1;
       lbTx = 0;
       lbTy = 0;
@@ -2377,7 +2444,10 @@
         }
         updateBadges();
         renderMyOrders();
-        if (isAdminLoggedIn) renderAdminOrders();
+        const adminOrdersEl = document.getElementById("adminOrdersList");
+        if (isAdminLoggedIn && (!adminOrdersEl || !adminOrdersEl.contains(document.activeElement))) {
+          renderAdminOrders();
+        }
       }, handleFirestoreError);
 
     } else {
@@ -2428,14 +2498,14 @@
         const btn = document.getElementById("nav-" + id);
         if (btn) {
           btn.classList.remove("bg-[#22211F]", "text-white");
-          btn.classList.add("text-[#6E6A63]");
+          btn.classList.add("text-[#6E6A63]", "hover:text-[#22211F]", "hover:bg-[#EFECE6]");
         }
       });
       document.getElementById("view-" + tab).classList.remove("hidden");
       const activeBtn = document.getElementById("nav-" + tab);
       if (activeBtn) {
         activeBtn.classList.add("bg-[#22211F]", "text-white");
-        activeBtn.classList.remove("text-[#6E6A63]");
+        activeBtn.classList.remove("text-[#6E6A63]", "hover:text-[#22211F]", "hover:bg-[#EFECE6]");
       }
 
       if (tab === "my-orders") renderMyOrders();
@@ -2455,12 +2525,13 @@
     }
 
     window.shareCatalogLink = function() {
-      const cleanUrl = window.location.origin + window.location.pathname;
-      if (navigator.share) {
+      const cleanUrl = (window.location.protocol === "file:" || !window.location.origin || window.location.origin === "null")
+        ? window.location.href.split("#")[0]
+        : (window.location.origin + window.location.pathname);
+      if (navigator.share && /^https?:\/\//i.test(cleanUrl)) {
         navigator.share({ title: STUDIO_CONFIG.shopName, url: cleanUrl }).catch(() => {});
       } else {
-        navigator.clipboard.writeText(cleanUrl);
-        showToast("Studio-Link kopiert!");
+        copyTextSafe(cleanUrl, "Studio-Link kopiert!");
       }
     };
 
@@ -2546,7 +2617,7 @@
       return `
         <div class="flex items-center justify-between gap-2.5 px-3 py-2 rounded-2xl text-xs bg-[#F7F6F2] border border-[#E2DFD7] text-[#22211F]">
           <span class="flex items-center gap-2.5 min-w-0">
-            <span class="w-[18px] h-[18px] rounded-full border border-black/20 shadow-2xs shrink-0" style="${getFilamentSwatchStyle(f)}"></span>
+            <span class="w-[18px] h-[18px] rounded-full border border-black/20 shadow-sm shrink-0" style="${getFilamentSwatchStyle(f)}"></span>
             <span class="leading-snug">${escapeHtml(f.name)} <span class="text-[#6E6A63]">(${escapeHtml(f.material)})</span></span>
           </span>
           ${extraTag ? `<span class="shrink-0 px-2 py-0.5 rounded-full bg-[#EFECE6] font-semibold text-[#57151E] text-[11px]">${escapeHtml(extraTag)}</span>` : ""}
@@ -2655,7 +2726,7 @@
                   <h3 class="font-display font-bold text-base sm:text-lg text-[#22211F] leading-snug">${escapeHtml(p.title)}</h3>
                   <span class="font-display text-lg font-bold text-[#22211F] whitespace-nowrap">${displayPriceText}</span>
                 </div>
-                ${p.description ? `<p class="text-sm text-[#6E6A63] mt-2.5 leading-relaxed line-clamp-2">${escapeHtml(p.description)}</p>` : ""}
+                ${p.description ? `<p onclick="this.classList.toggle('line-clamp-2')" title="Klicken, um die vollständige Beschreibung ein-/auszublenden" class="text-sm text-[#6E6A63] mt-2.5 leading-relaxed line-clamp-2 cursor-pointer">${escapeHtml(p.description)}</p>` : ""}
 
                 <div class="mt-4 pt-3.5 border-t border-[#F0EEE9]">
                   <div class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6A63] mb-2">
@@ -2698,7 +2769,7 @@
                 : "border-[#E2DFD7] hover:border-[#57151E] text-[#6E6A63]"
             }">
             <span class="flex items-center gap-2.5 min-w-0">
-              <span class="w-[18px] h-[18px] rounded-full border border-black/20 shadow-2xs shrink-0" style="${getFilamentSwatchStyle(f)}"></span>
+              <span class="w-[18px] h-[18px] rounded-full border border-black/20 shadow-sm shrink-0" style="${getFilamentSwatchStyle(f)}"></span>
               <span class="leading-snug">${escapeHtml(f.name)} (${escapeHtml(f.material)})</span>
             </span>
             ${extraTag ? `<span class="shrink-0 px-2 py-0.5 rounded-full bg-[#EFECE6] text-[#57151E] text-[11px] font-semibold">${escapeHtml(extraTag)}</span>` : ""}
@@ -2728,6 +2799,7 @@
       renderOrderModalColorOptions(availableColors);
       updateOrderTotal();
       document.getElementById("orderModal").classList.remove("hidden");
+      syncBodyScrollLock();
     };
 
     window.selectModalFilament = function(filId) {
@@ -2750,6 +2822,7 @@
 
     window.closeOrderModal = function() {
       document.getElementById("orderModal").classList.add("hidden");
+      syncBodyScrollLock();
     };
 
     window.submitCatalogOrder = async function(e) {
@@ -2870,7 +2943,10 @@
       if (headerFile) headerFile.classList.toggle("hidden", !isFileMode);
       if (platformLinks) platformLinks.classList.toggle("hidden", isFileMode);
       if (urlBlock) urlBlock.classList.toggle("hidden", isFileMode);
-      if (urlInput) urlInput.required = !isFileMode;
+      if (urlInput) {
+        urlInput.required = !isFileMode;
+        urlInput.disabled = isFileMode;
+      }
       if (linkSubmitWrap) linkSubmitWrap.classList.toggle("hidden", isFileMode);
       if (emailSection) emailSection.classList.toggle("hidden", !isFileMode);
 
@@ -2917,13 +2993,7 @@
 
     window.copyCustomEmailTemplate = function() {
       const { body } = buildCustomEmailTemplateData();
-      if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
-        navigator.clipboard.writeText(body).then(() => {
-          showToast("E-Mail-Textvorlage kopiert!");
-        }).catch(() => {
-          showToast("Bitte Textvorlage manuell markieren und kopieren.");
-        });
-      }
+      copyTextSafe(body, "E-Mail-Textvorlage kopiert!");
     };
 
     window.renderCustomInStockChips = function() {
@@ -2960,7 +3030,7 @@
                 : "bg-[#F7F6F2] hover:bg-[#EFECE6] border-[#E2DFD7] text-[#22211F]"
             }">
             <span class="flex items-center gap-2.5 min-w-0">
-              <span class="w-[18px] h-[18px] rounded-full border border-black/20 shadow-2xs shrink-0" style="${getFilamentSwatchStyle(f)}"></span>
+              <span class="w-[18px] h-[18px] rounded-full border border-black/20 shadow-sm shrink-0" style="${getFilamentSwatchStyle(f)}"></span>
               <span class="leading-snug">${escapeHtml(f.name)} <span class="text-[#6E6A63] font-normal">(${escapeHtml(f.material)})</span></span>
             </span>
             ${extraTag ? `<span class="shrink-0 px-2 py-0.5 rounded-full bg-white/80 font-semibold text-[#57151E] text-[11px]">${escapeHtml(extraTag)}</span>` : ""}
@@ -2997,11 +3067,7 @@
     window.submitCustomLinkRequest = async function(e) {
       e.preventDefault();
       if (customRequestMode === "file") {
-        const emailSection = document.getElementById("customEmailTemplateSection");
-        if (emailSection) {
-          emailSection.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-        showToast("Deine E-Mail-Vorlage unten ist bereit – bitte per E-Mail senden und 3D-Datei anhängen.");
+        await window.submitCustomFileRequest();
         return;
       }
 
@@ -3084,7 +3150,10 @@
       }
     };
 
+    let isSubmittingCustomFile = false;
     window.submitCustomFileRequest = async function() {
+      if (isSubmittingCustomFile) return;
+
       const nameInput = document.getElementById("customCustomerName");
       const contactInput = document.getElementById("customCustomerContact");
       const customerName = (nameInput?.value || "").trim();
@@ -3108,6 +3177,11 @@
         return;
       }
 
+      if (document.activeElement && typeof document.activeElement.blur === "function") {
+        document.activeElement.blur();
+      }
+
+      isSubmittingCustomFile = true;
       const btn = document.getElementById("customFileConfirmBtn");
       const originalBtnHtml = btn ? btn.innerHTML : "";
       if (btn) {
@@ -3170,6 +3244,7 @@
         console.error("Fehler beim Erstellen des Anfragestatus:", err);
         showToast("Fehler beim Speichern: " + (err?.message || "Unbekannter Fehler"));
       } finally {
+        isSubmittingCustomFile = false;
         if (btn) {
           btn.disabled = false;
           btn.innerHTML = originalBtnHtml;
@@ -3209,29 +3284,48 @@
       document.getElementById("confEmailBtn").href =
         `mailto:${STUDIO_CONFIG.contactEmail}?subject=${encSubj}&body=${encText}`;
 
+      const emailBtn = document.getElementById("confEmailBtn");
+      const statusBtn = document.getElementById("confStatusBtn");
+      const isFileRequest = requestType === "file";
+      if (emailBtn) emailBtn.classList.toggle("hidden", isFileRequest);
+      if (statusBtn) statusBtn.classList.toggle("hidden", !isFileRequest);
+
       document.getElementById("confirmationModal").classList.remove("hidden");
+      syncBodyScrollLock();
     }
 
     window.closeConfirmationModal = function() {
       document.getElementById("confirmationModal").classList.add("hidden");
+      syncBodyScrollLock();
     };
 
     window.openFilamentGuideModal = function() {
       document.getElementById("filamentGuideModal").classList.remove("hidden");
+      syncBodyScrollLock();
     };
 
     window.closeFilamentGuideModal = function() {
       document.getElementById("filamentGuideModal").classList.add("hidden");
+      syncBodyScrollLock();
     };
 
     document.addEventListener("keydown", function(e) {
-      if (e.key === "Escape") {
-        const lbModal = document.getElementById("imageLightboxModal");
-        if (lbModal && !lbModal.classList.contains("hidden")) return;
-        const guideModal = document.getElementById("filamentGuideModal");
-        if (guideModal && !guideModal.classList.contains("hidden")) {
-          closeFilamentGuideModal();
-        }
+      if (e.key !== "Escape") return;
+      const lbModal = document.getElementById("imageLightboxModal");
+      if (lbModal && !lbModal.classList.contains("hidden")) return;
+      const guideModal = document.getElementById("filamentGuideModal");
+      if (guideModal && !guideModal.classList.contains("hidden")) {
+        closeFilamentGuideModal();
+        return;
+      }
+      const confModal = document.getElementById("confirmationModal");
+      if (confModal && !confModal.classList.contains("hidden")) {
+        closeConfirmationModal();
+        return;
+      }
+      const ordModal = document.getElementById("orderModal");
+      if (ordModal && !ordModal.classList.contains("hidden")) {
+        closeOrderModal();
       }
     });
 
@@ -3244,6 +3338,7 @@
         localStorage.setItem("ld_printlab_refs", JSON.stringify(localSavedRefs));
       }
       updateBadges();
+      renderMyOrders();
     }
 
     function updateBadges() {
@@ -3264,7 +3359,13 @@
       e.preventDefault();
       let code = document.getElementById("lookupRefInput").value.trim().toUpperCase();
       if (!code) return;
-      if (!code.startsWith("#")) code = "#" + code;
+      if (/^\d{4}$/.test(code)) {
+        code = "#LP-" + code;
+      } else if (/^LP-?\d{4}$/.test(code)) {
+        code = "#LP-" + code.replace(/^LP-?/, "");
+      } else if (!code.startsWith("#")) {
+        code = "#" + code;
+      }
       const found = allOrders.find(o => o.refId === code);
       if (found) {
         rememberOrderRef(code);
@@ -3643,19 +3744,26 @@
         paymentLine
       ].filter(Boolean).join("\n");
 
-      navigator.clipboard.writeText(lines);
-      showToast(hidePaymentNotice ? "Antworttext kopiert!" : "Antworttext inkl. PayPal-/Bar-Info kopiert!");
+      copyTextSafe(
+        lines,
+        hidePaymentNotice ? "Antworttext kopiert!" : "Antworttext inkl. PayPal-/Bar-Info kopiert!"
+      );
     };
 
     window.deleteOrder = async function(orderId) {
       if (!confirm("Anfrage wirklich löschen?")) return;
-      if (isCloudConfigured) {
-        await deleteDoc(doc(db, "orders", orderId));
-      } else {
-        allOrders = allOrders.filter(o => o.id !== orderId);
-        syncDemoStorage();
+      try {
+        if (isCloudConfigured) {
+          await deleteDoc(doc(db, "orders", orderId));
+        } else {
+          allOrders = allOrders.filter(o => o.id !== orderId);
+          syncDemoStorage();
+        }
+        showToast("Anfrage gelöscht.");
+      } catch (err) {
+        console.error("Fehler beim Löschen der Anfrage:", err);
+        showToast("Löschen fehlgeschlagen: " + (err?.message || "Bitte erneut versuchen"));
       }
-      showToast("Anfrage gelöscht.");
     };
 
     // --- Admin: 3D-Modelle (inkl. Multi-Bild-Upload, Standardfarbe & Aufpreis-Overrides) ---
@@ -3886,6 +3994,7 @@
                 c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
                 resolve(c.toDataURL("image/jpeg", 0.80));
               };
+              img.onerror = () => resolve(src);
               img.src = src;
             }))
           );
@@ -3947,7 +4056,7 @@
           defaultFilamentId,
           filamentSurcharges,
           images: finalImages,
-          createdAt: existing ? existing.createdAt : Date.now()
+          createdAt: (existing && existing.createdAt) ? existing.createdAt : Date.now()
         };
 
         if (isCloudConfigured) {
@@ -4038,13 +4147,18 @@
 
     window.deleteProduct = async function(prodId) {
       if (!confirm("Dieses 3D-Modell wirklich aus dem Katalog entfernen?")) return;
-      if (isCloudConfigured) {
-        await deleteDoc(doc(db, "products", prodId));
-      } else {
-        products = products.filter(p => p.id !== prodId);
-        syncDemoStorage();
+      try {
+        if (isCloudConfigured) {
+          await deleteDoc(doc(db, "products", prodId));
+        } else {
+          products = products.filter(p => p.id !== prodId);
+          syncDemoStorage();
+        }
+        showToast("Modell entfernt.");
+      } catch (err) {
+        console.error("Fehler beim Entfernen des Modells:", err);
+        showToast("Entfernen fehlgeschlagen: " + (err?.message || "Bitte erneut versuchen"));
       }
-      showToast("Modell entfernt.");
     };
 
     function renderAdminProductsList() {
@@ -4085,24 +4199,15 @@
     }
 
     // --- Admin: Zentrale Filament-Rollen (Öffentlich + Geschützte interne EK-Preise) ---
-    const BAMBU_LAB_SEED_B64 = "W3siYmFtYnVDb2RlIjogIjMwMTA2IiwgIm1hdGVyaWFsIjogIlBFVEcgQmFzaWMiLCAibmFtZSI6ICJXZWnDnyIsICJoZXgiOiAiI0ZGRkZGRiIsICJwdXJjaGFzZVByaWNlIjogMTIuMzQsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMTIuMzQsICJjb3N0Tm90ZSI6ICIxw5cgU3B1bGUgKDEyLDM0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMzAxMDUiLCAibWF0ZXJpYWwiOiAiUEVURyBCYXNpYyIsICJuYW1lIjogIlNjaHdhcnoiLCAiaGV4IjogIiMwMDAwMDAiLCAicHVyY2hhc2VQcmljZSI6IDExLjIsICJyb2xsQ291bnQiOiAyLCAidG90YWxDb3N0IjogMjIuNCwgImNvc3ROb3RlIjogIjLDlyBTcHVsZTogMTIsMzQg4oKsICsgMTAsMDYg4oKsICjDmCAxMSwyMCDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjEwMTAxIiwgIm1hdGVyaWFsIjogIlBMQSBCYXNpYyIsICJuYW1lIjogIlNjaHdhcnoiLCAiaGV4IjogIiMwMDAwMDAiLCAicHVyY2hhc2VQcmljZSI6IDEyLjk5LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEyLjk5LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMiw5OSDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjMwMTA3IiwgIm1hdGVyaWFsIjogIlBFVEcgQmFzaWMiLCAibmFtZSI6ICJHcmF1IiwgImhleCI6ICIjOEU5MDg5IiwgInB1cmNoYXNlUHJpY2UiOiAxMi4zNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMi4zNCwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTIsMzQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMTYwMSIsICJtYXRlcmlhbCI6ICJQTEEgTWF0dGUiLCAibmFtZSI6ICJFaXNibGF1IiwgImhleCI6ICIjQTNEOEUxIiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTEyMDIiLCAibWF0ZXJpYWwiOiAiUExBIE1hdHRlIiwgIm5hbWUiOiAiRHVua2Vscm90IiwgImhleCI6ICIjQkIzRDQzIiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTMxMDkiLCAibWF0ZXJpYWwiOiAiUExBIFNpbGsrIiwgIm5hbWUiOiAiU2lsYmVyIiwgImhleCI6ICIjQzhDOEM4IiwgInB1cmNoYXNlUHJpY2UiOiAxMi45OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMi45OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTIsOTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMTYwMiIsICJtYXRlcmlhbCI6ICJQTEEgTWF0dGUiLCAibmFtZSI6ICJEdW5rZWxibGF1IiwgImhleCI6ICIjMDQyRjU2IiwgInB1cmNoYXNlUHJpY2UiOiAxMS4wNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMS4wNCwgImNvc3ROb3RlIjogIjHDlyBSZWZpbGwgKDExLDA0IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMzUxMDAiLCAibWF0ZXJpYWwiOiAiUEVURyBNYXR0ZSIsICJuYW1lIjogIldlacOfIiwgImhleCI6ICIjRkZGRkZGIiwgInB1cmNoYXNlUHJpY2UiOiAwLjAsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMC4wLCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgwLDAwIOKCrCBHZXNjaGVuaykifSwgeyJiYW1idUNvZGUiOiAiMTAyMDEiLCAibWF0ZXJpYWwiOiAiUExBIEJhc2ljIiwgIm5hbWUiOiAiQmVpZ2UiLCAiaGV4IjogIiNGN0U2REUiLCAicHVyY2hhc2VQcmljZSI6IDkuMDEsICJyb2xsQ291bnQiOiAyLCAidG90YWxDb3N0IjogMTguMDEsICJjb3N0Tm90ZSI6ICIyw5cgUmVmaWxsOiAxOCwwMSDigqwgZ2VzYW10ICg5LDAxIOKCrC9Sb2xsZSkifSwgeyJiYW1idUNvZGUiOiAiMzAxMDgiLCAibWF0ZXJpYWwiOiAiUEVURyBCYXNpYyIsICJuYW1lIjogIk1pc3R5IEJsdWUiLCAiaGV4IjogIiM2MTdCOEIiLCAicHVyY2hhc2VQcmljZSI6IDEwLjA2LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEwLjA2LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMCwwNiDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjExMjAxIiwgIm1hdGVyaWFsIjogIlBMQSBNYXR0ZSIsICJuYW1lIjogIlNha3VyYS1Sb3NhIiwgImhleCI6ICIjRThBRkNGIiwgInB1cmNoYXNlUHJpY2UiOiA5LjAsICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogOS4wLCAiY29zdE5vdGUiOiAiMcOXIFJlZmlsbCAoOSwwMCDigqwpIn0sIHsiYmFtYnVDb2RlIjogIjExMTAxIiwgIm1hdGVyaWFsIjogIlBMQSBNYXR0ZSIsICJuYW1lIjogIkFudGhyYXppdCIsICJoZXgiOiAiIzAwMDAwMCIsICJwdXJjaGFzZVByaWNlIjogMTAuNTksICJyb2xsQ291bnQiOiAxLCAidG90YWxDb3N0IjogMTAuNTksICJjb3N0Tm90ZSI6ICIxw5cgU3B1bGUgKDEwLDU5IOKCrCkifSwgeyJiYW1idUNvZGUiOiAiMTMyMDUiLCAibWF0ZXJpYWwiOiAiUExBIFNpbGsrIiwgIm5hbWUiOiAiQ2FuZHktUm90IiwgImhleCI6ICIjRDAyNzI3IiwgInB1cmNoYXNlUHJpY2UiOiAxMC41OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxMC41OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTAsNTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICI0NTYwMCIsICJtYXRlcmlhbCI6ICJBU0EiLCAibmFtZSI6ICJCbGF1IiwgImhleCI6ICIjMjE0MEI0IiwgInB1cmNoYXNlUHJpY2UiOiAxNC45OSwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxNC45OSwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTQsOTkg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMDgwMiIsICJtYXRlcmlhbCI6ICJQTEEgQmFzaWMiLCAibmFtZSI6ICJLYWthb2JyYXVuIiwgImhleCI6ICIjNkY1MDM0IiwgInB1cmNoYXNlUHJpY2UiOiAxNS4wLCAicm9sbENvdW50IjogMiwgInRvdGFsQ29zdCI6IDI5Ljk5LCAiY29zdE5vdGUiOiAiMsOXIFNwdWxlOiAyOSw5OSDigqwgZ2VzYW10ICgxNSwwMCDigqwvUm9sbGUpIn0sIHsiYmFtYnVDb2RlIjogIjM1NzAwIiwgIm1hdGVyaWFsIjogIlBFVEcgTWF0dGUiLCAibmFtZSI6ICJQaW5rIiwgImhleCI6ICIjRjVCNkNEIiwgInB1cmNoYXNlUHJpY2UiOiAxNC4yNCwgInJvbGxDb3VudCI6IDEsICJ0b3RhbENvc3QiOiAxNC4yNCwgImNvc3ROb3RlIjogIjHDlyBTcHVsZSAoMTQsMjQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIxMDMwMCIsICJtYXRlcmlhbCI6ICJQTEEgQmFzaWMiLCAibmFtZSI6ICJPcmFuZ2UiLCAiaGV4IjogIiNGRjZBMTMiLCAicHVyY2hhc2VQcmljZSI6IDEyLjc0LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEyLjc0LCAiY29zdE5vdGUiOiAiMcOXIFJlZmlsbCAoMTIsNzQg4oKsKSJ9LCB7ImJhbWJ1Q29kZSI6ICIzMjEwMSIsICJtYXRlcmlhbCI6ICJQRVRHIFRyYW5zbHVjZW50IiwgIm5hbWUiOiAiVHJhbnNwYXJlbnQiLCAiaGV4IjogIiNEOUQ5RDkiLCAicHVyY2hhc2VQcmljZSI6IDEwLjU5LCAicm9sbENvdW50IjogMSwgInRvdGFsQ29zdCI6IDEwLjU5LCAiY29zdE5vdGUiOiAiMcOXIFNwdWxlICgxMCw1OSDigqwpIn1d";
-    function getBambuInitialSeed() {
-      if (!isAdminLoggedIn) return [];
-      try {
-        const bin = atob(BAMBU_LAB_SEED_B64);
-        const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
-        return JSON.parse(new TextDecoder("utf-8").decode(bytes));
-      } catch (e) {
-        console.error("Seed decode error:", e);
-        return [];
-      }
-    }
-
-    window.importBambuInventory = async function() {
+    window.handleBambuJsonFileImport = async function(e) {
+      const file = e.target?.files?.[0];
+      if (!file) return;
       if (!isAdminLoggedIn) {
         showToast("Bitte zuerst im Studio anmelden.");
+        e.target.value = "";
         return;
       }
+
       const btn = document.getElementById("importBambuBtn");
       if (btn) {
         btn.disabled = true;
@@ -4110,57 +4215,94 @@
       }
 
       try {
+        const rawText = await file.text();
+        const parsed = JSON.parse(rawText);
+        const seedList = Array.isArray(parsed) ? parsed : (Array.isArray(parsed?.filaments) ? parsed.filaments : null);
+        if (!seedList || seedList.length === 0) {
+          showToast("Ungültiges JSON-Format: Array mit Filament-Einträgen erwartet.");
+          return;
+        }
+
         let addedCount = 0;
         let updatedCostCount = 0;
         const baseTime = Date.now();
 
-        const seedList = getBambuInitialSeed();
         for (let i = 0; i < seedList.length; i++) {
-          const item = seedList[i];
+          const item = seedList[i] || {};
+          const itemName = String(item.name || "").trim();
+          const itemMaterial = String(item.material || "PLA Basic").trim();
+          if (!itemName) continue;
+
+          const itemCode = String(item.bambuCode || "").trim();
+          const itemHex = sanitizeHexColor(item.hex, "#1E1E1E");
+          const isDualColor = !!(item.isDualColor && parseValidHex(item.hex2));
+          const itemHex2 = isDualColor ? sanitizeHexColor(item.hex2, "#D4AF37") : "";
+          const purchasePrice = Number.isFinite(Number(item.purchasePrice)) ? Number(item.purchasePrice) : null;
+          const rollCount = Number.isFinite(Number(item.rollCount)) && Number(item.rollCount) > 0 ? Number(item.rollCount) : 1;
+          const totalCost = Number.isFinite(Number(item.totalCost))
+            ? Number(item.totalCost)
+            : (purchasePrice !== null ? Number((purchasePrice * rollCount).toFixed(2)) : null);
+          const costNote = String(item.costNote || "").trim();
+          const brand = String(item.brand || "").trim();
+          const adminComment = String(item.adminComment || "").trim();
+
           const existing = filaments.find(f =>
-            (f.bambuCode && String(f.bambuCode).trim() === item.bambuCode) ||
-            (f.name.trim().toLowerCase() === item.name.toLowerCase() && f.material.trim().toLowerCase() === item.material.toLowerCase())
+            (itemCode && f.bambuCode && String(f.bambuCode).trim() === itemCode) ||
+            (f.name.trim().toLowerCase() === itemName.toLowerCase() && f.material.trim().toLowerCase() === itemMaterial.toLowerCase())
           );
 
           const costPayload = {
-            purchasePrice: item.purchasePrice,
-            rollCount: item.rollCount,
-            totalCost: item.totalCost,
-            costNote: item.costNote,
+            ...(purchasePrice !== null ? { purchasePrice, rollCount, totalCost } : {}),
+            ...(costNote ? { costNote } : {}),
+            ...(brand ? { brand } : {}),
+            ...(adminComment ? { adminComment } : {}),
             updatedAt: Date.now()
           };
+          const hasCostData = Object.keys(costPayload).length > 1;
 
           if (existing) {
+            const publicUpdates = {
+              hex: itemHex,
+              isDualColor,
+              hex2: itemHex2,
+              ...(itemCode ? { bambuCode: itemCode } : {})
+            };
             if (isCloudConfigured) {
-              await updateDoc(doc(db, "filaments", existing.id), {
-                bambuCode: item.bambuCode,
-                hex: item.hex
-              });
-              await setDoc(doc(db, "filament_costs", existing.id), costPayload, { merge: true });
+              await updateDoc(doc(db, "filaments", existing.id), publicUpdates);
+              if (hasCostData) {
+                await setDoc(doc(db, "filament_costs", existing.id), costPayload, { merge: true });
+              }
             } else {
-              existing.bambuCode = item.bambuCode;
-              existing.hex = item.hex;
-              filamentCosts[existing.id] = { ...(filamentCosts[existing.id] || {}), ...costPayload };
+              Object.assign(existing, publicUpdates);
+              if (hasCostData) {
+                filamentCosts[existing.id] = { ...(filamentCosts[existing.id] || {}), ...costPayload };
+              }
             }
             updatedCostCount++;
           } else {
             const publicPayload = {
-              name: item.name,
-              material: item.material,
-              hex: item.hex,
-              bambuCode: item.bambuCode,
-              surcharge: 0,
-              inStock: true,
+              name: itemName,
+              material: itemMaterial,
+              hex: itemHex,
+              isDualColor,
+              hex2: itemHex2,
+              bambuCode: itemCode,
+              surcharge: Number.isFinite(Number(item.surcharge)) ? Number(item.surcharge) : 0,
+              inStock: item.inStock !== false,
               createdAt: baseTime + i
             };
 
             if (isCloudConfigured) {
               const ref = await addDoc(collection(db, "filaments"), publicPayload);
-              await setDoc(doc(db, "filament_costs", ref.id), costPayload);
+              if (hasCostData) {
+                await setDoc(doc(db, "filament_costs", ref.id), costPayload);
+              }
             } else {
               const newId = "fil-" + (baseTime + i);
               filaments.push({ id: newId, ...publicPayload });
-              filamentCosts[newId] = costPayload;
+              if (hasCostData) {
+                filamentCosts[newId] = costPayload;
+              }
             }
             addedCount++;
           }
@@ -4170,18 +4312,15 @@
           syncDemoStorage();
         }
         renderAdminFilamentsList();
-        if (addedCount > 0) {
-          showToast(`${addedCount} Bambu-Lab-Filamente (22 Rollen) importiert!`);
-        } else {
-          showToast(`Alle ${updatedCostCount} Bambu-Lab-Filamente sind bereits angelegt (EK aktualisiert).`);
-        }
+        showToast(`JSON-Import abgeschlossen: ${addedCount} neu angelegt, ${updatedCostCount} aktualisiert.`);
       } catch (err) {
-        console.error("Fehler beim Import:", err);
-        showToast("Import-Hinweis: " + (err?.message || "Bitte Firestore-Regeln prüfen."));
+        console.error("Fehler beim JSON-Import:", err);
+        showToast("JSON-Import fehlgeschlagen: " + (err?.message || "Bitte Datei prüfen."));
       } finally {
+        e.target.value = "";
         if (btn) {
           btn.disabled = false;
-          btn.textContent = "Bambu-Bestand importieren (19)";
+          btn.textContent = "Bestand per JSON importieren";
         }
       }
     };
@@ -4227,32 +4366,37 @@
           }
         : null;
 
-      if (isCloudConfigured) {
-        const ref = await addDoc(collection(db, "filaments"), publicPayload);
-        if (costPayload) {
-          await setDoc(doc(db, "filament_costs", ref.id), costPayload);
+      try {
+        if (isCloudConfigured) {
+          const ref = await addDoc(collection(db, "filaments"), publicPayload);
+          if (costPayload) {
+            await setDoc(doc(db, "filament_costs", ref.id), costPayload);
+          }
+        } else {
+          const newId = "fil-" + Date.now();
+          filaments.push({ id: newId, ...publicPayload });
+          if (costPayload) {
+            filamentCosts[newId] = costPayload;
+          }
+          syncDemoStorage();
         }
-      } else {
-        const newId = "fil-" + Date.now();
-        filaments.push({ id: newId, ...publicPayload });
-        if (costPayload) {
-          filamentCosts[newId] = costPayload;
-        }
-        syncDemoStorage();
-      }
 
-      document.getElementById("filName").value = "";
-      document.getElementById("filBambuCode").value = "";
-      document.getElementById("filSurcharge").value = "0";
-      document.getElementById("filPurchasePrice").value = "";
-      if (document.getElementById("filBrand")) document.getElementById("filBrand").value = "";
-      if (document.getElementById("filComment")) document.getElementById("filComment").value = "";
-      if (document.getElementById("filIsDualColor")) {
-        document.getElementById("filIsDualColor").checked = false;
-        toggleDualColorFilamentForm();
+        document.getElementById("filName").value = "";
+        document.getElementById("filBambuCode").value = "";
+        document.getElementById("filSurcharge").value = "0";
+        document.getElementById("filPurchasePrice").value = "";
+        if (document.getElementById("filBrand")) document.getElementById("filBrand").value = "";
+        if (document.getElementById("filComment")) document.getElementById("filComment").value = "";
+        if (document.getElementById("filIsDualColor")) {
+          document.getElementById("filIsDualColor").checked = false;
+          toggleDualColorFilamentForm();
+        }
+        lastSelectedPresetName = "";
+        showToast(`${name} (${material}) angelegt.`);
+      } catch (err) {
+        console.error("Fehler beim Anlegen des Filaments:", err);
+        showToast("Speichern fehlgeschlagen: " + (err?.message || "Bitte erneut versuchen"));
       }
-      lastSelectedPresetName = "";
-      showToast(`${name} (${material}) angelegt.`);
     };
 
     window.updateFilamentAdminMeta = async function(filId, field, rawVal) {
@@ -4262,19 +4406,24 @@
       const existingCost = filamentCosts[filId] || {};
       filamentCosts[filId] = { ...existingCost, [field]: value };
 
-      if (isCloudConfigured) {
-        await setDoc(doc(db, "filament_costs", filId), {
-          [field]: value,
-          updatedAt: Date.now()
-        }, { merge: true });
-      } else {
-        localStorage.setItem("ld_demo_filament_costs", JSON.stringify(filamentCosts));
+      try {
+        if (isCloudConfigured) {
+          await setDoc(doc(db, "filament_costs", filId), {
+            [field]: value,
+            updatedAt: Date.now()
+          }, { merge: true });
+        } else {
+          localStorage.setItem("ld_demo_filament_costs", JSON.stringify(filamentCosts));
+        }
+        const listEl = document.getElementById("adminFilamentsList");
+        if (!listEl || !listEl.contains(document.activeElement)) {
+          renderAdminFilamentsList();
+        }
+        showToast(field === "brand" ? "Marke gespeichert (nur Admin)." : "Kommentar gespeichert (nur Admin).");
+      } catch (err) {
+        console.error("Fehler beim Speichern der Admin-Metadaten:", err);
+        showToast("Speichern fehlgeschlagen: " + (err?.message || "Bitte erneut versuchen"));
       }
-      const listEl = document.getElementById("adminFilamentsList");
-      if (!listEl || !listEl.contains(document.activeElement)) {
-        renderAdminFilamentsList();
-      }
-      showToast(field === "brand" ? "Marke gespeichert (nur Admin)." : "Kommentar gespeichert (nur Admin).");
     };
 
     window.updateFilamentPurchasePrice = async function(filId, rawVal) {
@@ -4286,57 +4435,77 @@
       const rollCount = Number(existingCost.rollCount || 1);
       const totalCost = Number((purchasePrice * rollCount).toFixed(2));
 
-      if (isCloudConfigured) {
-        await setDoc(doc(db, "filament_costs", filId), {
-          purchasePrice,
-          rollCount,
-          totalCost,
-          updatedAt: Date.now()
-        }, { merge: true });
-      } else {
-        filamentCosts[filId] = { ...existingCost, purchasePrice, rollCount, totalCost };
-        syncDemoStorage();
+      try {
+        if (isCloudConfigured) {
+          await setDoc(doc(db, "filament_costs", filId), {
+            purchasePrice,
+            rollCount,
+            totalCost,
+            updatedAt: Date.now()
+          }, { merge: true });
+        } else {
+          filamentCosts[filId] = { ...existingCost, purchasePrice, rollCount, totalCost };
+          syncDemoStorage();
+        }
+        showToast(`Interner EK auf ${formatPrice(purchasePrice)} aktualisiert.`);
+      } catch (err) {
+        console.error("Fehler beim Aktualisieren des EK:", err);
+        showToast("EK konnte nicht gespeichert werden: " + (err?.message || "Bitte erneut versuchen"));
       }
-      showToast(`Interner EK auf ${formatPrice(purchasePrice)} aktualisiert.`);
     };
 
     window.updateFilamentSurcharge = async function(filId, rawVal) {
       const parsed = parseFloat(rawVal);
       const surcharge = Number.isFinite(parsed) ? parsed : 0;
-      if (isCloudConfigured) {
-        await updateDoc(doc(db, "filaments", filId), { surcharge });
-      } else {
-        const f = filaments.find(x => x.id === filId);
-        if (f) f.surcharge = surcharge;
-        syncDemoStorage();
+      try {
+        if (isCloudConfigured) {
+          await updateDoc(doc(db, "filaments", filId), { surcharge });
+        } else {
+          const f = filaments.find(x => x.id === filId);
+          if (f) f.surcharge = surcharge;
+          syncDemoStorage();
+        }
+        showToast(`Kunden-Aufpreis auf ${formatPrice(surcharge)} aktualisiert.`);
+      } catch (err) {
+        console.error("Fehler beim Aktualisieren des Aufpreises:", err);
+        showToast("Aufpreis konnte nicht gespeichert werden: " + (err?.message || "Bitte erneut versuchen"));
       }
-      showToast(`Kunden-Aufpreis auf ${formatPrice(surcharge)} aktualisiert.`);
     };
 
     window.toggleFilamentStock = async function(filId, nextState) {
-      if (isCloudConfigured) {
-        await updateDoc(doc(db, "filaments", filId), { inStock: nextState });
-      } else {
-        const f = filaments.find(x => x.id === filId);
-        if (f) f.inStock = nextState;
-        syncDemoStorage();
+      try {
+        if (isCloudConfigured) {
+          await updateDoc(doc(db, "filaments", filId), { inStock: nextState });
+        } else {
+          const f = filaments.find(x => x.id === filId);
+          if (f) f.inStock = nextState;
+          syncDemoStorage();
+        }
+        showToast(nextState ? "Als vorrätig aktiviert." : "Ausgeblendet (nicht vorrätig).");
+      } catch (err) {
+        console.error("Fehler beim Umschalten des Lagerbestands:", err);
+        showToast("Status konnte nicht geändert werden: " + (err?.message || "Bitte erneut versuchen"));
       }
-      showToast(nextState ? "Als vorrätig aktiviert." : "Ausgeblendet (nicht vorrätig).");
     };
 
     window.deleteFilament = async function(filId) {
       if (!confirm("Filamentrolle wirklich löschen?")) return;
-      if (isCloudConfigured) {
-        await deleteDoc(doc(db, "filaments", filId));
-        try {
-          await deleteDoc(doc(db, "filament_costs", filId));
-        } catch (_) {}
-      } else {
-        filaments = filaments.filter(f => f.id !== filId);
-        delete filamentCosts[filId];
-        syncDemoStorage();
+      try {
+        if (isCloudConfigured) {
+          await deleteDoc(doc(db, "filaments", filId));
+          try {
+            await deleteDoc(doc(db, "filament_costs", filId));
+          } catch (_) {}
+        } else {
+          filaments = filaments.filter(f => f.id !== filId);
+          delete filamentCosts[filId];
+          syncDemoStorage();
+        }
+        showToast("Filament entfernt.");
+      } catch (err) {
+        console.error("Fehler beim Löschen des Filaments:", err);
+        showToast("Löschen fehlgeschlagen: " + (err?.message || "Bitte erneut versuchen"));
       }
-      showToast("Filament entfernt.");
     };
 
     function renderAdminFilamentsList() {
@@ -4346,7 +4515,7 @@
 
       if (filaments.length === 0) {
         if (summaryEl) summaryEl.textContent = "Noch keine Spulen im Lager.";
-        box.innerHTML = `<p class="py-6 text-sm text-[#6E6A63]">Noch keine Filamente angelegt. Nutze oben den Import-Button für eure 19 Bambu-Lab-Filamente.</p>`;
+        box.innerHTML = `<p class="py-6 text-sm text-[#6E6A63]">Noch keine Filamente angelegt. Lege links eine Rolle an oder importiere deinen Bestand per JSON-Datei.</p>`;
         return;
       }
 
@@ -4367,7 +4536,21 @@
         summaryEl.textContent = `${totalRolls} Rollen gesamt • Interner Lagerwert: ${formatPrice(totalInventoryValue)} (nur für Admins sichtbar)`;
       }
 
-      const sortedFilaments = sortFilaments(filaments);
+      const searchTerm = (document.getElementById("adminFilamentSearchInput")?.value || "").trim().toLowerCase();
+      const sortedFilaments = sortFilaments(filaments).filter(f => {
+        if (!searchTerm) return true;
+        const costInfo = filamentCosts[f.id] || {};
+        const hay = [f.name, f.material, f.bambuCode, costInfo.brand, costInfo.adminComment, costInfo.costNote]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+        return hay.includes(searchTerm);
+      });
+
+      if (sortedFilaments.length === 0) {
+        box.innerHTML = `<p class="py-6 text-center text-xs text-[#6E6A63]">Keine passenden Filamente für „${escapeHtml(searchTerm)}“ gefunden.</p>`;
+        return;
+      }
 
       box.innerHTML = sortedFilaments.map(f => {
         const costInfo = filamentCosts[f.id] || {};
@@ -4448,14 +4631,19 @@
       e.preventDefault();
       const name = document.getElementById("newCategoryName").value.trim();
       if (!name) return;
-      if (isCloudConfigured) {
-        await addDoc(collection(db, "categories"), { name, order: categories.length });
-      } else {
-        categories.push({ id: "cat-" + Date.now(), name, order: categories.length });
-        syncDemoStorage();
+      try {
+        if (isCloudConfigured) {
+          await addDoc(collection(db, "categories"), { name, order: categories.length });
+        } else {
+          categories.push({ id: "cat-" + Date.now(), name, order: categories.length });
+          syncDemoStorage();
+        }
+        document.getElementById("newCategoryName").value = "";
+        showToast("Kategorie hinzugefügt.");
+      } catch (err) {
+        console.error("Fehler beim Anlegen der Kategorie:", err);
+        showToast("Kategorie konnte nicht angelegt werden: " + (err?.message || "Bitte erneut versuchen"));
       }
-      document.getElementById("newCategoryName").value = "";
-      showToast("Kategorie hinzugefügt.");
     };
 
     window.deleteCategory = async function(catId) {
@@ -4463,13 +4651,18 @@
         showToast("Lege zuerst eine eigene Kategorie an.");
         return;
       }
-      if (isCloudConfigured) {
-        await deleteDoc(doc(db, "categories", catId));
-      } else {
-        categories = categories.filter(c => c.id !== catId);
-        syncDemoStorage();
+      try {
+        if (isCloudConfigured) {
+          await deleteDoc(doc(db, "categories", catId));
+        } else {
+          categories = categories.filter(c => c.id !== catId);
+          syncDemoStorage();
+        }
+        showToast("Kategorie entfernt.");
+      } catch (err) {
+        console.error("Fehler beim Löschen der Kategorie:", err);
+        showToast("Kategorie konnte nicht entfernt werden: " + (err?.message || "Bitte erneut versuchen"));
       }
-      showToast("Kategorie entfernt.");
     };
 
     function renderAdminCategoriesList() {
@@ -4788,8 +4981,9 @@
       document.getElementById("calcBreakdownLabor").textContent = calcFormatEur(workCost);
 
       // Tab 2 Werte
+      const totalPrintMinutes = Math.round((hours * 60) + minutes);
       document.getElementById("calcTab2SummaryBadge").textContent =
-        `${grams} g • ${Math.floor(hours)} Std ${Math.round(minutes)} Min`;
+        `${grams} g • ${Math.floor(totalPrintMinutes / 60)} Std ${totalPrintMinutes % 60} Min`;
 
       const paidInput = document.getElementById("calcPaidAmountInput");
       const syncBtn = document.getElementById("calcSyncRecommendedBtn");
@@ -5416,19 +5610,13 @@
           }, 2200);
         };
 
-        if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
-          navigator.clipboard.writeText(textToCopy).then(onSuccess).catch(() => {
-            const ta = document.createElement("textarea");
-            ta.value = textToCopy;
-            ta.setAttribute("readonly", "");
-            ta.style.position = "fixed";
-            ta.style.left = "-9999px";
-            document.body.appendChild(ta);
-            ta.select();
-            if (document.execCommand("copy")) onSuccess();
-            document.body.removeChild(ta);
-          });
-        }
+        copyTextSafe(textToCopy, "Eintrag in Zwischenablage kopiert!", () => {
+          if (labelEl) labelEl.textContent = "✓ Text kopiert!";
+          clearTimeout(window._calcCopyTimer);
+          window._calcCopyTimer = setTimeout(() => {
+            if (labelEl) labelEl.textContent = "Text kopieren";
+          }, 2200);
+        });
       });
 
       calcUpdateAll();
