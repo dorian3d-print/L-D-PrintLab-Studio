@@ -650,12 +650,6 @@
                 <h3 class="font-display text-lg font-bold text-[#22211F]">Euer Filament-Lager (<span id="adminFilCount">0</span>)</h3>
                 <p id="adminFilInventorySummary" class="text-[11px] text-[#6E6A63] mt-0.5"></p>
               </div>
-              <div class="flex items-center gap-2">
-                <input type="file" id="bambuJsonFileInput" accept=".json,application/json" onchange="handleBambuJsonFileImport(event)" class="hidden" />
-                <button type="button" id="importBambuBtn" onclick="document.getElementById('bambuJsonFileInput').click()" class="px-3.5 py-2 rounded-full bg-[#57151E] hover:bg-[#6E1B26] text-white text-xs font-medium transition shadow-sm">
-                  Bestand per JSON importieren
-                </button>
-              </div>
             </div>
             <div>
               <input type="text" id="adminFilamentSearchInput" oninput="renderAdminFilamentsList()" placeholder="Filament nach Farbe, Material, Bambu-Code, Marke oder Kommentar suchen …" class="w-full px-3.5 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60 text-xs text-[#22211F] focus:bg-white focus:outline-none focus:border-[#57151E]" />
@@ -4199,131 +4193,6 @@
     }
 
     // --- Admin: Zentrale Filament-Rollen (Öffentlich + Geschützte interne EK-Preise) ---
-    window.handleBambuJsonFileImport = async function(e) {
-      const file = e.target?.files?.[0];
-      if (!file) return;
-      if (!isAdminLoggedIn) {
-        showToast("Bitte zuerst im Studio anmelden.");
-        e.target.value = "";
-        return;
-      }
-
-      const btn = document.getElementById("importBambuBtn");
-      if (btn) {
-        btn.disabled = true;
-        btn.textContent = "Importiere …";
-      }
-
-      try {
-        const rawText = await file.text();
-        const parsed = JSON.parse(rawText);
-        const seedList = Array.isArray(parsed) ? parsed : (Array.isArray(parsed?.filaments) ? parsed.filaments : null);
-        if (!seedList || seedList.length === 0) {
-          showToast("Ungültiges JSON-Format: Array mit Filament-Einträgen erwartet.");
-          return;
-        }
-
-        let addedCount = 0;
-        let updatedCostCount = 0;
-        const baseTime = Date.now();
-
-        for (let i = 0; i < seedList.length; i++) {
-          const item = seedList[i] || {};
-          const itemName = String(item.name || "").trim();
-          const itemMaterial = String(item.material || "PLA Basic").trim();
-          if (!itemName) continue;
-
-          const itemCode = String(item.bambuCode || "").trim();
-          const itemHex = sanitizeHexColor(item.hex, "#1E1E1E");
-          const isDualColor = !!(item.isDualColor && parseValidHex(item.hex2));
-          const itemHex2 = isDualColor ? sanitizeHexColor(item.hex2, "#D4AF37") : "";
-          const purchasePrice = Number.isFinite(Number(item.purchasePrice)) ? Number(item.purchasePrice) : null;
-          const rollCount = Number.isFinite(Number(item.rollCount)) && Number(item.rollCount) > 0 ? Number(item.rollCount) : 1;
-          const totalCost = Number.isFinite(Number(item.totalCost))
-            ? Number(item.totalCost)
-            : (purchasePrice !== null ? Number((purchasePrice * rollCount).toFixed(2)) : null);
-          const costNote = String(item.costNote || "").trim();
-          const brand = String(item.brand || "").trim();
-          const adminComment = String(item.adminComment || "").trim();
-
-          const existing = filaments.find(f =>
-            (itemCode && f.bambuCode && String(f.bambuCode).trim() === itemCode) ||
-            (f.name.trim().toLowerCase() === itemName.toLowerCase() && f.material.trim().toLowerCase() === itemMaterial.toLowerCase())
-          );
-
-          const costPayload = {
-            ...(purchasePrice !== null ? { purchasePrice, rollCount, totalCost } : {}),
-            ...(costNote ? { costNote } : {}),
-            ...(brand ? { brand } : {}),
-            ...(adminComment ? { adminComment } : {}),
-            updatedAt: Date.now()
-          };
-          const hasCostData = Object.keys(costPayload).length > 1;
-
-          if (existing) {
-            const publicUpdates = {
-              hex: itemHex,
-              isDualColor,
-              hex2: itemHex2,
-              ...(itemCode ? { bambuCode: itemCode } : {})
-            };
-            if (isCloudConfigured) {
-              await updateDoc(doc(db, "filaments", existing.id), publicUpdates);
-              if (hasCostData) {
-                await setDoc(doc(db, "filament_costs", existing.id), costPayload, { merge: true });
-              }
-            } else {
-              Object.assign(existing, publicUpdates);
-              if (hasCostData) {
-                filamentCosts[existing.id] = { ...(filamentCosts[existing.id] || {}), ...costPayload };
-              }
-            }
-            updatedCostCount++;
-          } else {
-            const publicPayload = {
-              name: itemName,
-              material: itemMaterial,
-              hex: itemHex,
-              isDualColor,
-              hex2: itemHex2,
-              bambuCode: itemCode,
-              surcharge: Number.isFinite(Number(item.surcharge)) ? Number(item.surcharge) : 0,
-              inStock: item.inStock !== false,
-              createdAt: baseTime + i
-            };
-
-            if (isCloudConfigured) {
-              const ref = await addDoc(collection(db, "filaments"), publicPayload);
-              if (hasCostData) {
-                await setDoc(doc(db, "filament_costs", ref.id), costPayload);
-              }
-            } else {
-              const newId = "fil-" + (baseTime + i);
-              filaments.push({ id: newId, ...publicPayload });
-              if (hasCostData) {
-                filamentCosts[newId] = costPayload;
-              }
-            }
-            addedCount++;
-          }
-        }
-
-        if (!isCloudConfigured) {
-          syncDemoStorage();
-        }
-        renderAdminFilamentsList();
-        showToast(`JSON-Import abgeschlossen: ${addedCount} neu angelegt, ${updatedCostCount} aktualisiert.`);
-      } catch (err) {
-        console.error("Fehler beim JSON-Import:", err);
-        showToast("JSON-Import fehlgeschlagen: " + (err?.message || "Bitte Datei prüfen."));
-      } finally {
-        e.target.value = "";
-        if (btn) {
-          btn.disabled = false;
-          btn.textContent = "Bestand per JSON importieren";
-        }
-      }
-    };
 
     window.addFilament = async function(e) {
       e.preventDefault();
@@ -4515,7 +4384,7 @@
 
       if (filaments.length === 0) {
         if (summaryEl) summaryEl.textContent = "Noch keine Spulen im Lager.";
-        box.innerHTML = `<p class="py-6 text-sm text-[#6E6A63]">Noch keine Filamente angelegt. Lege links eine Rolle an oder importiere deinen Bestand per JSON-Datei.</p>`;
+        box.innerHTML = `<p class="py-6 text-sm text-[#6E6A63]">Noch keine Filamente angelegt. Lege links eine Rolle an.</p>`;
         return;
       }
 
