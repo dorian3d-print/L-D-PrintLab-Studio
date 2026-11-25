@@ -107,7 +107,7 @@
       whatsappNumber: "491785271446",
       whatsappDisplay: "0178 5271446",
       contactEmail: "dorian3d-print@web.de",
-      paypalEmail: "dorian.weinreich@web.de",
+      paypalEmail: "dorian3d-print@web.de",
       currency: "€"
     };
 
@@ -233,7 +233,7 @@
           </span>
           <h2 class="font-display text-2xl font-bold text-[#22211F]">Eigene 3D-Datei (.stl / .step) per E-Mail anfragen</h2>
           <p class="text-sm text-[#6E6A63] leading-relaxed">
-            Du hast bereits eine eigene <strong class="font-semibold text-[#22211F]">.stl</strong>- oder <strong class="font-semibold text-[#22211F]">.step</strong>-Datei? Wähle von oben nach unten deine Wunschfarbe, Stückzahl und Kontaktdaten aus – ganz unten wird daraus automatisch deine fertige E-Mail-Vorlage erstellt, mit der du uns deine Datei direkt an <a href="mailto:dorian3d-print@web.de" class="font-semibold text-[#57151E] underline">dorian3d-print@web.de</a> senden kannst.
+            Du hast bereits eine eigene <strong class="font-semibold text-[#22211F]">.stl</strong>- oder <strong class="font-semibold text-[#22211F]">.step</strong>-Datei? Wähle von oben nach unten deine Wunschfarbe, Stückzahl und Kontaktdaten aus – ganz unten wird daraus automatisch deine fertige E-Mail-Vorlage erstellt, mit der du uns deine Datei direkt an <a href="mailto:dorian3d-print@web.de" class="font-semibold text-[#57151E] underline">dorian3d-print@web.de</a> senden kannst. Anschließend kannst du deine Anfrage direkt bestätigen, um deinen Anfragestatus zu erstellen.
           </p>
         </div>
 
@@ -311,33 +311,27 @@
             <textarea id="customNotes" rows="2" oninput="updateCustomEmailTemplate()" placeholder="z. B. Besondere Größe, Farbwünsche bei Mehrfarbdruck, Einsatzbereich oder Wunsch nach Versand" class="w-full px-4 py-2.5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/50 text-sm focus:bg-white focus:outline-none focus:border-[#57151E]"></textarea>
           </div>
 
-          <!-- 5. Hinweise für Wunschmodell -->
-          <div class="p-3.5 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] space-y-1.5 text-xs text-[#6E6A63] leading-relaxed">
-            <p><strong class="text-[#22211F]">Hinweis zum Druckbild:</strong> Farbe und Aussehen des fertigen 3D-Drucks können minimal von digitalen Vorschaubildern abweichen.</p>
-            <p><strong class="text-[#22211F]">Fertigung &amp; Zahlung:</strong> Das Modell wird nach deiner Freigabe schnellstmöglich frisch gedruckt. Eine Zahlung über die Website ist nicht möglich – die Bezahlung erfolgt privat per PayPal (Freunde &amp; Bekannte) oder in Bar.</p>
-          </div>
-
-          <!-- 6A. Absende-Button für Link-Anfrage (nur im Link-Modus sichtbar) -->
+          <!-- 5A. Absende-Button für Link-Anfrage (nur im Link-Modus sichtbar) -->
           <div id="customLinkSubmitWrap">
             <button type="submit" id="customSubmitBtn" class="w-full sm:w-auto px-6 py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-sm transition">
               Unverbindliches Angebot anfragen
             </button>
           </div>
 
-          <!-- 6B. Fertige E-Mail-Textvorlage für eigene 3D-Datei ganz unten auf der Seite (nur im 3D-Datei-Modus sichtbar) -->
+          <!-- 5B. Fertige E-Mail-Textvorlage für eigene 3D-Datei (nur im 3D-Datei-Modus sichtbar) -->
           <div id="customEmailTemplateSection" class="hidden rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/80 p-4 sm:p-5 space-y-3.5">
-            <div class="flex items-start gap-3">
-              <div class="w-9 h-9 rounded-xl bg-white border border-[#E2DFD7] text-[#57151E] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                </svg>
+            <div class="space-y-2.5">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-white border border-[#E2DFD7] text-[#57151E] flex items-center justify-center shrink-0 shadow-2xs">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                  </svg>
+                </div>
+                <h3 class="font-display text-xs sm:text-sm font-bold text-[#22211F] leading-snug">Fertige E-Mail-Vorlage zum Versenden deiner 3D-Datei</h3>
               </div>
-              <div class="space-y-1">
-                <h3 class="font-display text-xs sm:text-sm font-bold text-[#22211F]">Fertige E-Mail-Vorlage zum Versenden deiner 3D-Datei</h3>
-                <p class="text-xs text-[#6E6A63] leading-relaxed">
-                  Deine Angaben oben wurden automatisch übernommen. Klicke auf <strong class="text-[#22211F]">„Per E-Mail senden“</strong> und hänge deine <strong class="text-[#22211F]">.stl</strong>- oder <strong class="text-[#22211F]">.step</strong>-Datei im E-Mail-Programm einfach an.
-                </p>
-              </div>
+              <p class="text-xs text-[#6E6A63] leading-relaxed">
+                Deine Angaben oben wurden automatisch übernommen. Klicke auf <strong class="text-[#22211F]">„Per E-Mail senden“</strong> und hänge deine <strong class="text-[#22211F]">.stl</strong>- oder <strong class="text-[#22211F]">.step</strong>-Datei im E-Mail-Programm einfach an.
+              </p>
             </div>
 
             <div class="space-y-1.5">
@@ -359,6 +353,24 @@
                 <span>Textvorlage kopieren</span>
               </button>
             </div>
+
+            <div class="pt-3.5 border-t border-[#E2DFD7] space-y-2.5">
+              <p class="text-xs text-[#6E6A63] leading-relaxed">
+                <strong class="text-[#22211F]">E-Mail abgeschickt?</strong> Bestätige hier deine E-Mail-Anfrage, damit wir sie direkt im Studio-System sehen und ein <strong class="text-[#22211F]">Anfragestatus</strong> zur Nachverfolgung für dich erstellt wird:
+              </p>
+              <button type="button" id="customFileConfirmBtn" onclick="submitCustomFileRequest()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-[#22211F] hover:bg-[#3A3835] text-white font-medium text-xs sm:text-sm transition shadow-2xs">
+                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Per E-Mail angefragt – Anfragestatus erstellen</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 6. Hinweise für Wunschmodell -->
+          <div class="p-3.5 rounded-2xl bg-[#F7F6F2] border border-[#E2DFD7] space-y-1.5 text-xs text-[#6E6A63] leading-relaxed">
+            <p><strong class="text-[#22211F]">Hinweis zum Druckbild:</strong> Farbe und Aussehen des fertigen 3D-Drucks können minimal von digitalen Vorschaubildern abweichen.</p>
+            <p><strong class="text-[#22211F]">Fertigung &amp; Zahlung:</strong> Das Modell wird nach deiner Freigabe schnellstmöglich frisch gedruckt. Eine Zahlung über die Website ist nicht möglich – die Bezahlung erfolgt privat per PayPal (Freunde &amp; Bekannte) oder in Bar.</p>
           </div>
         </form>
       </div>
@@ -1255,8 +1267,8 @@
         <span class="px-3 py-1 rounded-full bg-[#EFECE6] text-[#22211F] text-xs font-semibold">Gespeichert • <span id="confRefId">#LP-0000</span></span>
         <button onclick="closeConfirmationModal()" class="w-8 h-8 rounded-full bg-[#F7F6F2] text-[#6E6A63] flex items-center justify-center">✕</button>
       </div>
-      <h3 class="font-display text-xl font-bold text-[#22211F]">Deine Anfrage ist eingegangen</h3>
-      <p class="text-xs sm:text-sm text-[#6E6A63] leading-relaxed">
+      <h3 id="confTitleText" class="font-display text-xl font-bold text-[#22211F]">Deine Anfrage ist eingegangen</h3>
+      <p id="confDescriptionText" class="text-xs sm:text-sm text-[#6E6A63] leading-relaxed">
         Deine Anfrage wurde direkt im Studio-System hinterlegt. Dein Modell wird schnellstmöglich nach Bestellung frisch gedruckt. Die Bezahlung erfolgt privat per PayPal (Freunde &amp; Bekannte) oder in Bar (nicht über die Website).
       </p>
 
@@ -2757,6 +2769,7 @@
       const comment = document.getElementById("orderComment").value.trim();
       const refId = "#LP-" + Math.floor(1000 + Math.random() * 9000);
       const total = unitPrice * qty;
+      const now = Date.now();
 
       const orderPayload = {
         refId,
@@ -2775,14 +2788,17 @@
         customerContact,
         comment,
         status: "Neu eingegangen",
-        createdAt: Date.now()
+        statusHistory: [
+          { status: "Neu eingegangen", timestamp: now }
+        ],
+        createdAt: now
       };
 
       try {
         if (isCloudConfigured) {
           await addDoc(collection(db, "orders"), orderPayload);
         } else {
-          allOrders.unshift({ id: "ord-" + Date.now(), ...orderPayload });
+          allOrders.unshift({ id: "ord-" + now, ...orderPayload });
           syncDemoStorage();
         }
 
@@ -2801,7 +2817,7 @@
           comment ? `• Kommentar: ${comment}` : null
         ].filter(Boolean).join("\n");
 
-        openConfirmationModal(refId, summaryText, `Anfrage ${refId} – ${orderPayload.productTitle}`);
+        openConfirmationModal(refId, summaryText, `Anfrage ${refId} – ${orderPayload.productTitle}`, "catalog");
       } catch (err) {
         showToast("Fehler beim Senden: " + err.message);
       } finally {
@@ -3009,6 +3025,7 @@
       const customerContact = document.getElementById("customCustomerContact").value.trim();
       const comment = document.getElementById("customNotes").value.trim();
       const refId = "#LP-" + Math.floor(1000 + Math.random() * 9000);
+      const now = Date.now();
 
       btn.disabled = true;
       btn.textContent = "Wird übermittelt …";
@@ -3026,16 +3043,19 @@
         customerContact,
         comment,
         status: "Neu eingegangen",
+        statusHistory: [
+          { status: "Neu eingegangen", timestamp: now }
+        ],
         quotedPrice: null,
         adminNote: "",
-        createdAt: Date.now()
+        createdAt: now
       };
 
       try {
         if (isCloudConfigured) {
           await addDoc(collection(db, "orders"), orderPayload);
         } else {
-          allOrders.unshift({ id: "ord-" + Date.now(), ...orderPayload });
+          allOrders.unshift({ id: "ord-" + now, ...orderPayload });
           syncDemoStorage();
         }
 
@@ -3054,7 +3074,7 @@
           comment ? `• Kommentar: ${comment}` : null
         ].filter(Boolean).join("\n");
 
-        openConfirmationModal(refId, summaryText, `Link-Anfrage ${refId} – Wunschmodell`);
+        openConfirmationModal(refId, summaryText, `Link-Anfrage ${refId} – Wunschmodell`, "link");
       } catch (err) {
         console.error("Fehler beim Übermitteln der Link-Anfrage:", err);
         showToast("Fehler beim Senden: " + (err?.message || "Unbekannter Fehler"));
@@ -3064,14 +3084,123 @@
       }
     };
 
+    window.submitCustomFileRequest = async function() {
+      const nameInput = document.getElementById("customCustomerName");
+      const contactInput = document.getElementById("customCustomerContact");
+      const customerName = (nameInput?.value || "").trim();
+      const customerContact = (contactInput?.value || "").trim();
+
+      if (!customerName) {
+        if (nameInput) {
+          nameInput.focus();
+          nameInput.reportValidity();
+        }
+        showToast("Bitte gib oben deinen Namen an, damit wir deine E-Mail zuordnen können.");
+        return;
+      }
+
+      if (!customerContact) {
+        if (contactInput) {
+          contactInput.focus();
+          contactInput.reportValidity();
+        }
+        showToast("Bitte gib oben deine E-Mail-Adresse oder WhatsApp-Nummer an.");
+        return;
+      }
+
+      const btn = document.getElementById("customFileConfirmBtn");
+      const originalBtnHtml = btn ? btn.innerHTML : "";
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "Anfragestatus wird erstellt …";
+      }
+
+      const chosenFil = filaments.find(x => x.id === selectedCustomFilamentId) || null;
+      const filamentName = chosenFil ? `${chosenFil.name} (${chosenFil.material})` : "Nach Absprache";
+      const qty = Math.max(1, parseInt(document.getElementById("customQty")?.value || "1", 10));
+      const comment = (document.getElementById("customNotes")?.value || "").trim();
+      const refId = "#LP-" + Math.floor(1000 + Math.random() * 9000);
+      const now = Date.now();
+
+      const orderPayload = {
+        refId,
+        type: "file",
+        productTitle: "Wunschmodell (Eigene 3D-Datei per E-Mail)",
+        filamentName,
+        filamentHex: chosenFil ? chosenFil.hex : null,
+        filamentHex2: chosenFil && isDualColorFilament(chosenFil) ? chosenFil.hex2 : null,
+        qty,
+        customerName,
+        customerContact,
+        comment,
+        status: "Neu eingegangen",
+        statusHistory: [
+          { status: "Neu eingegangen", timestamp: now }
+        ],
+        quotedPrice: null,
+        adminNote: "",
+        createdAt: now
+      };
+
+      try {
+        if (isCloudConfigured) {
+          await addDoc(collection(db, "orders"), orderPayload);
+        } else {
+          allOrders.unshift({ id: "ord-" + now, ...orderPayload });
+          syncDemoStorage();
+        }
+
+        rememberOrderRef(refId);
+        const formEl = document.getElementById("customLinkForm");
+        if (formEl) formEl.reset();
+        selectedCustomFilamentId = "";
+        renderCustomInStockChips();
+
+        const summaryText = [
+          `Hallo Dorian, ich habe meine 3D-Datei per E-Mail angefragt (${refId}):`,
+          `• Anfrageart: Eigene 3D-Datei (.stl / .step per E-Mail)`,
+          `• Wunschfarbe / Material: ${filamentName}`,
+          `• Stückzahl: ${qty}x`,
+          `• Name: ${customerName} (${customerContact})`,
+          comment ? `• Kommentar: ${comment}` : null
+        ].filter(Boolean).join("\n");
+
+        openConfirmationModal(refId, summaryText, `3D-Datei Anfrage ${refId} – Wunschmodell`, "file");
+      } catch (err) {
+        console.error("Fehler beim Erstellen des Anfragestatus:", err);
+        showToast("Fehler beim Speichern: " + (err?.message || "Unbekannter Fehler"));
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = originalBtnHtml;
+        }
+      }
+    };
+
     updateCustomEmailTemplate();
 
     // =====================================================================
     // BESTÄTIGUNGS-MODAL (WHATSAPP & E-MAIL)
     // =====================================================================
-    function openConfirmationModal(refId, message, subject) {
+    function openConfirmationModal(refId, message, subject, requestType = "catalog") {
       document.getElementById("confRefId").textContent = refId;
       document.getElementById("confPreviewText").textContent = message;
+
+      const titleEl = document.getElementById("confTitleText");
+      const descEl = document.getElementById("confDescriptionText");
+      if (titleEl) {
+        titleEl.textContent = "Deine Anfrage ist eingegangen";
+      }
+      if (descEl) {
+        if (requestType === "link") {
+          descEl.textContent = "Deine Link-Anfrage wurde direkt im Studio-System hinterlegt. Wir prüfen nun die Druck- und Umsetzbarkeit deines Modells und melden uns anschließend mit einem unverbindlichen Angebot bei dir. Eine Bezahlung ist aktuell noch nicht nötig – gedruckt wird erst nach deiner Freigabe. Den aktuellen Stand kannst du jederzeit unter „Anfragestatus“ verfolgen.";
+        } else if (requestType === "file") {
+          descEl.textContent = "Deine Bestätigung wurde hinterlegt und dein Anfragestatus wurde erstellt. Sobald deine E-Mail mit der 3D-Datei eingegangen ist, prüfen wir die Druck- und Umsetzbarkeit und melden uns mit einem unverbindlichen Angebot bei dir. Eine Bezahlung ist aktuell noch nicht nötig – gedruckt wird erst nach deiner Freigabe.";
+        } else {
+          descEl.textContent = "Deine Anfrage wurde direkt im Studio-System hinterlegt. Dein Modell wird schnellstmöglich nach Bestellung frisch gedruckt. Die Bezahlung erfolgt privat per PayPal (Freunde & Bekannte) oder in Bar (nicht über die Website).";
+        }
+      }
+
       const encText = encodeURIComponent(message);
       const encSubj = encodeURIComponent(subject);
 
@@ -3146,6 +3275,41 @@
       }
     };
 
+    function formatStatusTimestamp(ts) {
+      if (!ts) return "";
+      try {
+        return new Date(ts).toLocaleString("de-DE", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        }) + " Uhr";
+      } catch (_) {
+        return "";
+      }
+    }
+
+    function getOrderStatusHistory(order) {
+      if (Array.isArray(order?.statusHistory) && order.statusHistory.length > 0) {
+        return order.statusHistory
+          .map(entry => ({
+            status: String(entry?.status || "").trim(),
+            timestamp: entry?.timestamp || null
+          }))
+          .filter(entry => entry.status);
+      }
+      const initialStatus = "Neu eingegangen";
+      const currentStatus = String(order?.status || initialStatus).trim();
+      if (currentStatus === initialStatus) {
+        return [{ status: initialStatus, timestamp: order?.createdAt || null }];
+      }
+      return [
+        { status: initialStatus, timestamp: order?.createdAt || null },
+        { status: currentStatus, timestamp: order?.updatedAt || null }
+      ];
+    }
+
     function renderMyOrders() {
       const box = document.getElementById("myOrdersList");
       const matched = allOrders.filter(o => localSavedRefs.includes(o.refId));
@@ -3157,14 +3321,15 @@
 
       box.innerHTML = matched.map(o => {
         const dateStr = o.createdAt ? new Date(o.createdAt).toLocaleDateString("de-DE") : "";
+        const history = getOrderStatusHistory(o);
         return `
-          <div class="p-4 sm:p-5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60 space-y-2.5">
+          <div class="p-4 sm:p-5 rounded-2xl border border-[#E2DFD7] bg-[#F7F6F2]/60 space-y-3">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <div class="flex items-center gap-2">
                 <span class="font-mono text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#22211F] text-white">${o.refId}</span>
                 <span class="text-xs text-[#6E6A63]">${dateStr}</span>
               </div>
-              <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white border border-[#E2DFD7] text-[#22211F]">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white border border-[#57151E]/30 text-[#57151E]">
                 ${escapeHtml(o.status)}
               </span>
             </div>
@@ -3188,6 +3353,28 @@
                 Hinweis: ${escapeHtml(o.adminNote)}
               </div>
             ` : ""}
+
+            <div class="pt-2.5 border-t border-[#E2DFD7] space-y-2">
+              <div class="text-[11px] font-semibold uppercase tracking-wider text-[#6E6A63]">Status-Verlauf</div>
+              <div class="space-y-1.5">
+                ${history.map((entry, idx) => {
+                  const isCurrent = idx === history.length - 1;
+                  const timeLabel = formatStatusTimestamp(entry.timestamp);
+                  return `
+                    <div class="flex items-start justify-between gap-3 text-xs">
+                      <div class="flex items-start gap-2.5 min-w-0">
+                        <div class="flex flex-col items-center pt-1 shrink-0">
+                          <span class="w-2 h-2 rounded-full ${isCurrent ? "bg-[#57151E] ring-4 ring-[#57151E]/15" : "bg-[#8C7765]/70"}"></span>
+                          ${!isCurrent ? `<span class="w-px h-3.5 bg-[#D6D1C7] mt-1"></span>` : ""}
+                        </div>
+                        <span class="${isCurrent ? "font-semibold text-[#22211F]" : "text-[#6E6A63]"} leading-snug">${escapeHtml(entry.status)}</span>
+                      </div>
+                      ${timeLabel ? `<span class="text-[11px] text-[#6E6A63] whitespace-nowrap shrink-0 tabular-nums">${escapeHtml(timeLabel)}</span>` : ""}
+                    </div>
+                  `;
+                }).join("")}
+              </div>
+            </div>
           </div>
         `;
       }).join("");
@@ -3310,16 +3497,22 @@
       box.innerHTML = allOrders.map(o => {
         const dateStr = o.createdAt ? new Date(o.createdAt).toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" }) : "";
         const isLink = o.type === "link";
-        const statusOptions = isLink ? LINK_STATUSES : CATALOG_STATUSES;
+        const isFile = o.type === "file";
+        const isQuoteRequest = isLink || isFile;
+        const typeBadgeLabel = isLink
+          ? "MakerWorld / Thingiverse Link"
+          : (isFile ? "Eigene 3D-Datei (per E-Mail)" : "Katalog-Bestellung");
+        const statusOptions = isQuoteRequest ? LINK_STATUSES : CATALOG_STATUSES;
         const finalStatuses = statusOptions.includes(o.status) ? statusOptions : [o.status, ...statusOptions];
+        const history = getOrderStatusHistory(o);
 
         return `
           <div class="bg-white rounded-3xl p-5 sm:p-6 border border-[#E2DFD7] space-y-4">
             <div class="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
                   <span class="font-mono text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#22211F] text-white">${o.refId}</span>
-                  <span class="text-xs font-semibold text-[#57151E]">${isLink ? "MakerWorld / Thingiverse Link" : "Katalog-Bestellung"}</span>
+                  <span class="text-xs font-semibold text-[#57151E]">${typeBadgeLabel}</span>
                   <span class="text-xs text-[#6E6A63]">• ${dateStr}</span>
                 </div>
                 <h4 class="font-display font-bold text-base text-[#22211F] mt-1.5">
@@ -3327,7 +3520,7 @@
                 </h4>
                 <p class="text-xs text-[#6E6A63] mt-1">
                   Kunde: <strong class="text-[#22211F]">${escapeHtml(o.customerName)}</strong> (${escapeHtml(o.customerContact)}) • Farbe: <strong class="text-[#22211F]">${escapeHtml(o.filamentName)}</strong>
-                  ${!isLink ? ` • Summe: <strong class="text-[#22211F]">${formatPrice(o.totalPrice)}</strong>` : ""}
+                  ${!isQuoteRequest ? ` • Summe: <strong class="text-[#22211F]">${formatPrice(o.totalPrice)}</strong>` : ""}
                 </p>
                 ${o.comment ? `<p class="text-xs text-[#22211F] bg-[#F7F6F2] px-3 py-2 rounded-xl mt-2 border border-[#E2DFD7]">Kommentar: ${escapeHtml(o.comment)}</p>` : ""}
               </div>
@@ -3335,8 +3528,21 @@
               <button onclick="deleteOrder('${o.id}')" class="text-xs text-[#6E6A63] hover:text-red-600 underline">Löschen</button>
             </div>
 
-            <!-- Bearbeitung: Bei Link-Anfragen mit Angebotspreis, bei Katalog-Bestellungen ohne Angebotspreis & ohne Gewicht -->
-            ${isLink ? `
+            <!-- Kompakter Status-Verlauf für den Admin -->
+            <div class="text-[11px] text-[#6E6A63] bg-[#F7F6F2]/80 px-3 py-2 rounded-xl border border-[#E2DFD7]/80 space-y-1">
+              <div class="font-semibold text-[#22211F]">Status-Verlauf:</div>
+              ${history.map((h, idx) => {
+                const t = formatStatusTimestamp(h.timestamp);
+                const isLast = idx === history.length - 1;
+                return `<div class="flex items-center justify-between gap-2 ${isLast ? "font-semibold text-[#57151E]" : ""}">
+                  <span>• ${escapeHtml(h.status)}</span>
+                  ${t ? `<span class="whitespace-nowrap tabular-nums">${escapeHtml(t)}</span>` : ""}
+                </div>`;
+              }).join("")}
+            </div>
+
+            <!-- Bearbeitung: Bei Link- und 3D-Datei-Anfragen mit Angebotspreis, bei Katalog-Bestellungen ohne Angebotspreis -->
+            ${isQuoteRequest ? `
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-[#F0EEE9]">
                 <select id="status-${o.id}" class="px-3 py-2 rounded-xl border border-[#E2DFD7] bg-[#F7F6F2] text-xs font-medium">
                   ${finalStatuses.map(st =>
@@ -3359,7 +3565,7 @@
 
             <div class="flex flex-wrap items-center gap-2">
               <button onclick="saveOrderUpdate('${o.id}')" class="px-4 py-2 rounded-full bg-[#22211F] text-white text-xs font-medium hover:bg-[#3A3835] transition">
-                Status ${isLink ? "& Angebot " : ""}speichern
+                Status ${isQuoteRequest ? "& Angebot " : ""}speichern
               </button>
               <button onclick="copyAdminReply('${o.id}')" class="px-4 py-2 rounded-full bg-[#EFECE6] text-[#22211F] text-xs font-medium hover:bg-[#E2DFD7] transition">
                 Antworttext kopieren
@@ -3371,25 +3577,40 @@
     }
 
     window.saveOrderUpdate = async function(orderId) {
+      const existingOrder = allOrders.find(o => o.id === orderId);
       const status = document.getElementById("status-" + orderId).value;
       const qPriceEl = document.getElementById("qprice-" + orderId);
       const qPriceRaw = qPriceEl ? qPriceEl.value : "";
       const adminNote = document.getElementById("qnote-" + orderId).value.trim();
 
+      const now = Date.now();
+      const history = existingOrder ? [...getOrderStatusHistory(existingOrder)] : [];
+      const lastEntry = history[history.length - 1];
+      if (!lastEntry || lastEntry.status !== status) {
+        history.push({ status, timestamp: now });
+      }
+
       const updates = {
         status,
+        statusHistory: history,
         quotedPrice: qPriceRaw ? parseFloat(qPriceRaw) : null,
-        adminNote
+        adminNote,
+        updatedAt: now
       };
 
-      if (isCloudConfigured) {
-        await updateDoc(doc(db, "orders", orderId), updates);
-      } else {
-        const idx = allOrders.findIndex(o => o.id === orderId);
-        if (idx > -1) Object.assign(allOrders[idx], updates);
-        syncDemoStorage();
+      try {
+        if (isCloudConfigured) {
+          await updateDoc(doc(db, "orders", orderId), updates);
+        } else {
+          const idx = allOrders.findIndex(o => o.id === orderId);
+          if (idx > -1) Object.assign(allOrders[idx], updates);
+          syncDemoStorage();
+        }
+        showToast("Status & Verlauf gespeichert.");
+      } catch (err) {
+        console.error("Fehler beim Speichern des Status:", err);
+        showToast("Fehler beim Speichern: " + (err?.message || "Unbekannter Fehler"));
       }
-      showToast("Änderungen gespeichert.");
     };
 
     window.copyAdminReply = function(orderId) {
@@ -3405,7 +3626,8 @@
         normalizedStatus === "umsetzung wird geprüft" ||
         normalizedStatus === "nicht umsetzbar";
 
-      const amountLine = o.type === "link"
+      const isQuoteRequest = o.type === "link" || o.type === "file";
+      const amountLine = isQuoteRequest
         ? (quotedPrice ? `Angebotspreis: ${formatPrice(quotedPrice)}` : null)
         : (o.totalPrice ? `Gesamtbetrag: ${formatPrice(o.totalPrice)}` : null);
 
